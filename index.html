@@ -1,0 +1,3165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Infocell OS — Carioca Infocell</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F4F2EC;
+    --bg-soft:#EAE6DA;
+    --surface:#FFFFFF;
+    --ink:#1D2226;
+    --ink-soft:#666F68;
+    --ink-faint:#9A9E93;
+    --line:#DCD6C7;
+    --line-soft:#E9E5D9;
+    --brand:#0047CC;
+    --brand-deep:#00285C;
+    --brand-soft:#E3ECFB;
+    --cel:#0047CC;
+    --cel-soft:#E3ECFB;
+    --info:#0F8A3C;
+    --info-soft:#DFF5E5;
+    --st-recebido:#5C6570;   --st-recebido-soft:#E7E9EC;
+    --st-analisando:#C97A2E; --st-analisando-soft:#F7E7D4;
+    --st-andamento:#3D63C9;  --st-andamento-soft:#DFE6F8;
+    --st-aguardando:#8E4FBF; --st-aguardando-soft:#EDE1F6;
+    --st-pronto:#0AA83F;     --st-pronto-soft:#DFF7E7;
+    --st-entregue:#847A6B;   --st-entregue-soft:#EAE5DC;
+    --shadow-sm: 0 1px 2px rgba(29,34,38,0.06), 0 1px 1px rgba(29,34,38,0.04);
+    --shadow-md: 0 6px 20px rgba(18,63,57,0.08), 0 2px 6px rgba(18,63,57,0.06);
+    --shadow-lg: 0 20px 50px rgba(18,63,57,0.18);
+    --radius: 14px;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(29,34,38,0.045) 1px, transparent 0);
+    background-size: 22px 22px;
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+    padding-bottom:60px;
+  }
+  h1,h2,h3,.display{font-family:'Space Grotesk',sans-serif;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+  button{font-family:'Inter',sans-serif;}
+  ::selection{background:var(--brand-soft);}
+  a{color:inherit;}
+
+  button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible{
+    outline:2px solid var(--brand);
+    outline-offset:2px;
+  }
+
+  /* ---------- HEADER ---------- */
+  .topbar{
+    background:var(--brand-deep);
+    color:#F4F2EC;
+    padding:18px 20px 0;
+  }
+  .topbar-inner{
+    max-width:1180px;
+    margin:0 auto;
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:16px;
+    flex-wrap:wrap;
+    padding-bottom:18px;
+  }
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand-mark{
+    width:44px;height:44px;border-radius:12px;
+    background:#fff;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 3px 8px rgba(0,0,0,0.28);
+    flex-shrink:0;overflow:hidden;
+  }
+  .brand-mark svg{width:23px;height:23px;color:var(--brand);}
+  .brand-mark img{width:100%;height:100%;object-fit:contain;padding:4px;}
+  .brand-text h1{font-size:20px;margin:0;font-weight:700;letter-spacing:-0.01em;color:#fff;}
+  .brand-text span{font-size:12.5px;color:#B9CFF5;display:block;margin-top:1px;}
+  .topbar-right{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+  .today-pill{
+    font-size:12.5px;color:#CBDBF7;
+    background:rgba(255,255,255,0.07);
+    border:1px solid rgba(255,255,255,0.12);
+    padding:7px 12px;border-radius:100px;
+    display:flex;align-items:center;gap:7px;
+  }
+  .btn-new{
+    background:#00C940;
+    color:#063D14;
+    border:none;
+    padding:11px 18px;
+    border-radius:10px;
+    font-weight:700;
+    font-size:14px;
+    display:flex;align-items:center;gap:8px;
+    cursor:pointer;
+    box-shadow:0 2px 0 #049436, var(--shadow-sm);
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .btn-new:hover{transform:translateY(-1px);box-shadow:0 3px 0 #049436, var(--shadow-md);}
+  .btn-new:active{transform:translateY(1px);box-shadow:0 1px 0 #049436;}
+
+  /* type tabs */
+  .tabs{
+    max-width:1180px;margin:0 auto;
+    display:flex;gap:4px;
+    overflow-x:auto;
+    padding-top:2px;
+  }
+  .tab{
+    padding:10px 16px 12px;
+    color:#B9CFC9;
+    font-size:14px;
+    font-weight:600;
+    background:none;border:none;
+    cursor:pointer;
+    border-bottom:3px solid transparent;
+    white-space:nowrap;
+    display:flex;align-items:center;gap:8px;
+    transition:color .15s ease;
+  }
+  .tab .count{
+    background:rgba(255,255,255,0.1);
+    color:#DCE9E5;
+    font-size:11.5px;
+    padding:1px 7px;
+    border-radius:100px;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .tab.active{color:#fff;border-bottom-color:#00C940;}
+  .tab.active .count{background:#00C940;color:#063D14;}
+  .tab:hover:not(.active){color:#fff;}
+
+  /* ---------- MAIN ---------- */
+  .wrap{max-width:1180px;margin:0 auto;padding:22px 20px 0;}
+
+  /* stats */
+  .stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+    margin-bottom:20px;
+  }
+  .stat-card{
+    background:var(--surface);
+    border:1px solid var(--line-soft);
+    border-radius:var(--radius);
+    padding:14px 16px;
+    box-shadow:var(--shadow-sm);
+    cursor:pointer;
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .stat-card:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,0.08);}
+  .stat-card:active{transform:translateY(0);}
+  .stat-card .num{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;line-height:1;}
+  .stat-card .lbl{font-size:12.5px;color:var(--ink-soft);margin-top:6px;font-weight:600;}
+  .stat-card.accent-pend .num{color:var(--st-analisando);}
+  .stat-card.accent-pronto{background:var(--st-pronto-soft);border-color:var(--st-pronto);}
+  .stat-card.accent-pronto .num{color:var(--st-pronto);}
+  .stat-card.accent-pronto .lbl{color:var(--st-pronto);}
+  .stat-card.accent-entregue .num{color:var(--ink-faint);}
+
+  /* filters */
+  .filters{
+    display:flex;gap:10px;flex-wrap:wrap;
+    align-items:center;
+    margin-bottom:18px;
+    background:var(--surface);
+    border:1px solid var(--line-soft);
+    padding:12px;
+    border-radius:var(--radius);
+    box-shadow:var(--shadow-sm);
+  }
+  .search-box{
+    flex:1 1 220px;
+    position:relative;
+    min-width:180px;
+  }
+  .search-box input{
+    width:100%;
+    padding:10px 12px 10px 36px;
+    border-radius:9px;
+    border:1px solid var(--line);
+    background:var(--bg);
+    font-size:14px;
+    color:var(--ink);
+  }
+  .search-box svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--ink-faint);}
+  select.filter-select, input.filter-date{
+    padding:10px 30px 10px 12px;
+    border-radius:9px;
+    border:1px solid var(--line);
+    background:var(--bg);
+    font-size:13.5px;
+    color:var(--ink);
+    cursor:pointer;
+    font-family:'Inter',sans-serif;
+  }
+  select.filter-select{
+    appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23666F68'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;
+    background-position:right 12px center;
+  }
+  .clear-btn{
+    background:none;border:none;color:var(--brand);font-size:13px;font-weight:600;
+    cursor:pointer;padding:8px 6px;white-space:nowrap;
+  }
+  .clear-btn:hover{text-decoration:underline;}
+
+  /* empty state */
+  .empty{
+    text-align:center;
+    padding:70px 20px;
+    color:var(--ink-soft);
+  }
+  .empty svg{width:52px;height:52px;color:var(--ink-faint);margin-bottom:14px;}
+  .empty h3{margin:0 0 6px;font-size:17px;color:var(--ink);}
+  .empty p{margin:0;font-size:14px;}
+
+  /* ---------- CARDS GRID ---------- */
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:14px;
+    margin-bottom:10px;
+  }
+
+  .ticket{
+    background:var(--surface);
+    border:1px solid var(--line-soft);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow-sm);
+    position:relative;
+    overflow:hidden;
+    transition:box-shadow .15s ease, transform .15s ease;
+    display:flex;
+    flex-direction:column;
+  }
+  .ticket:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);}
+  .ticket-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:12px 14px 10px;
+  }
+  .os-num{
+    display:flex;align-items:center;gap:8px;
+  }
+  .punch{
+    width:11px;height:11px;border-radius:50%;
+    background:var(--bg);
+    border:1.5px solid var(--line);
+    box-shadow:inset 0 1px 2px rgba(0,0,0,0.08);
+  }
+  .os-num .label{font-size:10.5px;color:var(--ink-faint);font-weight:700;letter-spacing:.06em;text-transform:uppercase;}
+  .os-num .num{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:15px;color:var(--brand-deep);}
+  .type-chip{
+    font-size:10.5px;font-weight:700;letter-spacing:.03em;
+    padding:4px 9px;border-radius:100px;
+    display:flex;align-items:center;gap:5px;
+    white-space:nowrap;
+  }
+  .type-chip.cel{background:var(--cel-soft);color:var(--cel);}
+  .type-chip.info{background:var(--info-soft);color:var(--info);}
+
+  .perforation{
+    border-top:1.5px dashed var(--line);
+    margin:0 14px;
+  }
+
+  .ticket-body{padding:12px 14px 6px;flex:1;}
+  .client-row{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px;}
+  .client-name{font-family:'Space Grotesk',sans-serif;font-size:16.5px;font-weight:700;color:var(--ink);}
+  .client-contact{font-size:12px;color:var(--ink-soft);margin-top:2px;font-family:'JetBrains Mono',monospace;}
+
+  .status-badge{
+    font-size:11px;font-weight:700;
+    padding:5px 10px;border-radius:100px;
+    white-space:nowrap;
+    display:inline-flex;align-items:center;gap:5px;
+  }
+  .status-badge .dot{width:6px;height:6px;border-radius:50%;}
+  .status-recebido{background:var(--st-recebido-soft);color:var(--st-recebido);}
+  .status-recebido .dot{background:var(--st-recebido);}
+  .status-analisando{background:var(--st-analisando-soft);color:var(--st-analisando);}
+  .status-analisando .dot{background:var(--st-analisando);}
+  .status-andamento{background:var(--st-andamento-soft);color:var(--st-andamento);}
+  .status-andamento .dot{background:var(--st-andamento);}
+  .status-aguardando{background:var(--st-aguardando-soft);color:var(--st-aguardando);}
+  .status-aguardando .dot{background:var(--st-aguardando);}
+  .status-pronto{background:var(--st-pronto-soft);color:var(--st-pronto);}
+  .status-pronto .dot{background:var(--st-pronto);}
+  .status-entregue{background:var(--st-entregue-soft);color:var(--st-entregue);}
+  .status-entregue .dot{background:var(--st-entregue);}
+
+  .info-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:7px 12px;
+    margin:10px 0 4px;
+  }
+  .info-item .k{font-size:10px;color:var(--ink-faint);font-weight:700;text-transform:uppercase;letter-spacing:.04em;}
+  .info-item .v{font-size:13px;color:var(--ink);margin-top:2px;font-weight:500;}
+  .info-item.full{grid-column:1/-1;}
+  .valor-tag{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--brand-deep);}
+
+  .ticket-footer{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:10px 14px 12px;
+    margin-top:auto;
+  }
+  .tech-tag{
+    font-size:12px;color:var(--ink-soft);
+    display:flex;align-items:center;gap:6px;
+  }
+  .tech-avatar{
+    width:20px;height:20px;border-radius:50%;
+    background:var(--brand-soft);color:var(--brand-deep);
+    font-size:10px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .ticket-actions{display:flex;gap:4px;}
+  .icon-btn{
+    width:30px;height:30px;
+    border:1px solid var(--line);
+    background:var(--surface);
+    border-radius:8px;
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;
+    color:var(--ink-soft);
+    transition:all .12s ease;
+  }
+  .icon-btn svg{width:15px;height:15px;}
+  .icon-btn:hover{background:var(--bg);color:var(--ink);}
+  .icon-btn.danger:hover{background:#FBE7E2;color:#B5432A;border-color:#F1C4B6;}
+
+  .entregue-flag{
+    position:absolute;top:0;right:0;
+    background:var(--st-entregue);
+    color:#fff;font-size:9.5px;font-weight:700;
+    padding:3px 22px 3px 10px;
+    transform:rotate(0deg);
+    letter-spacing:.05em;
+    border-bottom-left-radius:8px;
+  }
+
+  /* ---------- MODAL ---------- */
+  .overlay{
+    position:fixed;inset:0;
+    background:rgba(18,26,24,0.5);
+    backdrop-filter:blur(2px);
+    display:none;
+    align-items:flex-start;justify-content:center;
+    padding:26px 16px;
+    overflow-y:auto;
+    z-index:100;
+  }
+  .overlay.show{display:flex;}
+  .modal{
+    background:var(--surface);
+    border-radius:18px;
+    width:100%;max-width:640px;
+    box-shadow:var(--shadow-lg);
+    animation:pop .16s ease;
+  }
+  @keyframes pop{from{opacity:0;transform:translateY(8px) scale(.98);}to{opacity:1;transform:translateY(0) scale(1);}}
+  .modal-head{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 22px;
+    border-bottom:1px solid var(--line-soft);
+  }
+  .modal-head h2{margin:0;font-size:18px;font-weight:700;}
+  .modal-head .sub{font-size:12.5px;color:var(--ink-soft);margin-top:2px;font-weight:500;}
+  .close-x{
+    width:32px;height:32px;border-radius:8px;border:none;background:var(--bg);
+    display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink-soft);
+  }
+  .close-x:hover{background:var(--line-soft);color:var(--ink);}
+  .modal-body{padding:20px 22px;max-height:65vh;overflow-y:auto;}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .field{display:flex;flex-direction:column;gap:6px;}
+  .field.full{grid-column:1/-1;}
+  .field label{font-size:12.5px;font-weight:700;color:var(--ink-soft);}
+  .field label .req{color:#C1512F;}
+  .field input, .field select, .field textarea{
+    padding:10px 12px;
+    border-radius:9px;
+    border:1px solid var(--line);
+    background:var(--bg);
+    font-size:14px;
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+  }
+  .field textarea{resize:vertical;min-height:56px;}
+  .seg{display:flex;gap:8px;flex-wrap:wrap;}
+  .seg-btn{
+    flex:1;min-width:110px;
+    padding:9px 10px;
+    border-radius:9px;
+    border:1.5px solid var(--line);
+    background:var(--bg);
+    font-size:13px;font-weight:600;color:var(--ink-soft);
+    cursor:pointer;text-align:center;
+    transition:all .12s ease;
+  }
+  .seg-btn.active-cel{border-color:var(--cel);background:var(--cel-soft);color:var(--cel);}
+  .seg-btn.active-info{border-color:var(--info);background:var(--info-soft);color:var(--info);}
+
+  .modal-foot{
+    display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;
+    padding:16px 22px 20px;
+    border-top:1px solid var(--line-soft);
+  }
+  .btn{
+    padding:10px 18px;border-radius:9px;font-size:14px;font-weight:700;
+    cursor:pointer;border:none;
+  }
+  .btn-ghost{background:var(--bg);color:var(--ink-soft);}
+  .btn-ghost:hover{background:var(--line-soft);}
+  .btn-primary{background:var(--brand);color:#fff;box-shadow:0 2px 0 var(--brand-deep);}
+  .btn-primary:hover{background:#0038A8;}
+  .btn-primary:active{transform:translateY(1px);box-shadow:none;}
+
+  /* confirm modal */
+  .confirm-modal{max-width:380px;text-align:center;padding:26px 24px 22px;}
+  .confirm-modal .icon-wrap{
+    width:48px;height:48px;border-radius:50%;background:#FBE7E2;color:#B5432A;
+    display:flex;align-items:center;justify-content:center;margin:0 auto 14px;
+  }
+  .confirm-modal h3{margin:0 0 6px;font-size:16.5px;}
+  .confirm-modal p{margin:0 0 20px;font-size:13.5px;color:var(--ink-soft);}
+  .confirm-actions{display:flex;gap:10px;}
+  .confirm-actions .btn{flex:1;}
+  .btn-danger{background:#C1512F;color:#fff;box-shadow:0 2px 0 #8f3a20;}
+  .btn-danger:hover{background:#A8451F;}
+  .confirm-modal .icon-wrap.success{background:var(--st-pronto-soft);color:var(--st-pronto);}
+  .btn-success{background:var(--st-pronto);color:#fff;box-shadow:0 2px 0 #077a2c;}
+  .btn-success:hover{background:#089438;}
+
+  .toast{
+    position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(20px);
+    background:var(--brand-deep);color:#fff;
+    padding:12px 20px;border-radius:10px;
+    font-size:13.5px;font-weight:600;
+    box-shadow:var(--shadow-lg);
+    opacity:0;pointer-events:none;
+    transition:all .25s ease;
+    z-index:200;
+    display:flex;align-items:center;gap:8px;
+    max-width:min(92vw,480px);
+    text-align:center;
+    white-space:normal;
+    line-height:1.4;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  .loading-row{text-align:center;padding:50px;color:var(--ink-soft);font-size:14px;}
+
+  /* ---------- LAYOUT: CONTEÚDO PRINCIPAL + WIDGET LATERAL ---------- */
+  .content-grid{
+    display:grid;
+    grid-template-columns:1fr 300px;
+    gap:20px;
+    align-items:start;
+  }
+  .main-col{min-width:0;}
+  .side-col{position:sticky;top:16px;}
+
+  .pronto-widget{
+    background:var(--surface);
+    border:1px solid var(--st-pronto);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow-sm);
+    overflow:hidden;
+  }
+  .pronto-widget-head{
+    background:var(--st-pronto-soft);
+    color:#0A6E30;
+    padding:14px 16px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-weight:700;
+    font-size:14px;
+    border-bottom:1px solid var(--st-pronto);
+  }
+  .pronto-widget-head .count-pill{
+    margin-left:auto;
+    background:var(--st-pronto);
+    color:#fff;
+    font-size:12px;
+    font-family:'JetBrains Mono',monospace;
+    padding:2px 8px;
+    border-radius:100px;
+  }
+  .pronto-widget-list{
+    display:flex;flex-direction:column;
+    max-height:420px;
+    overflow-y:auto;
+  }
+  .pronto-widget-empty{
+    padding:22px 16px;
+    text-align:center;
+    color:var(--ink-faint);
+    font-size:13px;
+  }
+  .pronto-widget-item{
+    padding:11px 14px;
+    border-bottom:1px solid var(--line-soft);
+    cursor:pointer;
+    transition:background .12s ease;
+  }
+  .pronto-widget-item:last-child{border-bottom:none;}
+  .pronto-widget-item:hover{background:var(--bg-soft);}
+  .pronto-widget-item .pw-name{
+    font-weight:700;font-size:13.5px;color:var(--ink);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .pronto-widget-item .pw-device{
+    font-size:12px;color:var(--ink-soft);margin-top:1px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .pronto-widget-item .pw-actions{
+    display:flex;align-items:center;justify-content:space-between;
+    margin-top:7px;gap:8px;
+  }
+  .pronto-widget-item .pw-osnum{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;color:var(--ink-faint);
+  }
+  .pw-whatsapp-btn{
+    background:#25D366;color:#06341C;border:none;
+    font-size:11.5px;font-weight:700;
+    padding:5px 9px;border-radius:7px;
+    cursor:pointer;display:flex;align-items:center;gap:4px;
+    white-space:nowrap;
+  }
+  .pw-whatsapp-btn:hover{background:#1EBE5B;}
+
+  @media (max-width:900px){
+    .content-grid{grid-template-columns:1fr;}
+    .side-col{position:static;order:-1;}
+    .pronto-widget-list{max-height:260px;}
+  }
+
+  @media (max-width:640px){
+    .stats{grid-template-columns:1fr 1fr;}
+    .form-grid{grid-template-columns:1fr;}
+    .brand-text h1{font-size:17px;}
+    .grid{grid-template-columns:1fr;}
+    .modal{border-radius:16px 16px 0 0;position:absolute;bottom:0;max-width:100%;}
+    .overlay{align-items:flex-end;padding:0;}
+    .modal-body{max-height:70vh;}
+  }
+  @media (max-width:420px){
+    .photo-grid{grid-template-columns:repeat(2,1fr);}
+  }
+
+  /* ---------- THUMBNAIL NA LISTA ---------- */
+  .ticket{cursor:pointer;}
+  .ticket-footer, .ticket-footer *{cursor:default;}
+  .client-row-main{display:flex;gap:10px;align-items:flex-start;min-width:0;}
+  .ticket-thumb{
+    width:44px;height:44px;border-radius:9px;flex-shrink:0;
+    object-fit:cover;border:1px solid var(--line-soft);
+    background:var(--bg-soft);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--ink-faint);font-size:17px;
+  }
+
+  /* ---------- BOTÃO CONFIGURAÇÕES ---------- */
+  .btn-icon-topbar{
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.14);
+    color:#F4F2EC;
+    width:42px;height:42px;border-radius:10px;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;transition:background .12s ease;
+  }
+  .btn-icon-topbar:hover{background:rgba(255,255,255,0.16);}
+  .btn-icon-topbar svg{width:19px;height:19px;}
+
+  /* ---------- UPLOAD DE FOTOS ---------- */
+  .photo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+  .photo-slot{
+    aspect-ratio:1;border-radius:10px;border:1.5px dashed var(--line);
+    background:var(--bg);display:flex;align-items:center;justify-content:center;
+    position:relative;overflow:hidden;cursor:pointer;color:var(--ink-faint);
+  }
+  .photo-slot input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;}
+  .photo-slot img{width:100%;height:100%;object-fit:cover;display:block;}
+  .photo-slot .rm{
+    position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;
+    background:rgba(18,26,24,0.72);color:#fff;display:flex;align-items:center;justify-content:center;
+    font-size:14px;line-height:1;border:none;cursor:pointer;z-index:2;
+  }
+  .photo-slot .plus-icon{width:22px;height:22px;}
+
+  /* ---------- SENHA DO APARELHO ---------- */
+  .senha-box{border:1px solid var(--line-soft);border-radius:12px;padding:14px;background:var(--bg);}
+  .senha-tabs{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+  .senha-tab-btn{
+    flex:1;min-width:130px;padding:8px 10px;border-radius:8px;border:1.5px solid var(--line);
+    background:var(--surface);font-size:12.5px;font-weight:700;color:var(--ink-soft);cursor:pointer;
+  }
+  .senha-tab-btn.active{border-color:var(--brand);background:var(--brand-soft);color:var(--brand-deep);}
+  .senha-box input{width:100%;}
+  .diag-btn-row{padding:2px 0 12px;display:flex;flex-direction:column;gap:8px;}
+  .btn-diag{
+    width:100%;
+    background:var(--brand);
+    color:#fff;
+    border:none;
+    padding:10px 14px;
+    border-radius:9px;
+    font-weight:700;
+    font-size:13.5px;
+    cursor:pointer;
+    box-shadow:0 2px 0 var(--brand-deep);
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .btn-diag:hover{transform:translateY(-1px);}
+  .btn-diag:active{transform:translateY(1px);box-shadow:none;}
+  .btn-diag-continue{background:var(--st-analisando);box-shadow:0 2px 0 #9c5c20;}
+  .btn-diag-view{background:var(--ink-soft);box-shadow:0 2px 0 #4b524c;}
+  .btn-entregar{background:#2E6BE0;box-shadow:0 2px 0 #1E4FAE;}
+  .btn-whatsapp{background:#25D366;color:#06341C;box-shadow:0 2px 0 #128C3E;}
+  .motivo-badge{
+    background:#FBE7E1;color:#B5432A;font-weight:700;font-size:12px;
+    padding:6px 10px;border-radius:8px;margin:0 0 10px;
+    display:inline-flex;align-items:center;gap:5px;
+  }
+  .obs-retirada-box{
+    background:var(--st-pronto-soft);color:#0A6E30;
+    border:1px solid var(--st-pronto);
+    font-size:12.5px;line-height:1.45;
+    padding:9px 11px;border-radius:9px;margin:0 0 10px;
+  }
+  .obs-retirada-box strong{display:block;font-size:11.5px;text-transform:uppercase;letter-spacing:.02em;margin-bottom:2px;}
+  .diag-motivo-row{display:flex;flex-direction:column;gap:8px;margin-top:6px;}
+  .diag-motivo-opt{
+    display:flex;align-items:flex-start;gap:9px;
+    background:var(--bg);border:1px solid var(--line);
+    padding:9px 11px;border-radius:9px;cursor:pointer;
+  }
+  .diag-motivo-opt input{margin-top:2px;width:16px;height:16px;flex-shrink:0;}
+  .diag-motivo-opt span{font-size:13px;font-weight:500;color:var(--ink);}
+  .diag-header-box{
+    background:var(--bg-soft);border:1px solid var(--line);border-radius:10px;
+    padding:12px 14px;margin-bottom:16px;font-size:13px;color:var(--ink-soft);
+  }
+  .diag-header-box b{color:var(--ink);}
+
+  .senha-check-row{
+    display:flex;align-items:flex-start;gap:9px;margin-top:12px;
+    padding-top:12px;border-top:1px dashed var(--line);
+  }
+  .senha-check-row input{margin-top:3px;width:16px;height:16px;flex-shrink:0;}
+  .senha-check-row label{font-size:12.5px;color:var(--ink-soft);line-height:1.4;font-weight:500;cursor:pointer;}
+  .senha-disabled{opacity:0.4;pointer-events:none;}
+
+  .pattern-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;}
+  .pattern-grid{position:relative;width:180px;height:180px;}
+  .pattern-grid svg{position:absolute;top:0;left:0;pointer-events:none;}
+  .pattern-dot{
+    position:absolute;width:22px;height:22px;border-radius:50%;
+    border:2.5px solid var(--ink-faint);background:var(--surface);
+    display:flex;align-items:center;justify-content:center;
+    font-size:10px;font-weight:700;color:var(--brand);cursor:pointer;
+    transform:translate(-50%,-50%);
+  }
+  .pattern-dot.active{border-color:var(--brand);background:var(--brand-soft);}
+
+  /* ---------- MODAL CONFIGURAÇÕES ---------- */
+  .cfg-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+
+  .cfg-loja-form{display:flex;flex-direction:column;gap:14px;}
+  .cfg-loja-form .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .logo-upload-row{
+    display:flex;align-items:center;gap:14px;
+    background:var(--bg-soft);border:1px dashed var(--line);
+    border-radius:12px;padding:14px;
+  }
+  .logo-preview{
+    width:76px;height:76px;border-radius:10px;
+    background:#fff;border:1px solid var(--line-soft);
+    display:flex;align-items:center;justify-content:center;
+    overflow:hidden;flex-shrink:0;color:var(--ink-faint);
+  }
+  .logo-preview img{width:100%;height:100%;object-fit:contain;padding:6px;}
+  .logo-upload-actions{display:flex;flex-direction:column;gap:6px;}
+  .logo-upload-actions .hint{font-size:12px;color:var(--ink-soft);}
+  .logo-btns{display:flex;gap:8px;}
+  .cfg-add-row{display:flex;gap:8px;margin-bottom:12px;}
+  .cfg-add-row input{flex:1;padding:10px 12px;border-radius:9px;border:1px solid var(--line);background:var(--bg);font-size:14px;}
+  .cfg-add-row select{padding:10px 10px;border-radius:9px;border:1px solid var(--line);background:var(--bg);font-size:12.5px;max-width:170px;}
+  .cfg-list{display:flex;flex-direction:column;gap:6px;max-height:280px;overflow-y:auto;}
+  .cfg-item{
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
+    padding:9px 12px;border-radius:8px;background:var(--bg);border:1px solid var(--line-soft);font-size:13.5px;
+  }
+  .cfg-item button{background:none;border:none;color:#B5432A;cursor:pointer;padding:2px;display:flex;flex-shrink:0;}
+  .cfg-empty{font-size:13px;color:var(--ink-faint);text-align:center;padding:20px;}
+  .cfg-badge{
+    font-size:10.5px;font-weight:700;color:var(--ink-faint);
+    background:rgba(0,0,0,0.05);padding:2px 8px;border-radius:20px;margin-left:8px;
+    display:inline-flex;align-items:center;gap:3px;
+  }
+
+  /* ---------- CLIENTES ---------- */
+  .cliente-list{display:flex;flex-direction:column;gap:6px;max-height:400px;overflow-y:auto;}
+  .cliente-item{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:11px 14px;border-radius:10px;background:var(--bg);border:1px solid var(--line-soft);
+    cursor:pointer;transition:background .12s ease;
+  }
+  .cliente-item:hover{background:var(--brand-soft);}
+  .cliente-item .info{min-width:0;}
+  .cliente-item .nome{font-weight:700;font-size:14px;}
+  .cliente-item .contato{font-size:12.5px;color:var(--ink-faint);margin-top:2px;}
+  .cliente-item .right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+  .cliente-item .count-badge{
+    font-size:11px;font-weight:700;color:var(--brand-deep);background:var(--brand-soft);
+    padding:3px 9px;border-radius:20px;white-space:nowrap;
+  }
+  .cliente-item .cliente-actions{display:flex;gap:4px;}
+  .cliente-item .cliente-actions button{
+    background:none;border:none;cursor:pointer;padding:5px;border-radius:6px;color:var(--ink-faint);
+    display:flex;align-items:center;
+  }
+  .cliente-item .cliente-actions button:hover{background:rgba(0,0,0,0.06);color:var(--ink);}
+  .cliente-item .cliente-actions button.danger:hover{color:#B5432A;}
+
+  .hist-os-list{display:flex;flex-direction:column;gap:8px;}
+  .hist-os-item{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:11px 14px;border-radius:10px;background:var(--bg);border:1px solid var(--line-soft);
+    cursor:pointer;transition:background .12s ease;
+  }
+  .hist-os-item:hover{background:var(--brand-soft);}
+  .hist-os-item .left{min-width:0;}
+  .hist-os-item .num{font-weight:700;font-size:13.5px;}
+  .hist-os-item .desc{font-size:12px;color:var(--ink-faint);margin-top:2px;}
+  .hist-empty{font-size:13px;color:var(--ink-faint);text-align:center;padding:24px;}
+
+  /* ---------- MODAL VISUALIZAR OS ---------- */
+  .view-section{margin-bottom:18px;}
+  .view-section:last-child{margin-bottom:0;}
+  .view-section h4{
+    font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-faint);
+    margin:0 0 10px;font-weight:700;
+  }
+  .view-photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:10px;}
+  .view-photos img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;border:1px solid var(--line-soft);cursor:zoom-in;}
+  .senha-view-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .senha-reveal-btn{background:none;border:1px solid var(--line);border-radius:7px;padding:5px 10px;font-size:12px;cursor:pointer;color:var(--brand);font-weight:600;}
+  .installments-wrap{display:none !important;}
+  .installments-wrap.show{display:flex !important;}
+
+  .photo-lightbox{
+    position:fixed;inset:0;background:rgba(10,14,13,0.9);z-index:300;
+    display:none;align-items:center;justify-content:center;padding:30px;
+  }
+  .photo-lightbox.show{display:flex;}
+  .photo-lightbox img{max-width:100%;max-height:100%;border-radius:10px;}
+  .photo-lightbox .close-x{position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.15);color:#fff;}
+
+  /* ---------- LOGIN ---------- */
+  .auth-overlay{
+    position:fixed;inset:0;z-index:400;
+    background:linear-gradient(160deg,#00308C 0%,#001A4D 100%);
+    display:flex;align-items:center;justify-content:center;padding:20px;
+  }
+  .auth-overlay.hide{display:none;}
+  .auth-card{
+    width:100%;max-width:380px;background:var(--surface);border-radius:18px;
+    padding:32px 28px;box-shadow:0 20px 60px rgba(0,0,0,0.35);
+  }
+  .auth-brand{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+  .auth-brand h1{font-size:20px;margin:0;}
+  .auth-card .sub{margin-bottom:22px;}
+  .auth-card .field{margin-bottom:14px;}
+  .auth-error{
+    color:#B5432A;font-size:12.5px;font-weight:600;margin:-4px 0 14px;min-height:0;display:none;
+  }
+  .auth-error.show{display:block;}
+</style>
+</head>
+<body>
+
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-card">
+    <div class="auth-brand">
+      <div class="brand-mark" id="authBrandMark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+      </div>
+      <h1 id="authBrandTitle">Infocell OS</h1>
+    </div>
+    <div class="sub">Entre com sua conta para acessar o sistema</div>
+    <div class="field">
+      <label>E-mail</label>
+      <input type="email" id="authEmail" placeholder="seuemail@loja.com" autocomplete="username">
+    </div>
+    <div class="field">
+      <label>Senha</label>
+      <input type="password" id="authPassword" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <div class="auth-error" id="authError"></div>
+    <button class="btn btn-primary" id="btnLogin" style="width:100%;justify-content:center;">Entrar</button>
+  </div>
+</div>
+
+<div id="appRoot" style="display:none;">
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-mark" id="topbarBrandMark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+      </div>
+      <div class="brand-text">
+        <h1>Infocell OS</h1>
+        <span id="topbarSubtitle">Controle de recebimentos &amp; ordens de serviço · Carioca Infocell</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="today-pill" id="todayPill">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M8 2v4M16 2v4M3 9h18M5 5h14a2 2 0 012 2v13a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span id="todayText">—</span>
+      </div>
+      <button class="btn-icon-topbar" id="btnLogout" title="Sair">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="btn-icon-topbar" id="btnClientes" title="Clientes">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="btn-icon-topbar" id="btnSettings" title="Configurações">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z" stroke="currentColor" stroke-width="1.8"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 008.6 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H2a2 2 0 010-4h.09A1.65 1.65 0 003.6 8.6a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H8a1.65 1.65 0 001-1.51V2a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V8c.14.36.4.66.73.85.33.19.71.27 1.09.22H21a2 2 0 010 4h-.09c-.36 0-.71.1-1 .28-.29.19-.53.46-.68.79z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="btn-new" id="btnNew">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+        Nova OS
+      </button>
+    </div>
+  </div>
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-tipo="todos">Todas as OS <span class="count" id="cntTodos">0</span></button>
+    <button class="tab" data-tipo="cel"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:2px"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg> Celulares &amp; Tablets <span class="count" id="cntCel">0</span></button>
+    <button class="tab" data-tipo="info"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:2px"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg> Informática &amp; Impressoras <span class="count" id="cntInfo">0</span></button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="content-grid">
+    <div class="main-col">
+
+      <div class="stats" id="statsRow">
+        <div class="stat-card" data-stat="total">
+          <div class="num" id="statTotal">0</div>
+          <div class="lbl">Total de OS</div>
+        </div>
+        <div class="stat-card accent-pend" data-stat="pend">
+          <div class="num" id="statPend">0</div>
+          <div class="lbl">Em análise</div>
+        </div>
+        <div class="stat-card accent-pronto" data-stat="pronto">
+          <div class="num" id="statPronto">0</div>
+          <div class="lbl">Prontas p/ retirada</div>
+        </div>
+        <div class="stat-card accent-entregue" data-stat="entregue-hoje">
+          <div class="num" id="statEntregueHoje">0</div>
+          <div class="lbl">Entregues hoje</div>
+        </div>
+      </div>
+
+      <div class="filters">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <input type="text" id="searchInput" placeholder="Buscar por cliente, contato ou modelo...">
+        </div>
+        <input type="date" class="filter-date" id="dateFilter" title="Filtrar por data de entrada">
+        <select class="filter-select" id="statusFilter">
+          <option value="">Todos os status</option>
+          <option value="recebido">Recebido</option>
+          <option value="analisando">Em Análise</option>
+          <option value="pronto">Pronto para Retirada</option>
+          <option value="entregue">Entregue</option>
+        </select>
+        <select class="filter-select" id="tecFilter">
+          <option value="">Todos os técnicos</option>
+        </select>
+        <select class="filter-select" id="entregueFilter">
+          <option value="">Entregues e pendentes</option>
+          <option value="nao">Somente pendentes</option>
+          <option value="sim">Somente entregues</option>
+        </select>
+        <button class="clear-btn" id="clearFilters">Limpar filtros</button>
+      </div>
+
+      <div id="listArea">
+        <div class="loading-row">Carregando ordens de serviço...</div>
+      </div>
+
+    </div><!-- /main-col -->
+
+    <aside class="side-col">
+      <div class="pronto-widget">
+        <div class="pronto-widget-head">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg> Prontas para retirada
+          <span class="count-pill" id="pwCount">0</span>
+        </div>
+        <div class="pronto-widget-list" id="pwList">
+          <div class="pronto-widget-empty">Nenhuma OS pronta no momento.</div>
+        </div>
+      </div>
+    </aside>
+
+  </div><!-- /content-grid -->
+
+</div>
+
+</div><!-- /appRoot -->
+
+<!-- MODAL: NOVA/EDITAR OS -->
+<div class="overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div>
+        <h2 id="modalTitle">Nova OS</h2>
+        <div class="sub" id="modalSub">Preencha os dados do equipamento recebido</div>
+      </div>
+      <button class="close-x" id="closeModal">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="field full" style="margin-bottom:14px;">
+        <label>Tipo de equipamento <span class="req">*</span></label>
+        <div class="seg">
+          <button type="button" class="seg-btn" id="segCel" data-tipo="cel"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:2px"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg> Celular / Tablet</button>
+          <button type="button" class="seg-btn" id="segInfo" data-tipo="info"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:2px"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg> Informática / Impressora</button>
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label>Cliente <span class="req">*</span></label>
+          <input type="text" id="fCliente" list="clientList" placeholder="Nome do cliente">
+          <datalist id="clientList"></datalist>
+        </div>
+        <div class="field">
+          <label>Contato</label>
+          <input type="text" id="fContato" placeholder="(00) 00000-0000">
+        </div>
+        <div class="field">
+          <label>Atendente</label>
+          <select id="fAtendente">
+            <option value="">Selecione o atendente</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Tipo de aparelho</label>
+          <select id="fTipoAparelho">
+            <option value="">Selecione</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Modelo / Equipamento</label>
+          <input type="text" id="fModelo" placeholder="Ex: A15, Note 8 Pro, PC Gamer...">
+        </div>
+        <div class="field">
+          <label>Serviço</label>
+          <input type="text" id="fServico" placeholder="Ex: Conector, Formatação...">
+        </div>
+        <div class="field">
+          <label>Valor</label>
+          <input type="text" id="fValor" placeholder="Ex: R$ 150,00 ou Orçamento">
+        </div>
+        <div class="field">
+          <label>Forma de pagamento</label>
+          <select id="fPagamento">
+            <option value="">Selecione</option>
+            <option value="Pix">Pix</option>
+            <option value="Dinheiro">Dinheiro</option>
+            <option value="Cartão de Crédito">Cartão de Crédito</option>
+            <option value="Cartão de Débito">Cartão de Débito</option>
+            <option value="Transferência">Transferência</option>
+            <option value="Boleto">Boleto</option>
+            <option value="A combinar">A combinar</option>
+          </select>
+        </div>
+        <div class="field installments-wrap" id="parcelasWrap">
+          <label>Quantidade de parcelas</label>
+          <select id="fParcelas"></select>
+        </div>
+        <div class="field">
+          <label>Técnico responsável</label>
+          <select id="fTecnico">
+            <option value="">Selecione o técnico</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Status</label>
+          <select id="fStatus">
+            <option value="recebido">Recebido</option>
+            <option value="analisando">Em Análise</option>
+            <option value="pronto">Pronto para Retirada</option>
+            <option value="entregue">Entregue</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Data de entrada</label>
+          <input type="date" id="fDataEntrada">
+        </div>
+        <div class="field">
+          <label>Horário recebido</label>
+          <input type="time" id="fHorarioR">
+        </div>
+        <div class="field">
+          <label>Data de entrega</label>
+          <input type="date" id="fDataEntrega">
+        </div>
+        <div class="field">
+          <label>Horário de entrega</label>
+          <input type="time" id="fHorarioE">
+        </div>
+        <div class="field full">
+          <label>Fotos do aparelho (até 4)</label>
+          <div class="photo-grid" id="photoGrid"></div>
+        </div>
+        <div class="field full">
+          <label>Senha do aparelho</label>
+          <div class="senha-box" id="senhaBox">
+            <div class="senha-tabs">
+              <button type="button" class="senha-tab-btn active" id="senhaTabAlfa" data-tipo="alfa"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:2px"><rect width="20" height="16" x="2" y="4" rx="2" ry="2"/><path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M8 12h.01M12 12h.01M16 12h.01M7 16h10"/></svg> Alfanumérica</button>
+              <button type="button" class="senha-tab-btn" id="senhaTabDesenho" data-tipo="desenho"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:2px"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> Desenhada</button>
+            </div>
+            <div id="senhaAlfaPanel">
+              <input type="text" id="fSenhaAlfa" placeholder="Ex: 1234, abc123...">
+            </div>
+            <div id="senhaDesenhoPanel" style="display:none;">
+              <div class="pattern-wrap">
+                <div class="pattern-grid" id="patternGrid"></div>
+                <button type="button" class="clear-btn" id="btnClearPattern">Limpar desenho</button>
+              </div>
+            </div>
+            <div class="senha-check-row">
+              <input type="checkbox" id="fSemSenha">
+              <label for="fSemSenha">Cliente não autorizou o uso de senha. Ciente de que o técnico não conseguirá realizar testes no aparelho sem a senha.</label>
+            </div>
+          </div>
+        </div>
+        <div class="field full">
+          <label>Observações</label>
+          <textarea id="fObs" placeholder="Detalhes adicionais, acessórios entregues..."></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" id="btnCancel">Cancelar</button>
+      <button class="btn btn-primary" id="btnSave">Salvar OS</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: VISUALIZAR OS -->
+<div class="overlay" id="viewOverlay">
+  <div class="modal" style="max-width:680px;">
+    <div class="modal-head">
+      <div>
+        <h2 id="viewTitle">OS Nº 0000</h2>
+        <div class="sub" id="viewSub">Detalhes completos da ordem de serviço</div>
+      </div>
+      <button class="close-x" id="closeView">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-body" id="viewBody"></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" id="btnCloseViewFoot">Fechar</button>
+      <button class="btn btn-ghost" id="btnPrintTermica"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:3px"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M16 8h-6"/><path d="M16 12h-6"/><path d="M16 16h-6"/></svg> Recibo térmico</button>
+      <button class="btn btn-ghost" id="btnPrintA4"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:3px"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg> Recibo A4</button>
+      <button class="btn btn-primary" id="btnEditFromView">Editar OS</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: DIAGNÓSTICO -->
+<div class="overlay" id="diagOverlay">
+  <div class="modal" style="max-width:560px;">
+    <div class="modal-head">
+      <div>
+        <h2 id="diagTitle">Diagnóstico — OS Nº 0000</h2>
+        <div class="sub" id="diagSub">Preencha o diagnóstico técnico</div>
+      </div>
+      <button class="close-x" id="closeDiag">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="diag-header-box" id="diagHeaderBox"></div>
+      <div class="form-grid">
+        <div class="field">
+          <label>Preço do serviço</label>
+          <input type="text" id="dValor" placeholder="Ex: R$ 150,00 ou Orçamento">
+        </div>
+        <div class="field full">
+          <label>Diagnóstico</label>
+          <textarea id="dDiagnostico" placeholder="O que foi encontrado no aparelho..."></textarea>
+        </div>
+        <div class="field full">
+          <label>Solução</label>
+          <textarea id="dSolucao" placeholder="O que foi feito / será feito para resolver..."></textarea>
+        </div>
+        <div class="field full">
+          <label>Se não houver solução ou o cliente desistir</label>
+          <div class="diag-motivo-row">
+            <label class="diag-motivo-opt"><input type="checkbox" id="dMotivoDesistiu" data-motivo="desistiu"><span>Cliente desistiu do reparo</span></label>
+            <label class="diag-motivo-opt"><input type="checkbox" id="dMotivoNaoAprovado" data-motivo="nao_aprovado"><span>Cliente não aprovou o orçamento</span></label>
+            <label class="diag-motivo-opt"><input type="checkbox" id="dMotivoCancelada" data-motivo="cancelada"><span>OS cancelada</span></label>
+          </div>
+        </div>
+        <div class="field full">
+          <label>Observação para retirada (visível no card, para o atendente avisar o cliente)</label>
+          <textarea id="dObsRetirada" placeholder="Ex: Aparelho sem reparo, pode retirar sem custo. Ex: Orçamento não aprovado pelo cliente."></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" id="btnCancelDiag">Cancelar</button>
+      <button class="btn btn-ghost" id="btnSaveDiagDraft">Salvar sem finalizar</button>
+      <button class="btn btn-primary" id="btnFinalizarOS"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:2px"><path d="M20 6 9 17l-5-5"/></svg> Finalizar OS</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: CONFIGURAÇÕES -->
+<div class="overlay" id="settingsOverlay">
+  <div class="modal" style="max-width:520px;">
+    <div class="modal-head">
+      <div>
+        <h2>Configurações</h2>
+        <div class="sub">Cadastre técnicos, tipos de aparelho e atendentes</div>
+      </div>
+      <button class="close-x" id="closeSettings">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="cfg-tabs" id="cfgTabs">
+        <button type="button" class="seg-btn active-cel" id="cfgTabTec" data-cfg="tecnicos">Técnicos</button>
+        <button type="button" class="seg-btn" id="cfgTabTipo" data-cfg="tipos">Tipos de Aparelho</button>
+        <button type="button" class="seg-btn" id="cfgTabAtend" data-cfg="atendentes">Atendentes</button>
+        <button type="button" class="seg-btn" id="cfgTabLoja" data-cfg="loja">Dados da Loja</button>
+      </div>
+      <div class="cfg-add-row" id="cfgAddRow">
+        <input type="text" id="cfgNewItem" placeholder="Nome...">
+        <select id="cfgNewCategoria" style="display:none;">
+          <option value="cel">Celular/Tablet</option>
+          <option value="info">Informática/Impressora</option>
+        </select>
+        <button class="btn btn-primary" id="cfgAddBtn">Adicionar</button>
+      </div>
+      <div class="cfg-list" id="cfgList"></div>
+
+      <div class="cfg-loja-form" id="cfgLojaForm" style="display:none;">
+        <div class="logo-upload-row">
+          <div class="logo-preview" id="lojaLogoPreview">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 00-2 2v9a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+          </div>
+          <div class="logo-upload-actions">
+            <div class="hint">Logo da loja — aparece no topo do sistema e nos recibos (térmico e A4). Recomendado: imagem quadrada, fundo transparente (PNG).</div>
+            <div class="logo-btns">
+              <button type="button" class="btn btn-ghost" id="btnLojaLogoPick">Escolher imagem</button>
+              <button type="button" class="btn btn-ghost" id="btnLojaLogoRemove" style="display:none;">Remover</button>
+            </div>
+            <input type="file" id="lojaLogoInput" accept="image/*" style="display:none;">
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label>Nome da loja</label>
+            <input type="text" id="lojaNome" placeholder="Ex: Carioca Infocell">
+          </div>
+          <div class="field">
+            <label>CNPJ</label>
+            <input type="text" id="lojaCnpj" placeholder="00.000.000/0000-00">
+          </div>
+          <div class="field">
+            <label>Telefone</label>
+            <input type="text" id="lojaTelefone" placeholder="(00) 00000-0000">
+          </div>
+          <div class="field">
+            <label>Endereço</label>
+            <input type="text" id="lojaEndereco" placeholder="Rua, número, bairro — cidade/UF">
+          </div>
+        </div>
+        <button class="btn btn-primary" id="btnSalvarLoja" style="align-self:flex-start;">Salvar dados da loja</button>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" id="btnCloseSettingsFoot">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: LISTA DE CLIENTES -->
+<div class="overlay" id="clientesOverlay">
+  <div class="modal" style="max-width:560px;">
+    <div class="modal-head">
+      <div>
+        <h2>Clientes</h2>
+        <div class="sub">Clique num cliente para ver o histórico de manutenções</div>
+      </div>
+      <button class="close-x" id="closeClientes">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <input type="text" id="clientesSearch" class="cfg-add-row-input-full" placeholder="Buscar cliente..." style="width:100%;padding:10px 12px;border-radius:9px;border:1px solid var(--line);background:var(--bg);font-size:14px;margin-bottom:12px;">
+      <div class="cliente-list" id="clientesList"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" id="btnCloseClientesFoot">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: HISTÓRICO DO CLIENTE -->
+<div class="overlay" id="clienteHistOverlay">
+  <div class="modal" style="max-width:600px;">
+    <div class="modal-head">
+      <div>
+        <h2 id="clienteHistNome">Cliente</h2>
+        <div class="sub" id="clienteHistContato">—</div>
+      </div>
+      <button class="close-x" id="closeClienteHist">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-body" id="clienteHistBody"></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" id="btnDeleteClienteFromHist" style="color:#B5432A;">Excluir cliente</button>
+      <button class="btn btn-ghost" id="btnEditClienteFromHist">Editar dados</button>
+      <button class="btn btn-primary" id="btnCloseClienteHistFoot">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: EDITAR CLIENTE -->
+<div class="overlay" id="clienteEditOverlay">
+  <div class="modal" style="max-width:420px;">
+    <div class="modal-head">
+      <div>
+        <h2>Editar cliente</h2>
+        <div class="sub">Atualiza também as OS já vinculadas a ele</div>
+      </div>
+      <button class="close-x" id="closeClienteEdit">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>Nome</label>
+        <input type="text" id="editClienteNome" placeholder="Nome do cliente">
+      </div>
+      <div class="field">
+        <label>Contato</label>
+        <input type="text" id="editClienteContato" placeholder="(00) 00000-0000">
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" id="btnCancelClienteEdit">Cancelar</button>
+      <button class="btn btn-primary" id="btnSaveClienteEdit">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: CONFIRMAR EXCLUSÃO DE CLIENTE -->
+<div class="overlay" id="confirmClienteOverlay">
+  <div class="modal" style="max-width:400px;">
+    <div class="modal-head">
+      <div>
+        <h2>Excluir cliente?</h2>
+        <div class="sub" id="confirmClienteText">Essa ação não pode ser desfeita.</div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" id="btnCancelDeleteCliente">Cancelar</button>
+      <button class="btn btn-danger" id="btnConfirmDeleteCliente">Excluir</button>
+    </div>
+  </div>
+</div>
+
+<div class="photo-lightbox" id="photoLightbox">
+  <button class="close-x" id="closeLightbox">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+  <img id="lightboxImg" src="" alt="Foto do aparelho">
+</div>
+
+<!-- MODAL: CONFIRMAR EXCLUSÃO -->
+
+<div class="overlay" id="confirmOverlay">
+  <div class="modal confirm-modal">
+    <div class="icon-wrap">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0l-1 14a2 2 0 01-2 2H7a2 2 0 01-2-2L4 6h16z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <h3>Excluir esta OS?</h3>
+    <p id="confirmText">Essa ação não pode ser desfeita.</p>
+    <div class="confirm-actions">
+      <button class="btn btn-ghost" id="btnCancelDelete">Cancelar</button>
+      <button class="btn btn-danger" id="btnConfirmDelete">Excluir</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: CONFIRMAR FINALIZAÇÃO DA OS -->
+
+<div class="overlay" id="confirmFinalizeOverlay">
+  <div class="modal confirm-modal">
+    <div class="icon-wrap success">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <h3>Finalizar esta OS?</h3>
+    <p id="confirmFinalizeText">O aparelho será marcado como pronto para retirada.</p>
+    <div class="confirm-actions">
+      <button class="btn btn-ghost" id="btnCancelFinalize">Cancelar</button>
+      <button class="btn btn-success" id="btnConfirmFinalize"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:2px"><path d="M20 6 9 17l-5-5"/></svg> Finalizar OS</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+(function(){
+  // ============================================================
+  // CONFIGURAÇÃO DO SUPABASE — troque pelos dados do seu projeto
+  // Painel do Supabase → Project Settings → API
+  // ============================================================
+  const SUPABASE_URL = 'https://enzohemdifpmtevfhgve.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_82Wfi8-Z6H_c4BSKAiQvhA_Wiac1-pr';
+  const FOTOS_BUCKET = 'fotos-os';
+
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const TABLE_MAP = { tecnicos:'tecnicos', atendentes:'atendentes', tipos:'tipos_aparelho' };
+
+  let records = [];
+  let counter = 0;
+  let currentTipoTab = 'todos';
+  let editingId = null;
+  let deletingId = null;
+  let config = { tecnicos: [], tipos: [], atendentes: [] };
+  let lojaInfo = { nome:'', cnpj:'', telefone:'', endereco:'', logoDataUrl:'' };
+  const DEFAULT_BRAND_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>';
+  let currentCfgTab = 'tecnicos';
+  let senhaTipoAtual = 'alfa';
+  let patternSequence = [];
+  let currentFotos = [null,null,null,null];
+
+  const STATUS_LABELS = {
+    recebido:'Recebido', analisando:'Em Análise', pronto:'Pronto para Retirada', entregue:'Entregue'
+  };
+
+  const $ = (id) => document.getElementById(id);
+
+  // ---------- ÍCONES (SVG modernos, substituem os emojis coloridos) ----------
+  const ICON_PATHS = {
+    phone: '<rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/>',
+    monitor: '<rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/>',
+    checkCircle: '<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>',
+    xCircle: '<circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/>',
+    alertTriangle: '<path d="m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
+    keyboard: '<rect width="20" height="16" x="2" y="4" rx="2" ry="2"/><path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M8 12h.01M12 12h.01M16 12h.01M7 16h10"/>',
+    penLine: '<path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>',
+    receipt: '<path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M16 8h-6"/><path d="M16 12h-6"/><path d="M16 16h-6"/>',
+    printer: '<path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect width="12" height="8" x="6" y="14"/>',
+    search: '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+    wrench: '<path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>',
+    clipboardList: '<rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/>',
+    messageCircle: '<path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/>',
+    packageCheck: '<path d="M16.5 9.4 7.55 4.24"/><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16Z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/>',
+    camera: '<path d="M14.5 4h-5L7 7H4a2 2 0 00-2 2v9a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/>',
+    check: '<path d="M20 6 9 17l-5-5"/>',
+    trash: '<path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0l-1 14a2 2 0 01-2 2H7a2 2 0 01-2-2L4 6h16z"/>',
+  };
+  function icon(name, size=16){
+    const p = ICON_PATHS[name] || '';
+    return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:-3px">${p}</svg>`;
+  }
+  // Mapeia o emoji "antigo" que abria cada toast para um ícone + cor modernos
+  const TOAST_ICON_MAP = [
+    { re: /^⚠️\s*/, name:'alertTriangle', cls:'toast-warn' },
+    { re: /^⛔\s*/, name:'xCircle', cls:'toast-warn' },
+    { re: /^🗑️\s*/, name:'trash', cls:'toast-warn' },
+    { re: /^🔍\s*/, name:'search', cls:'toast-info' },
+    { re: /^📦\s*/, name:'packageCheck', cls:'toast-info' },
+    { re: /^✅\s*/, name:'checkCircle', cls:'toast-ok' },
+    { re: /^✓\s*/, name:'checkCircle', cls:'toast-ok' },
+  ];
+
+  function todayISO(){
+    const d = new Date();
+    return d.toISOString().slice(0,10);
+  }
+  function formatDatePT(iso){
+    if(!iso) return '—';
+    const [y,m,d] = iso.split('-');
+    return `${d}/${m}/${y}`;
+  }
+  function showToast(msg){
+    const t = $('toast');
+    let text = msg;
+    let iconHtml = icon('checkCircle', 17);
+    for(const m of TOAST_ICON_MAP){
+      if(m.re.test(msg)){
+        text = msg.replace(m.re, '');
+        iconHtml = icon(m.name, 17);
+        break;
+      }
+    }
+    t.innerHTML = `${iconHtml}<span>${escapeHtml(text)}</span>`;
+    t.classList.add('show');
+    clearTimeout(t._timer);
+    const duration = Math.min(7000, Math.max(2400, msg.length * 60));
+    t._timer = setTimeout(()=> t.classList.remove('show'), duration);
+  }
+
+  // ---------- ID ----------
+  function makeId(){
+    if(window.crypto && crypto.randomUUID){
+      try{ return crypto.randomUUID(); }catch(e){}
+    }
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c=>{
+      const r = Math.random()*16|0, v = c==='x' ? r : (r&0x3|0x8);
+      return v.toString(16);
+    });
+  }
+
+  // ---------- MAPEAMENTO DB <-> REGISTRO ----------
+  async function mapRowToRecord(row){
+    let senhaValor = row.senha_valor;
+    if(row.senha_tipo === 'desenho' && senhaValor){
+      try{ senhaValor = JSON.parse(senhaValor); }catch(e){ senhaValor = []; }
+    }
+    const fotoPaths = row.fotos || [];
+    const fotos = [];
+    for(const path of fotoPaths){
+      try{
+        const { data, error } = await supabase.storage.from(FOTOS_BUCKET).createSignedUrl(path, 3600);
+        if(!error && data) fotos.push(data.signedUrl);
+      }catch(e){ /* ignora foto que falhar */ }
+    }
+    return {
+      id: row.id,
+      osNum: row.os_num,
+      tipo: row.tipo,
+      cliente: row.cliente,
+      contato: row.contato,
+      clienteId: row.cliente_id,
+      atendente: row.atendente,
+      tipoAparelho: row.tipo_aparelho,
+      modelo: row.modelo,
+      servico: row.servico,
+      valor: row.valor,
+      pagamento: row.pagamento,
+      parcelas: row.parcelas,
+      tecnico: row.tecnico,
+      status: row.status,
+      dataEntrada: row.data_entrada,
+      horarioR: row.horario_r ? String(row.horario_r).slice(0,5) : '',
+      dataEntrega: row.data_entrega,
+      horarioE: row.horario_e ? String(row.horario_e).slice(0,5) : '',
+      obs: row.obs,
+      diagnostico: row.diagnostico || '',
+      solucao: row.solucao || '',
+      motivoCancelamento: row.motivo_cancelamento || '',
+      obsRetirada: row.obs_retirada || '',
+      senha: { tipo: row.senha_tipo, valor: senhaValor, semSenha: !!row.sem_senha_autorizada },
+      fotos,
+      _fotoPaths: fotoPaths,
+    };
+  }
+
+  // ---------- BANCO DE DADOS: OS ----------
+  async function loadData(){
+    try{
+      const { data, error } = await supabase.from('ordens_servico').select('*').order('os_num', { ascending:false });
+      if(error) throw error;
+      records = await Promise.all((data||[]).map(mapRowToRecord));
+    }catch(e){
+      console.error(e);
+      showToast('⚠️ Erro ao carregar OS do banco de dados.');
+      records = [];
+    }
+    try{
+      const { data, error } = await supabase.from('contador').select('valor').eq('id',1).single();
+      if(error) throw error;
+      counter = data?.valor || 0;
+    }catch(e){
+      counter = records.reduce((m,r)=>Math.max(m, r.osNum||0), 0);
+    }
+    render();
+  }
+  async function persistCounter(){
+    try{ await supabase.from('contador').update({ valor: counter }).eq('id', 1); }catch(e){}
+  }
+
+  // ---------- BANCO DE DADOS: FOTOS (Supabase Storage) ----------
+  async function persistFotos(recordId){
+    const paths = [];
+    for(let i=0;i<4;i++){
+      const foto = currentFotos[i];
+      if(!foto) continue;
+      try{
+        const blob = await (await fetch(foto)).blob();
+        const path = `${recordId}/foto-${i+1}.jpg`;
+        const { error } = await supabase.storage.from(FOTOS_BUCKET).upload(path, blob, { contentType:'image/jpeg', upsert:true });
+        if(error) throw error;
+        paths.push(path);
+      }catch(e){
+        console.error(e);
+        showToast('⚠️ Erro ao enviar uma das fotos.');
+      }
+    }
+    return paths;
+  }
+
+  // ---------- BANCO DE DADOS: CLIENTES ----------
+  async function findOrCreateClienteId(nome, contato){
+    const nomeNorm = (nome || '').trim();
+    if(!nomeNorm) return null;
+    try{
+      const { data: existing, error: selErr } = await supabase
+        .from('clientes')
+        .select('id, contato')
+        .ilike('nome', nomeNorm)
+        .limit(1)
+        .maybeSingle();
+      if(selErr) throw selErr;
+
+      if(existing){
+        if(contato && contato !== existing.contato){
+          await supabase.from('clientes').update({ contato }).eq('id', existing.id);
+        }
+        return existing.id;
+      }
+
+      const { data: created, error: insErr } = await supabase
+        .from('clientes')
+        .insert({ nome: nomeNorm, contato: contato || null })
+        .select('id')
+        .single();
+      if(insErr) throw insErr;
+      return created.id;
+    }catch(e){
+      console.error(e);
+      return null;
+    }
+  }
+
+  let clientes = [];
+  async function loadClientes(){
+    try{
+      const { data, error } = await supabase
+        .from('clientes')
+        .select('id, nome, contato, ordens_servico(count)')
+        .order('nome');
+      if(error) throw error;
+      clientes = (data||[]).map(c=>({
+        id: c.id,
+        nome: c.nome,
+        contato: c.contato,
+        totalOS: c.ordens_servico?.[0]?.count || 0,
+      }));
+    }catch(e){
+      console.error(e);
+      showToast('⚠️ Erro ao carregar clientes.');
+      clientes = [];
+    }
+    renderClientesList();
+  }
+
+  function renderClientesList(){
+    const q = $('clientesSearch').value.trim().toLowerCase();
+    const list = clientes.filter(c => !q || c.nome.toLowerCase().includes(q) || (c.contato||'').toLowerCase().includes(q));
+    const el = $('clientesList');
+    if(list.length === 0){
+      el.innerHTML = `<div class="cfg-empty">${clientes.length===0 ? 'Nenhum cliente cadastrado ainda.' : 'Nenhum cliente encontrado.'}</div>`;
+      return;
+    }
+    el.innerHTML = list.map(c=>`
+      <div class="cliente-item" data-id="${c.id}">
+        <div class="info">
+          <div class="nome">${escapeHtml(toTitleCase(c.nome))}</div>
+          <div class="contato">${escapeHtml(c.contato) || 'sem contato'}</div>
+        </div>
+        <div class="right">
+          <span class="count-badge">${c.totalOS} OS</span>
+          <div class="cliente-actions">
+            <button data-act="edit" data-id="${c.id}" title="Editar">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4L16.5 3.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="danger" data-act="delete" data-id="${c.id}" title="Excluir">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0l-1 14a2 2 0 01-2 2H7a2 2 0 01-2-2L4 6h16z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>`).join('');
+  }
+
+  const clientesOverlay = $('clientesOverlay');
+  function closeClientesFn(){ clientesOverlay.classList.remove('show'); }
+  $('btnClientes').addEventListener('click', ()=>{
+    clientesOverlay.classList.add('show');
+    $('clientesSearch').value = '';
+    loadClientes();
+  });
+  $('closeClientes').addEventListener('click', closeClientesFn);
+  $('btnCloseClientesFoot').addEventListener('click', closeClientesFn);
+  clientesOverlay.addEventListener('click', (e)=>{ if(e.target === clientesOverlay) closeClientesFn(); });
+  $('clientesSearch').addEventListener('input', renderClientesList);
+
+  $('clientesList').addEventListener('click', (e)=>{
+    const actBtn = e.target.closest('button[data-act]');
+    const id = actBtn ? actBtn.dataset.id : e.target.closest('.cliente-item')?.dataset.id;
+    const cliente = clientes.find(c=>c.id === id);
+    if(!cliente) return;
+
+    if(actBtn){
+      if(actBtn.dataset.act === 'edit'){
+        openClienteEdit(cliente);
+      } else if(actBtn.dataset.act === 'delete'){
+        openConfirmDeleteCliente(cliente);
+      }
+      return;
+    }
+    openClienteHistorico(cliente);
+  });
+
+  // ---------- HISTÓRICO DO CLIENTE ----------
+  const clienteHistOverlay = $('clienteHistOverlay');
+  let clienteHistAtual = null;
+
+  function closeClienteHistFn(){ clienteHistOverlay.classList.remove('show'); }
+  $('closeClienteHist').addEventListener('click', closeClienteHistFn);
+  $('btnCloseClienteHistFoot').addEventListener('click', closeClienteHistFn);
+  clienteHistOverlay.addEventListener('click', (e)=>{ if(e.target === clienteHistOverlay) closeClienteHistFn(); });
+
+  function openClienteHistorico(cliente){
+    clienteHistAtual = cliente;
+    $('clienteHistNome').textContent = toTitleCase(cliente.nome);
+    $('clienteHistContato').textContent = cliente.contato || 'sem contato';
+
+    const osDoCliente = records.filter(r => r.clienteId === cliente.id).sort((a,b)=> b.osNum - a.osNum);
+
+    if(osDoCliente.length === 0){
+      $('clienteHistBody').innerHTML = `<div class="hist-empty">Nenhuma OS registrada para este cliente ainda.</div>`;
+    } else {
+      $('clienteHistBody').innerHTML = `<div class="hist-os-list">${osDoCliente.map(r=>`
+        <div class="hist-os-item" data-id="${r.id}">
+          <div class="left">
+            <div class="num">OS Nº ${String(r.osNum).padStart(4,'0')} — ${escapeHtml(r.modelo)||'sem modelo'}</div>
+            <div class="desc">${escapeHtml(r.servico)||'sem serviço informado'} · ${formatDatePT(r.dataEntrada)}</div>
+          </div>
+          <span class="status-badge status-${r.status}"><span class="dot"></span>${STATUS_LABELS[r.status]}</span>
+        </div>`).join('')}</div>`;
+    }
+
+    clientesOverlay.classList.remove('show');
+    clienteHistOverlay.classList.add('show');
+  }
+
+  $('clienteHistBody').addEventListener('click', (e)=>{
+    const item = e.target.closest('.hist-os-item');
+    if(!item) return;
+    const record = records.find(r=>r.id === item.dataset.id);
+    if(!record) return;
+    closeClienteHistFn();
+    openViewModal(record);
+  });
+
+  $('btnEditClienteFromHist').addEventListener('click', ()=>{
+    if(clienteHistAtual) openClienteEdit(clienteHistAtual);
+  });
+  $('btnDeleteClienteFromHist').addEventListener('click', ()=>{
+    if(clienteHistAtual) openConfirmDeleteCliente(clienteHistAtual);
+  });
+
+  // ---------- EDITAR CLIENTE ----------
+  const clienteEditOverlay = $('clienteEditOverlay');
+  let editingClienteId = null;
+  function closeClienteEditFn(){ clienteEditOverlay.classList.remove('show'); }
+  function openClienteEdit(cliente){
+    editingClienteId = cliente.id;
+    $('editClienteNome').value = toTitleCase(cliente.nome);
+    $('editClienteContato').value = cliente.contato || '';
+    clienteEditOverlay.classList.add('show');
+  }
+  $('closeClienteEdit').addEventListener('click', closeClienteEditFn);
+  $('btnCancelClienteEdit').addEventListener('click', closeClienteEditFn);
+  clienteEditOverlay.addEventListener('click', (e)=>{ if(e.target === clienteEditOverlay) closeClienteEditFn(); });
+
+  $('btnSaveClienteEdit').addEventListener('click', async ()=>{
+    const novoNome = toTitleCase($('editClienteNome').value.trim());
+    const novoContato = $('editClienteContato').value.trim();
+    if(!novoNome){
+      showToast('⚠️ Informe o nome do cliente.');
+      return;
+    }
+    $('btnSaveClienteEdit').disabled = true;
+    const { error } = await supabase.from('clientes').update({ nome: novoNome, contato: novoContato || null }).eq('id', editingClienteId);
+    if(error){
+      console.error(error);
+      $('btnSaveClienteEdit').disabled = false;
+      showToast('⚠️ Erro ao salvar cliente.');
+      return;
+    }
+    // Mantém o histórico exibido consistente com o nome/contato atuais
+    await supabase.from('ordens_servico').update({ cliente: novoNome, contato: novoContato || null }).eq('cliente_id', editingClienteId);
+    $('btnSaveClienteEdit').disabled = false;
+    closeClienteEditFn();
+    showToast('✓ Cliente atualizado.');
+    await loadClientes();
+    await loadData();
+  });
+
+  // ---------- EXCLUIR CLIENTE ----------
+  const confirmClienteOverlay = $('confirmClienteOverlay');
+  let deletingClienteId = null;
+  function openConfirmDeleteCliente(cliente){
+    deletingClienteId = cliente.id;
+    $('confirmClienteText').textContent = `${toTitleCase(cliente.nome)} será excluído. As OS já registradas continuam no histórico, mas perdem o vínculo com o cadastro do cliente.`;
+    confirmClienteOverlay.classList.add('show');
+  }
+  $('btnCancelDeleteCliente').addEventListener('click', ()=>{
+    confirmClienteOverlay.classList.remove('show');
+    deletingClienteId = null;
+  });
+  confirmClienteOverlay.addEventListener('click', (e)=>{
+    if(e.target === confirmClienteOverlay){
+      confirmClienteOverlay.classList.remove('show');
+      deletingClienteId = null;
+    }
+  });
+  $('btnConfirmDeleteCliente').addEventListener('click', async ()=>{
+    if(!deletingClienteId) return;
+    const { error } = await supabase.from('clientes').delete().eq('id', deletingClienteId);
+    confirmClienteOverlay.classList.remove('show');
+    if(error){
+      console.error(error);
+      showToast('⚠️ Erro ao excluir cliente.');
+      deletingClienteId = null;
+      return;
+    }
+    showToast('🗑️ Cliente excluído.');
+    deletingClienteId = null;
+    closeClienteHistFn();
+    await loadClientes();
+    await loadData();
+  });
+
+  // ---------- BANCO DE DADOS: CONFIGURAÇÕES (técnicos, atendentes, tipos) ----------
+  async function loadConfig(){
+    try{
+      const [t, a, p] = await Promise.all([
+        supabase.from('tecnicos').select('nome').order('nome'),
+        supabase.from('atendentes').select('nome').order('nome'),
+        supabase.from('tipos_aparelho').select('nome, categoria').order('nome'),
+      ]);
+      config = {
+        tecnicos: (t.data||[]).map(x=>x.nome),
+        atendentes: (a.data||[]).map(x=>x.nome),
+        tipos: (p.data||[]).map(x=>({ nome: x.nome, categoria: x.categoria || 'cel' })),
+      };
+    }catch(e){
+      console.error(e);
+      config = { tecnicos:[], atendentes:[], tipos:[] };
+    }
+    populateConfigSelects();
+  }
+  async function loadLoja(){
+    try{
+      const { data, error } = await supabase.from('loja').select('*').eq('id', 1).maybeSingle();
+      if(!error && data){
+        lojaInfo = {
+          nome: data.nome || '',
+          cnpj: data.cnpj || '',
+          telefone: data.telefone || '',
+          endereco: data.endereco || '',
+          logoDataUrl: data.logo_data_url || '',
+        };
+      }
+    }catch(e){ console.error(e); }
+    renderBrandMark();
+    populateLojaForm();
+  }
+
+  function renderBrandMark(){
+    const html = lojaInfo.logoDataUrl ? `<img src="${lojaInfo.logoDataUrl}" alt="Logo da loja">` : DEFAULT_BRAND_SVG;
+    $('authBrandMark').innerHTML = html;
+    $('topbarBrandMark').innerHTML = html;
+    $('topbarSubtitle').textContent = `Controle de recebimentos & ordens de serviço · ${lojaInfo.nome || 'Carioca Infocell'}`;
+  }
+
+  function populateLojaForm(){
+    $('lojaNome').value = lojaInfo.nome;
+    $('lojaCnpj').value = lojaInfo.cnpj;
+    $('lojaTelefone').value = lojaInfo.telefone;
+    $('lojaEndereco').value = lojaInfo.endereco;
+    updateLogoPreview();
+  }
+
+  function updateLogoPreview(){
+    const el = $('lojaLogoPreview');
+    if(lojaInfo.logoDataUrl){
+      el.innerHTML = `<img src="${lojaInfo.logoDataUrl}" alt="Logo da loja">`;
+      $('btnLojaLogoRemove').style.display = '';
+    } else {
+      el.innerHTML = icon('camera', 26);
+      $('btnLojaLogoRemove').style.display = 'none';
+    }
+  }
+
+  // Redimensiona a imagem escolhida (canvas) antes de guardar como base64,
+  // pra não deixar a logo pesada demais no banco.
+  function resizeImageFile(file, maxSize=320){
+    return new Promise((resolve, reject)=>{
+      const reader = new FileReader();
+      reader.onload = (e)=>{
+        const img = new Image();
+        img.onload = ()=>{
+          let { width, height } = img;
+          if(width > maxSize || height > maxSize){
+            if(width >= height){ height = Math.round(height * (maxSize/width)); width = maxSize; }
+            else { width = Math.round(width * (maxSize/height)); height = maxSize; }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = width; canvas.height = height;
+          canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL('image/png'));
+        };
+        img.onerror = reject;
+        img.src = e.target.result;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+  function populateConfigSelects(){
+    const tecSel = $('fTecnico');
+    const cur = tecSel.value;
+    tecSel.innerHTML = '<option value="">Selecione o técnico</option>' + config.tecnicos.map(t=>`<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('');
+    if(config.tecnicos.includes(cur)) tecSel.value = cur;
+
+    const atSel = $('fAtendente');
+    const curA = atSel.value;
+    atSel.innerHTML = '<option value="">Selecione o atendente</option>' + config.atendentes.map(a=>`<option value="${escapeHtml(a)}">${escapeHtml(a)}</option>`).join('');
+    if(config.atendentes.includes(curA)) atSel.value = curA;
+
+    const tpSel = $('fTipoAparelho');
+    const curT = tpSel.value;
+    tpSel.innerHTML = '<option value="">Selecione</option>' + config.tipos.map(t=>`<option value="${escapeHtml(t.nome)}" data-categoria="${t.categoria}">${escapeHtml(t.nome)}</option>`).join('');
+    if(config.tipos.some(t=>t.nome === curT)) tpSel.value = curT;
+  }
+
+  // ---------- RENDER ----------
+  let activeStatFilter = null; // null | 'pend' | 'entregue-hoje'
+  function applyFilters(list){
+    const q = $('searchInput').value.trim().toLowerCase();
+    const dateVal = $('dateFilter').value;
+    const status = $('statusFilter').value;
+    const tec = $('tecFilter').value;
+    const entregue = $('entregueFilter').value;
+    const today = todayISO();
+
+    return list.filter(r=>{
+      if(currentTipoTab !== 'todos' && r.tipo !== currentTipoTab) return false;
+
+      if(activeStatFilter === 'pend'){
+        if(r.status !== 'analisando') return false;
+      } else if(activeStatFilter === 'entregue-hoje'){
+        if(r.status !== 'entregue' || r.dataEntrega !== today) return false;
+      } else {
+        if(dateVal && r.dataEntrada !== dateVal) return false;
+        if(status && r.status !== status) return false;
+        if(tec && r.tecnico !== tec) return false;
+        if(entregue === 'sim' && r.status !== 'entregue') return false;
+        if(entregue === 'nao' && r.status === 'entregue') return false;
+      }
+
+      // OS prontas para retirada saem da fila de trabalho por padrão — elas ficam
+      // visíveis apenas na janelinha "Prontas para retirada" — a menos que o usuário
+      // busque algo ou filtre explicitamente pelo status "Pronto".
+      if(!status && !q && r.status === 'pronto') return false;
+
+      if(q){
+        const hay = `${r.cliente} ${r.contato} ${r.modelo} ${r.servico}`.toLowerCase();
+        if(!hay.includes(q)) return false;
+      }
+      return true;
+    });
+  }
+
+  function updateFilterOptions(){
+    // Técnicos
+    const sel = $('tecFilter');
+    const current = sel.value;
+    const techs = [...new Set(records.map(r=>r.tecnico).filter(Boolean))].sort();
+    sel.innerHTML = '<option value="">Todos os técnicos</option>' + techs.map(t=>`<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('');
+    if(techs.includes(current)) sel.value = current;
+
+    // Clientes Únicos (Mapa/Dicionário para guardar o contato vinculado)
+    const clientMap = {};
+    records.forEach(r => {
+      if(r.cliente) {
+        const cName = r.cliente.trim();
+        // Se já tiver contato salvo e o atual não tiver, ou apenas guarda o último/mais recente preenchido
+        if(r.contato) {
+          clientMap[cName] = r.contato.trim();
+        } else if(!clientMap[cName]) {
+          clientMap[cName] = '';
+        }
+      }
+    });
+
+    const clientDl = $('clientList');
+    clientDl.innerHTML = Object.keys(clientMap).sort().map(c => `<option value="${escapeHtml(c)}" data-contact="${escapeHtml(clientMap[c])}">`).join('');
+    
+    // Vincula evento para puxar o contato automaticamente ao escolher o cliente no input
+    window._clientMap = clientMap;
+  }
+
+  function updateCounts(){
+    // OS "prontas para retirada" já saíram da fila de trabalho (ficam só na janelinha
+    // lateral), então não entram na contagem das abas.
+    const emFila = records.filter(r=> r.status !== 'pronto');
+    const cel = emFila.filter(r=>r.tipo==='cel').length;
+    const info = emFila.filter(r=>r.tipo==='info').length;
+    $('cntTodos').textContent = emFila.length;
+    $('cntCel').textContent = cel;
+    $('cntInfo').textContent = info;
+
+    $('statTotal').textContent = records.length;
+    $('statPend').textContent = records.filter(r=> r.status==='analisando').length;
+    $('statPronto').textContent = records.filter(r=>r.status==='pronto').length;
+    const today = todayISO();
+    $('statEntregueHoje').textContent = records.filter(r=>r.status==='entregue' && r.dataEntrega===today).length;
+  }
+
+  function escapeHtml(str){
+    if(str===undefined || str===null) return '';
+    return String(str).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function toTitleCase(str){
+    if(!str) return '';
+    return str.trim().toLowerCase().split(/\s+/).map(w=>{
+      return w ? w.charAt(0).toUpperCase() + w.slice(1) : w;
+    }).join(' ');
+  }
+
+  function initials(name){
+    if(!name) return '—';
+    const parts = name.trim().split(/\s+/);
+    return (parts[0][0] + (parts[1]?parts[1][0]:'')).toUpperCase();
+  }
+
+  const MOTIVO_LABELS = {
+    desistiu: icon('alertTriangle',13) + ' Cliente desistiu', nao_aprovado: icon('alertTriangle',13) + ' Cliente não aprovou', cancelada: icon('xCircle',13) + ' OS cancelada'
+  };
+
+  function diagButtonHtml(r){
+    if(currentTipoTab === 'todos') return '';
+    if(r.status === 'recebido'){
+      return `<button type="button" class="btn-diag" data-action="diag-start" data-id="${r.id}">${icon('search',15)} Iniciar Diagnóstico</button>`;
+    }
+    if(r.status === 'analisando'){
+      return `<button type="button" class="btn-diag btn-diag-continue" data-action="diag-continue" data-id="${r.id}">${icon('wrench',15)} Continuar Diagnóstico</button>`;
+    }
+    if((r.status === 'pronto' || r.status === 'entregue') && (r.diagnostico || r.solucao || r.motivoCancelamento)){
+      return `<button type="button" class="btn-diag btn-diag-view" data-action="diag-continue" data-id="${r.id}">${icon('clipboardList',15)} Ver Diagnóstico</button>`;
+    }
+    return '';
+  }
+
+  function entregueButtonHtml(r){
+    if(r.status !== 'pronto') return '';
+    return `<button type="button" class="btn-diag btn-whatsapp" data-action="notify-whatsapp" data-id="${r.id}">${icon('messageCircle',15)} Notificar cliente (WhatsApp)</button><button type="button" class="btn-diag btn-entregar" data-action="mark-entregue" data-id="${r.id}">${icon('packageCheck',15)} Marcar como Entregue</button>`;
+  }
+
+  function buildWhatsAppLink(r){
+    const aparelho = [r.tipoAparelho, r.modelo].filter(Boolean).join(' — ') || r.modelo || 'seu aparelho';
+    const osNumTxt = String(r.osNum).padStart(4,'0');
+    const valorTxt = r.valor ? ` no valor de *${r.valor}*` : '';
+    const nome = toTitleCase(r.cliente) || '';
+    const msg = `Olá${nome ? ' ' + nome : ''}! 😊 Aqui é da *Carioca Infocell*.\n\nSeu aparelho (${aparelho}) referente à OS Nº ${osNumTxt} já está *pronto para retirada*${valorTxt}.\n\nAguardamos você para a retirada. Qualquer dúvida, estamos à disposição!`;
+    let phone = (r.contato || '').replace(/\D/g,'');
+    if(phone){
+      if(phone.length <= 11) phone = '55' + phone; // adiciona DDI Brasil se não tiver
+      return `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+    }
+    // Sem contato salvo: abre o WhatsApp Web/App para o usuário escolher o contato manualmente
+    return `https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`;
+  }
+
+  function ticketCard(r){
+    const typeChip = r.tipo === 'cel'
+      ? `<span class="type-chip cel">${icon('phone',13)} Celular/Tablet</span>`
+      : `<span class="type-chip info">${icon('monitor',13)} Informática</span>`;
+
+    const entregueFlag = r.status === 'entregue' ? `<div class="entregue-flag">ENTREGUE</div>` : '';
+    const thumb = (r.fotos && r.fotos[0])
+      ? `<img class="ticket-thumb" src="${r.fotos[0]}" alt="Foto do aparelho">`
+      : `<div class="ticket-thumb">${icon('camera',20)}</div>`;
+
+    const motivoBadge = r.motivoCancelamento ? `<div class="motivo-badge">${MOTIVO_LABELS[r.motivoCancelamento] || r.motivoCancelamento}</div>` : '';
+    const obsRetiradaBox = r.obsRetirada ? `<div class="obs-retirada-box"><strong>Aviso p/ retirada:</strong> ${escapeHtml(r.obsRetirada)}</div>` : '';
+    const diagBtn = diagButtonHtml(r);
+    const entregueBtn = entregueButtonHtml(r);
+
+    return `
+    <div class="ticket" data-id="${r.id}">
+      ${entregueFlag}
+      <div class="ticket-top">
+        <div class="os-num">
+          <span class="punch"></span>
+          <div>
+            <div class="label">OS Nº</div>
+            <div class="num">${String(r.osNum).padStart(4,'0')}</div>
+          </div>
+        </div>
+        ${typeChip}
+      </div>
+      <div class="perforation"></div>
+      <div class="ticket-body">
+        <div class="client-row">
+          <div class="client-row-main">
+            ${thumb}
+            <div>
+              <div class="client-name">${escapeHtml(toTitleCase(r.cliente)) || 'Sem nome'}</div>
+              <div class="client-contact">${escapeHtml(r.contato) || 'sem contato'}</div>
+            </div>
+          </div>
+          <span class="status-badge status-${r.status}"><span class="dot"></span>${STATUS_LABELS[r.status]}</span>
+        </div>
+        ${motivoBadge}
+        ${obsRetiradaBox}
+        <div class="info-grid">
+          <div class="info-item"><div class="k">Modelo</div><div class="v">${escapeHtml(r.modelo)||'—'}</div></div>
+          <div class="info-item"><div class="k">Serviço</div><div class="v">${escapeHtml(r.servico)||'—'}</div></div>
+          <div class="info-item"><div class="k">Valor</div><div class="v valor-tag">${escapeHtml(r.valor)||'—'}</div></div>
+          <div class="info-item"><div class="k">Pagamento</div><div class="v">${escapeHtml(r.pagamento)||'—'}</div></div>
+          <div class="info-item"><div class="k">Entrada</div><div class="v">${formatDatePT(r.dataEntrada)} ${r.horarioR? '· '+r.horarioR:''}</div></div>
+          <div class="info-item"><div class="k">Entrega</div><div class="v">${r.dataEntrega? formatDatePT(r.dataEntrega):'—'} ${r.horarioE? '· '+r.horarioE:''}</div></div>
+          ${r.obs ? `<div class="info-item full"><div class="k">Observações</div><div class="v">${escapeHtml(r.obs)}</div></div>` : ''}
+        </div>
+        ${(diagBtn || entregueBtn) ? `<div class="diag-btn-row">${diagBtn}${entregueBtn}</div>` : ''}
+      </div>
+      <div class="ticket-footer">
+        <div class="tech-tag">
+          <div class="tech-avatar">${initials(r.tecnico)}</div>
+          ${escapeHtml(r.tecnico) || 'Sem técnico'}
+        </div>
+        <div class="ticket-actions">
+          <button class="icon-btn" data-action="edit" data-id="${r.id}" title="Editar">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4L16.5 3.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button class="icon-btn danger" data-action="delete" data-id="${r.id}" title="Excluir">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0l-1 14a2 2 0 01-2 2H7a2 2 0 01-2-2L4 6h16z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  function render(){
+    updateCounts();
+    updateFilterOptions();
+    renderProntosWidget();
+
+    const filtered = applyFilters(records).sort((a,b)=> b.osNum - a.osNum);
+    const area = $('listArea');
+
+    if(filtered.length === 0){
+      area.innerHTML = `
+        <div class="empty">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <h3>${records.length===0 ? 'Nenhuma OS cadastrada ainda' : 'Nenhuma OS encontrada'}</h3>
+          <p>${records.length===0 ? 'Clique em "Nova OS" para registrar o primeiro equipamento recebido.' : 'Tente ajustar a busca ou os filtros aplicados.'}</p>
+        </div>`;
+      return;
+    }
+
+    area.innerHTML = `<div class="grid">${filtered.map(ticketCard).join('')}</div>`;
+  }
+
+  // ---------- WIDGET: PRONTAS PARA RETIRADA ----------
+  function renderProntosWidget(){
+    const prontos = records.filter(r=>r.status==='pronto').sort((a,b)=> b.osNum - a.osNum);
+    $('pwCount').textContent = prontos.length;
+    const list = $('pwList');
+    if(prontos.length === 0){
+      list.innerHTML = `<div class="pronto-widget-empty">Nenhuma OS pronta no momento.</div>`;
+      return;
+    }
+    list.innerHTML = prontos.map(r=>{
+      const aparelho = [r.tipoAparelho, r.modelo].filter(Boolean).join(' — ') || r.modelo || '—';
+      return `
+        <div class="pronto-widget-item" data-id="${r.id}">
+          <div class="pw-name">${escapeHtml(toTitleCase(r.cliente)) || 'Sem nome'}</div>
+          <div class="pw-device">${escapeHtml(aparelho)}</div>
+          <div class="pw-actions">
+            <span class="pw-osnum">OS ${String(r.osNum).padStart(4,'0')}</span>
+            <button type="button" class="pw-whatsapp-btn" data-action="pw-whatsapp" data-id="${r.id}">${icon('messageCircle',13)} Notificar</button>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  $('pwList').addEventListener('click', (e)=>{
+    const btn = e.target.closest('[data-action="pw-whatsapp"]');
+    if(btn){
+      const record = records.find(r=>r.id === btn.dataset.id);
+      if(record) window.open(buildWhatsAppLink(record), '_blank', 'noopener');
+      return;
+    }
+    const item = e.target.closest('.pronto-widget-item');
+    if(item){
+      const record = records.find(r=>r.id === item.dataset.id);
+      if(record) openViewModal(record);
+    }
+  });
+
+  // Auto preencher contato ao selecionar cliente existente
+  $('fCliente').addEventListener('input', (e)=>{
+    const val = e.target.value.trim();
+    if(window._clientMap && window._clientMap[val] !== undefined){
+      const savedContact = window._clientMap[val];
+      if(savedContact && !$('fContato').value){
+        $('fContato').value = savedContact;
+      }
+    }
+  });
+
+  // ---------- MODAL: NOVA/EDITAR ----------
+  const overlay = $('modalOverlay');
+  let modalTipo = 'cel';
+
+  function openModal(record){
+    editingId = record ? record.id : null;
+    modalTipo = record ? record.tipo : 'cel';
+    setModalTipo(modalTipo);
+    populateConfigSelects();
+
+    $('modalTitle').textContent = record ? `Editar OS Nº ${String(record.osNum).padStart(4,'0')}` : 'Nova OS';
+    $('modalSub').textContent = record ? 'Atualize os dados desta ordem de serviço' : 'Preencha os dados do equipamento recebido';
+
+    $('fCliente').value = record?.cliente || '';
+    $('fContato').value = record?.contato || '';
+    $('fAtendente').value = record?.atendente || '';
+    $('fTipoAparelho').value = record?.tipoAparelho || '';
+    $('fModelo').value = record?.modelo || '';
+    $('fServico').value = record?.servico || '';
+    $('fValor').value = record?.valor || '';
+    $('fPagamento').value = record?.pagamento || '';
+    updateParcelasVisibility();
+    $('fParcelas').value = record?.parcelas || '1';
+    $('fTecnico').value = record?.tecnico || '';
+    $('fStatus').value = record?.status || 'recebido';
+    $('fDataEntrada').value = record?.dataEntrada || todayISO();
+    $('fHorarioR').value = record?.horarioR || '';
+    $('fDataEntrega').value = record?.dataEntrega || '';
+    $('fHorarioE').value = record?.horarioE || '';
+    $('fObs').value = record?.obs || '';
+
+    currentFotos = [0,1,2,3].map(i => record?.fotos?.[i] || null);
+    renderPhotoGrid();
+
+    const senha = record?.senha || { tipo:'alfa', valor:'', semSenha:false };
+    setSenhaTab(senha.tipo === 'desenho' ? 'desenho' : 'alfa');
+    $('fSenhaAlfa').value = senha.tipo === 'alfa' ? (senha.valor || '') : '';
+    patternSequence = (senha.tipo === 'desenho' && Array.isArray(senha.valor)) ? [...senha.valor] : [];
+    buildPatternGrid();
+    renderPattern();
+    $('fSemSenha').checked = !!senha.semSenha;
+    toggleSenhaDisabled($('fSemSenha').checked);
+
+    overlay.classList.add('show');
+    setTimeout(()=> $('fCliente').focus(), 50);
+  }
+  function closeModalFn(){
+    overlay.classList.remove('show');
+    editingId = null;
+  }
+  function setModalTipo(t){
+    modalTipo = t;
+    $('segCel').classList.toggle('active-cel', t==='cel');
+    $('segInfo').classList.toggle('active-info', t==='info');
+  }
+
+  $('btnNew').addEventListener('click', ()=> openModal(null));
+  $('closeModal').addEventListener('click', closeModalFn);
+  $('btnCancel').addEventListener('click', closeModalFn);
+  overlay.addEventListener('click', (e)=>{ if(e.target === overlay) closeModalFn(); });
+  $('segCel').addEventListener('click', ()=> setModalTipo('cel'));
+  $('segInfo').addEventListener('click', ()=> setModalTipo('info'));
+  $('fTipoAparelho').addEventListener('change', (e)=>{
+    const opt = e.target.selectedOptions[0];
+    const categoria = opt ? opt.dataset.categoria : '';
+    if(categoria === 'cel' || categoria === 'info'){
+      setModalTipo(categoria);
+    }
+  });
+
+  $('btnSave').addEventListener('click', async ()=>{
+    const clienteRaw = $('fCliente').value.trim();
+    if(!clienteRaw){
+      showToast('⚠️ Informe o nome do cliente.');
+      $('fCliente').focus();
+      return;
+    }
+    const cliente = toTitleCase(clienteRaw);
+    const contatoVal = $('fContato').value.trim();
+
+    const pagamento = $('fPagamento').value;
+    const parcelas = (pagamento && pagamento.toLowerCase().includes('crédito')) ? parseInt($('fParcelas').value || '1', 10) : null;
+
+    const semSenha = $('fSemSenha').checked;
+    let senhaTipo = null, senhaValor = null;
+    if(!semSenha){
+      if(senhaTipoAtual === 'desenho'){
+        senhaTipo = 'desenho';
+        senhaValor = JSON.stringify(patternSequence);
+      } else {
+        senhaTipo = 'alfa';
+        senhaValor = $('fSenhaAlfa').value.trim();
+      }
+    }
+
+    const recordId = editingId || makeId();
+    $('btnSave').disabled = true;
+    showToast('Salvando...');
+
+    const fotoPaths = await persistFotos(recordId);
+    const clienteId = await findOrCreateClienteId(cliente, contatoVal);
+
+    const rowData = {
+      id: recordId,
+      tipo: modalTipo,
+      cliente,
+      contato: contatoVal,
+      cliente_id: clienteId,
+      atendente: $('fAtendente').value || null,
+      tipo_aparelho: $('fTipoAparelho').value || null,
+      modelo: $('fModelo').value.trim(),
+      servico: $('fServico').value.trim(),
+      valor: $('fValor').value.trim(),
+      pagamento: pagamento || null,
+      parcelas,
+      tecnico: $('fTecnico').value || null,
+      status: $('fStatus').value,
+      data_entrada: $('fDataEntrada').value || null,
+      horario_r: $('fHorarioR').value || null,
+      data_entrega: $('fDataEntrega').value || null,
+      horario_e: $('fHorarioE').value || null,
+      obs: $('fObs').value.trim(),
+      senha_tipo: senhaTipo,
+      senha_valor: senhaValor,
+      sem_senha_autorizada: semSenha,
+      fotos: fotoPaths,
+    };
+
+    if(editingId){
+      const { error } = await supabase.from('ordens_servico').update(rowData).eq('id', editingId);
+      $('btnSave').disabled = false;
+      if(error){ console.error(error); showToast('⚠️ Erro ao atualizar OS.'); return; }
+      showToast('✓ OS atualizada com sucesso.');
+    } else {
+      counter += 1;
+      rowData.os_num = counter;
+      const { error } = await supabase.from('ordens_servico').insert(rowData);
+      $('btnSave').disabled = false;
+      if(error){ console.error(error); counter -= 1; showToast('⚠️ Erro ao criar OS.'); return; }
+      await persistCounter();
+      showToast('✓ Nova OS criada.');
+    }
+
+    closeModalFn();
+    await loadData();
+  });
+
+  // ---------- CLIQUE NO CARD / EDIT / DELETE ----------
+  $('listArea').addEventListener('click', (e)=>{
+    const ticketEl = e.target.closest('.ticket');
+    if(!ticketEl) return;
+    const id = ticketEl.dataset.id;
+    const record = records.find(r=>r.id === id);
+    if(!record) return;
+
+    const btn = e.target.closest('[data-action]');
+    if(btn){
+      const action = btn.dataset.action;
+      if(action === 'edit'){
+        openModal(record);
+      } else if(action === 'delete'){
+        deletingId = id;
+        $('confirmText').textContent = `A OS Nº ${String(record.osNum).padStart(4,'0')} de ${record.cliente} será excluída permanentemente.`;
+        $('confirmOverlay').classList.add('show');
+      } else if(action === 'diag-start'){
+        startDiagnostico(record);
+      } else if(action === 'diag-continue'){
+        openDiagModal(record);
+      } else if(action === 'mark-entregue'){
+        marcarEntregue(record);
+      } else if(action === 'notify-whatsapp'){
+        window.open(buildWhatsAppLink(record), '_blank', 'noopener');
+      }
+      return;
+    }
+
+    openViewModal(record);
+  });
+
+  $('btnCancelDelete').addEventListener('click', ()=>{
+    $('confirmOverlay').classList.remove('show');
+    deletingId = null;
+  });
+  $('confirmOverlay').addEventListener('click', (e)=>{
+    if(e.target.id === 'confirmOverlay'){
+      $('confirmOverlay').classList.remove('show');
+      deletingId = null;
+    }
+  });
+  $('btnConfirmDelete').addEventListener('click', async ()=>{
+    if(deletingId){
+      const { error } = await supabase.from('ordens_servico').delete().eq('id', deletingId);
+      if(error){
+        console.error(error);
+        showToast('⚠️ Erro ao excluir OS.');
+      } else {
+        try{
+          await supabase.storage.from(FOTOS_BUCKET).remove(
+            [1,2,3,4].map(n => `${deletingId}/foto-${n}.jpg`)
+          );
+        }catch(e){ /* best effort */ }
+        showToast('🗑️ OS excluída.');
+        await loadData();
+      }
+    }
+    $('confirmOverlay').classList.remove('show');
+    deletingId = null;
+  });
+
+  // ---------- TABS & FILTERS ----------
+  $('tabs').addEventListener('click', (e)=>{
+    const tab = e.target.closest('.tab');
+    if(!tab) return;
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    currentTipoTab = tab.dataset.tipo;
+    render();
+  });
+
+  $('searchInput').addEventListener('input', render);
+  $('dateFilter').addEventListener('change', ()=>{ activeStatFilter = null; render(); });
+  $('statusFilter').addEventListener('change', ()=>{ activeStatFilter = null; render(); });
+  $('tecFilter').addEventListener('change', ()=>{ activeStatFilter = null; render(); });
+  $('entregueFilter').addEventListener('change', ()=>{ activeStatFilter = null; render(); });
+  $('clearFilters').addEventListener('click', ()=>{
+    $('searchInput').value = '';
+    $('dateFilter').value = '';
+    $('statusFilter').value = '';
+    $('tecFilter').value = '';
+    $('entregueFilter').value = '';
+    activeStatFilter = null;
+    render();
+  });
+
+  // ---------- CARDS DE ESTATÍSTICA CLICÁVEIS ----------
+  $('statsRow').addEventListener('click', (e)=>{
+    const card = e.target.closest('.stat-card');
+    if(!card) return;
+    const kind = card.dataset.stat;
+
+    $('searchInput').value = '';
+    $('dateFilter').value = '';
+    $('statusFilter').value = '';
+    $('tecFilter').value = '';
+    $('entregueFilter').value = '';
+
+    currentTipoTab = 'todos';
+    document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.tipo === 'todos'));
+
+    if(kind === 'pend'){
+      activeStatFilter = 'pend';
+    } else if(kind === 'entregue-hoje'){
+      activeStatFilter = 'entregue-hoje';
+    } else if(kind === 'pronto'){
+      activeStatFilter = null;
+      $('statusFilter').value = 'pronto';
+    } else {
+      activeStatFilter = null;
+    }
+
+    render();
+    $('listArea').scrollIntoView({ behavior:'smooth', block:'start' });
+  });
+
+  // ---------- PAGAMENTO / PARCELAS ----------
+  function updateParcelasVisibility(){
+    const val = $('fPagamento').value;
+    const wrap = $('parcelasWrap');
+    if(val && val.toLowerCase().includes('crédito')){
+      wrap.classList.add('show');
+      if($('fParcelas').options.length === 0){
+        let opts = '';
+        for(let i=1;i<=12;i++){ opts += `<option value="${i}">${i}x${i===1?' à vista':''}</option>`; }
+        $('fParcelas').innerHTML = opts;
+      }
+    } else {
+      wrap.classList.remove('show');
+    }
+  }
+  $('fPagamento').addEventListener('change', updateParcelasVisibility);
+
+  // ---------- SENHA DO APARELHO ----------
+  function setSenhaTab(tipo){
+    senhaTipoAtual = tipo;
+    $('senhaTabAlfa').classList.toggle('active', tipo==='alfa');
+    $('senhaTabDesenho').classList.toggle('active', tipo==='desenho');
+    $('senhaAlfaPanel').style.display = tipo==='alfa' ? '' : 'none';
+    $('senhaDesenhoPanel').style.display = tipo==='desenho' ? '' : 'none';
+  }
+  $('senhaTabAlfa').addEventListener('click', ()=> setSenhaTab('alfa'));
+  $('senhaTabDesenho').addEventListener('click', ()=> setSenhaTab('desenho'));
+
+  function toggleSenhaDisabled(disabled){
+    $('senhaBox').querySelector('.senha-tabs').classList.toggle('senha-disabled', disabled);
+    $('senhaAlfaPanel').classList.toggle('senha-disabled', disabled);
+    $('senhaDesenhoPanel').classList.toggle('senha-disabled', disabled);
+  }
+  $('fSemSenha').addEventListener('change', (e)=> toggleSenhaDisabled(e.target.checked));
+
+  function buildPatternGrid(){
+    const grid = $('patternGrid');
+    grid.innerHTML = '<svg width="180" height="180" id="patternSvg"></svg>';
+    for(let i=1;i<=9;i++){
+      const row = Math.floor((i-1)/3), col = (i-1)%3;
+      const dot = document.createElement('div');
+      dot.className = 'pattern-dot';
+      dot.dataset.n = i;
+      dot.style.left = (30 + col*60) + 'px';
+      dot.style.top = (30 + row*60) + 'px';
+      dot.addEventListener('click', ()=> togglePatternDot(i));
+      grid.appendChild(dot);
+    }
+  }
+  function togglePatternDot(n){
+    const idx = patternSequence.indexOf(n);
+    if(idx > -1){
+      patternSequence = patternSequence.slice(0, idx);
+    } else {
+      patternSequence.push(n);
+    }
+    renderPattern();
+  }
+  function renderPattern(){
+    document.querySelectorAll('.pattern-dot').forEach(d=>{
+      const n = parseInt(d.dataset.n, 10);
+      const pos = patternSequence.indexOf(n);
+      d.classList.toggle('active', pos > -1);
+      d.textContent = pos > -1 ? (pos+1) : '';
+    });
+    const svg = $('patternSvg');
+    if(!svg) return;
+    const pts = patternSequence.map(n=>{
+      const row = Math.floor((n-1)/3), col = (n-1)%3;
+      return {x:30+col*60, y:30+row*60};
+    });
+    let lines = '';
+    for(let i=0;i<pts.length-1;i++){
+      lines += `<line x1="${pts[i].x}" y1="${pts[i].y}" x2="${pts[i+1].x}" y2="${pts[i+1].y}" stroke="#0047CC" stroke-width="3" stroke-linecap="round"/>`;
+    }
+    svg.innerHTML = lines;
+  }
+  $('btnClearPattern').addEventListener('click', ()=>{ patternSequence = []; renderPattern(); });
+
+  // ---------- FOTOS DO APARELHO ----------
+  function renderPhotoGrid(){
+    const grid = $('photoGrid');
+    grid.innerHTML = currentFotos.map((foto,i)=>{
+      if(foto){
+        return `<div class="photo-slot" data-i="${i}">
+          <img src="${foto}" alt="Foto ${i+1}">
+          <button type="button" class="rm" data-i="${i}" title="Remover">×</button>
+        </div>`;
+      }
+      return `<div class="photo-slot" data-i="${i}">
+        <input type="file" accept="image/*" capture="environment" data-i="${i}">
+        <svg class="plus-icon" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </div>`;
+    }).join('');
+  }
+  function resizeImage(file){
+    return new Promise((resolve, reject)=>{
+      const reader = new FileReader();
+      reader.onload = (e)=>{
+        const img = new Image();
+        img.onload = ()=>{
+          const maxW = 700;
+          const scale = Math.min(1, maxW / img.width);
+          const canvas = document.createElement('canvas');
+          canvas.width = Math.round(img.width * scale);
+          canvas.height = Math.round(img.height * scale);
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          resolve(canvas.toDataURL('image/jpeg', 0.6));
+        };
+        img.onerror = reject;
+        img.src = e.target.result;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+  $('photoGrid').addEventListener('change', async (e)=>{
+    const input = e.target.closest('input[type=file]');
+    if(!input) return;
+    const file = input.files[0];
+    if(!file) return;
+    const i = parseInt(input.dataset.i, 10);
+    try{
+      currentFotos[i] = await resizeImage(file);
+      renderPhotoGrid();
+    }catch(err){
+      showToast('⚠️ Erro ao carregar imagem.');
+    }
+  });
+  $('photoGrid').addEventListener('click', (e)=>{
+    const rm = e.target.closest('.rm');
+    if(!rm) return;
+    e.stopPropagation();
+    const i = parseInt(rm.dataset.i, 10);
+    currentFotos[i] = null;
+    renderPhotoGrid();
+  });
+
+  // ---------- CONFIGURAÇÕES (técnicos, tipos, atendentes, loja) ----------
+  const settingsOverlay = $('settingsOverlay');
+  function closeSettingsFn(){ settingsOverlay.classList.remove('show'); }
+  $('btnSettings').addEventListener('click', ()=>{
+    settingsOverlay.classList.add('show');
+    refreshCfgPanel();
+  });
+  $('closeSettings').addEventListener('click', closeSettingsFn);
+  $('btnCloseSettingsFoot').addEventListener('click', closeSettingsFn);
+  settingsOverlay.addEventListener('click', (e)=>{ if(e.target === settingsOverlay) closeSettingsFn(); });
+
+  function refreshCfgPanel(){
+    const isLoja = currentCfgTab === 'loja';
+    $('cfgAddRow').style.display = isLoja ? 'none' : '';
+    $('cfgList').style.display = isLoja ? 'none' : '';
+    $('cfgLojaForm').style.display = isLoja ? '' : 'none';
+    if(isLoja){ populateLojaForm(); }
+    else { renderCfgList(); }
+  }
+
+  $('cfgTabs').addEventListener('click', (e)=>{
+    const btn = e.target.closest('[data-cfg]');
+    if(!btn) return;
+    document.querySelectorAll('#cfgTabs .seg-btn').forEach(b=>b.classList.remove('active-cel'));
+    btn.classList.add('active-cel');
+    currentCfgTab = btn.dataset.cfg;
+    $('cfgNewItem').value = '';
+    $('cfgNewCategoria').style.display = (currentCfgTab === 'tipos') ? '' : 'none';
+    refreshCfgPanel();
+  });
+
+  // ---------- DADOS DA LOJA (nome, CNPJ, telefone, endereço, logo) ----------
+  $('btnLojaLogoPick').addEventListener('click', ()=> $('lojaLogoInput').click());
+  $('lojaLogoInput').addEventListener('change', async (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    if(file.size > 3 * 1024 * 1024){
+      showToast('⚠️ Imagem muito grande. Escolha um arquivo de até 3MB.');
+      e.target.value = '';
+      return;
+    }
+    try{
+      lojaInfo.logoDataUrl = await resizeImageFile(file, 320);
+      updateLogoPreview();
+    }catch(err){
+      console.error(err);
+      showToast('⚠️ Não foi possível carregar essa imagem.');
+    }
+    e.target.value = '';
+  });
+  $('btnLojaLogoRemove').addEventListener('click', ()=>{
+    lojaInfo.logoDataUrl = '';
+    updateLogoPreview();
+  });
+  $('btnSalvarLoja').addEventListener('click', async ()=>{
+    const payload = {
+      id: 1,
+      nome: $('lojaNome').value.trim(),
+      cnpj: $('lojaCnpj').value.trim(),
+      telefone: $('lojaTelefone').value.trim(),
+      endereco: $('lojaEndereco').value.trim(),
+      logo_data_url: lojaInfo.logoDataUrl || null,
+    };
+    $('btnSalvarLoja').disabled = true;
+    const { error } = await supabase.from('loja').upsert(payload, { onConflict:'id' });
+    $('btnSalvarLoja').disabled = false;
+    if(error){
+      console.error(error);
+      showToast('⚠️ Erro ao salvar dados da loja.');
+      return;
+    }
+    showToast('✓ Dados da loja atualizados.');
+    await loadLoja();
+  });
+
+  function cfgLabel(){
+    return {tecnicos:'técnico', tipos:'tipo de aparelho', atendentes:'atendente'}[currentCfgTab];
+  }
+  function renderCfgList(){
+    const list = config[currentCfgTab] || [];
+    const listEl = $('cfgList');
+    if(list.length === 0){
+      listEl.innerHTML = `<div class="cfg-empty">Nenhum ${cfgLabel()} cadastrado ainda.</div>`;
+      return;
+    }
+    if(currentCfgTab === 'tipos'){
+      listEl.innerHTML = list.map((item,i)=>`
+        <div class="cfg-item">
+          <span>${escapeHtml(item.nome)}<span class="cfg-badge">${item.categoria === 'cel' ? icon('phone',11) + ' Celular/Tablet' : icon('monitor',11) + ' Informática'}</span></span>
+          <button data-idx="${i}" title="Remover">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </button>
+        </div>`).join('');
+      return;
+    }
+    listEl.innerHTML = list.map((item,i)=>`
+      <div class="cfg-item">
+        <span>${escapeHtml(item)}</span>
+        <button data-idx="${i}" title="Remover">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>`).join('');
+  }
+  $('cfgAddBtn').addEventListener('click', async ()=>{
+    const val = $('cfgNewItem').value.trim();
+    if(!val) return;
+    const table = TABLE_MAP[currentCfgTab];
+
+    if(currentCfgTab === 'tipos'){
+      if((config.tipos||[]).some(x=>x.nome.toLowerCase() === val.toLowerCase())){
+        showToast('⚠️ Já cadastrado.');
+        return;
+      }
+      const categoria = $('cfgNewCategoria').value;
+      const { error } = await supabase.from(table).insert({ nome: val, categoria });
+      if(error){
+        console.error(error);
+        showToast(error.code === '23505' ? '⚠️ Já cadastrado.' : '⚠️ Erro ao salvar.');
+        return;
+      }
+    } else {
+      if((config[currentCfgTab]||[]).some(x=>x.toLowerCase() === val.toLowerCase())){
+        showToast('⚠️ Já cadastrado.');
+        return;
+      }
+      const { error } = await supabase.from(table).insert({ nome: val });
+      if(error){
+        console.error(error);
+        showToast(error.code === '23505' ? '⚠️ Já cadastrado.' : '⚠️ Erro ao salvar.');
+        return;
+      }
+    }
+
+    $('cfgNewItem').value = '';
+    await loadConfig();
+    renderCfgList();
+  });
+  $('cfgNewItem').addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter'){ e.preventDefault(); $('cfgAddBtn').click(); }
+  });
+  $('cfgList').addEventListener('click', async (e)=>{
+    const btn = e.target.closest('button[data-idx]');
+    if(!btn) return;
+    const idx = parseInt(btn.dataset.idx, 10);
+    const item = config[currentCfgTab][idx];
+    const nome = currentCfgTab === 'tipos' ? item.nome : item;
+    const table = TABLE_MAP[currentCfgTab];
+    const { error } = await supabase.from(table).delete().eq('nome', nome);
+    if(error){
+      console.error(error);
+      showToast('⚠️ Erro ao remover.');
+      return;
+    }
+    await loadConfig();
+    renderCfgList();
+  });
+
+  // ---------- MODAL: VISUALIZAR OS ----------
+  const viewOverlay = $('viewOverlay');
+  function closeViewFn(){ viewOverlay.classList.remove('show'); }
+  $('closeView').addEventListener('click', closeViewFn);
+  $('btnCloseViewFoot').addEventListener('click', closeViewFn);
+  viewOverlay.addEventListener('click', (e)=>{ if(e.target === viewOverlay) closeViewFn(); });
+  $('btnEditFromView').addEventListener('click', ()=>{
+    const r = viewOverlay._currentRecord;
+    closeViewFn();
+    if(r) openModal(r);
+  });
+  $('btnPrintA4').addEventListener('click', ()=>{
+    const r = viewOverlay._currentRecord;
+    if(r) printReceipt(r, 'a4');
+  });
+  $('btnPrintTermica').addEventListener('click', ()=>{
+    const r = viewOverlay._currentRecord;
+    if(r) printReceipt(r, 'termica');
+  });
+
+  // ---------- RECIBO (impressão / PDF) ----------
+  function printReceipt(r, formato){
+    const dataImpressao = new Date().toLocaleString('pt-BR');
+    const cliente = toTitleCase(r.cliente) || '—';
+    const osLabel = `OS Nº ${String(r.osNum).padStart(4,'0')}`;
+    const pagamentoTxt = r.pagamento ? (r.pagamento + (r.parcelas ? ` em ${r.parcelas}x` : '')) : '—';
+    const aparelho = r.tipoAparelho || (r.tipo === 'cel' ? 'Celular/Tablet' : 'Informática');
+
+    const linhas = [
+      ['Cliente', cliente],
+      ['Contato', r.contato || '—'],
+      ['Atendente', r.atendente || '—'],
+      ['Técnico', r.tecnico || '—'],
+      ['Aparelho', aparelho],
+      ['Modelo', r.modelo || '—'],
+      ['Serviço', r.servico || '—'],
+      ['Valor', r.valor || '—'],
+      ['Pagamento', pagamentoTxt],
+      ['Status', STATUS_LABELS[r.status] || r.status || '—'],
+      ['Entrada', `${formatDatePT(r.dataEntrada)}${r.horarioR ? ' · '+r.horarioR : ''}`],
+      ['Entrega', r.dataEntrega ? `${formatDatePT(r.dataEntrega)}${r.horarioE ? ' · '+r.horarioE : ''}` : '—'],
+    ];
+
+    const w = window.open('', '_blank', 'width=420,height=720');
+    if(!w){
+      showToast('⚠️ Seu navegador bloqueou a janela de impressão. Permita pop-ups pra esse site.');
+      return;
+    }
+
+    const nomeLoja = lojaInfo.nome || 'Carioca Infocell';
+    const infoLojaPartes = [
+      lojaInfo.cnpj ? `CNPJ: ${lojaInfo.cnpj}` : '',
+      lojaInfo.telefone ? `Tel: ${lojaInfo.telefone}` : '',
+      lojaInfo.endereco || '',
+    ].filter(Boolean);
+
+    let pageCss, bodyHtml;
+
+    if(formato === 'termica'){
+      const sep = '--------------------------------';
+      const logoBox = lojaInfo.logoDataUrl
+        ? `<div class="c" style="margin-bottom:4px;"><img src="${lojaInfo.logoDataUrl}" style="max-width:130px;max-height:70px;object-fit:contain;"></div>`
+        : `<div class="c" style="margin:0 auto 6px;width:130px;height:52px;border:1px dashed #999;display:flex;align-items:center;justify-content:center;font-size:8px;color:#999;">ESPAÇO DA LOGO</div>`;
+      pageCss = `
+        @page{ size:80mm auto; margin:0; }
+        body{ width:76mm; margin:0 auto; padding:6px 4px; font-family:'Courier New',Courier,monospace; font-size:12px; color:#000; }
+        .c{ text-align:center; }
+      `;
+      bodyHtml = `
+        ${logoBox}
+        <div class="c" style="font-weight:bold;font-size:14px;">${escapeHtml(nomeLoja.toUpperCase())}</div>
+        ${infoLojaPartes.map(l=>`<div class="c" style="font-size:10px;">${escapeHtml(l)}</div>`).join('')}
+        <div class="c" style="margin-top:2px;">Recibo de Serviço</div>
+        <div class="c" style="font-size:10px;">*** SEM VALOR FISCAL ***</div>
+        <div>${sep}</div>
+        <div>${osLabel}</div>
+        <div>${sep}</div>
+        ${linhas.map(([k,v])=>`<div>${escapeHtml(k)}: ${escapeHtml(String(v))}</div>`).join('')}
+        <div>${sep}</div>
+        ${r.obs ? `<div>Obs: ${escapeHtml(r.obs)}</div><div>${sep}</div>` : ''}
+        <div class="c" style="font-size:10px;margin-top:6px;">Impresso em ${dataImpressao}</div>
+        <div class="c" style="font-size:10px;">Documento sem valor fiscal.</div>
+        <br><br>
+      `;
+    } else {
+      const logoBox = lojaInfo.logoDataUrl
+        ? `<img src="${lojaInfo.logoDataUrl}" style="width:66px;height:66px;object-fit:contain;flex-shrink:0;">`
+        : `<div style="width:66px;height:66px;border:1px dashed #CCC;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:8px;color:#AAA;text-align:center;line-height:1.3;flex-shrink:0;">ESPAÇO<br>DA LOGO</div>`;
+      pageCss = `
+        @page{ size:A4; margin:18mm; }
+        body{ font-family:Arial,Helvetica,sans-serif; font-size:13px; color:#1D2226; }
+        table{ width:100%; border-collapse:collapse; }
+        td{ padding:7px 0; border-bottom:1px solid #EEE; }
+      `;
+      bodyHtml = `
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:22px;border-bottom:2px solid #0047CC;padding-bottom:16px;">
+          ${logoBox}
+          <div>
+            <div style="font-size:21px;font-weight:800;color:#0047CC;">${escapeHtml(nomeLoja)}</div>
+            ${infoLojaPartes.length ? `<div style="font-size:11.5px;color:#666;margin-top:3px;">${infoLojaPartes.map(escapeHtml).join(' &nbsp;·&nbsp; ')}</div>` : ''}
+            <div style="font-size:12.5px;color:#666;margin-top:3px;">Recibo de Serviço — documento sem valor fiscal</div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:16px;font-size:13px;">
+          <div><strong>${osLabel}</strong></div>
+          <div style="color:#666;">Impresso em ${dataImpressao}</div>
+        </div>
+        <table>
+          ${linhas.map(([k,v])=>`
+            <tr>
+              <td style="color:#666;width:150px;">${escapeHtml(k)}</td>
+              <td style="font-weight:600;">${escapeHtml(String(v))}</td>
+            </tr>`).join('')}
+        </table>
+        ${r.obs ? `<div style="margin-top:16px;font-size:13px;"><strong>Observações:</strong><br>${escapeHtml(r.obs)}</div>` : ''}
+        <div style="margin-top:60px;display:flex;justify-content:space-between;font-size:12px;">
+          <div style="border-top:1px solid #333;width:44%;padding-top:6px;text-align:center;">Assinatura do cliente</div>
+          <div style="border-top:1px solid #333;width:44%;padding-top:6px;text-align:center;">Assinatura da loja</div>
+        </div>
+        <div style="margin-top:26px;font-size:10.5px;color:#999;text-align:center;">Este documento é apenas um comprovante de serviço — não possui valor fiscal.</div>
+      `;
+    }
+
+    w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
+      <title>Recibo ${osLabel}</title>
+      <style>*{box-sizing:border-box;}${pageCss}</style>
+      </head><body>${bodyHtml}</body></html>`);
+    w.document.close();
+    w.focus();
+    setTimeout(()=>{ w.print(); }, 300);
+  }
+
+  function renderSenhaView(r){
+    const s = r.senha;
+    if(!s || s.semSenha){
+      return `<div class="view-section"><h4>Senha do aparelho</h4>
+        <div class="info-item full"><div class="v" style="color:#B5432A;display:flex;align-items:center;gap:5px;">${icon('alertTriangle',14)} Cliente não autorizou o uso de senha. O técnico não conseguirá realizar testes no aparelho sem a senha.</div></div>
+      </div>`;
+    }
+    if(s.tipo === 'alfa' && s.valor){
+      return `<div class="view-section"><h4>Senha do aparelho (alfanumérica)</h4>
+        <div class="senha-view-row">
+          <span class="mono" id="senhaMasked" data-real="${escapeHtml(s.valor)}">${'•'.repeat(s.valor.length)}</span>
+          <button type="button" class="senha-reveal-btn" id="btnRevealSenha">Mostrar</button>
+        </div>
+      </div>`;
+    }
+    if(s.tipo === 'desenho' && Array.isArray(s.valor) && s.valor.length){
+      const pts = s.valor.map(n=>{ const row=Math.floor((n-1)/3), col=(n-1)%3; return {x:20+col*40, y:20+row*40}; });
+      let dots = '', lines = '';
+      for(let i=1;i<=9;i++){
+        const row = Math.floor((i-1)/3), col = (i-1)%3;
+        dots += `<circle cx="${20+col*40}" cy="${20+row*40}" r="6" fill="${s.valor.includes(i)?'#0047CC':'#DCD6C7'}"/>`;
+      }
+      for(let i=0;i<pts.length-1;i++){
+        lines += `<line x1="${pts[i].x}" y1="${pts[i].y}" x2="${pts[i+1].x}" y2="${pts[i+1].y}" stroke="#0047CC" stroke-width="3" stroke-linecap="round"/>`;
+      }
+      return `<div class="view-section"><h4>Senha do aparelho (padrão desenhado)</h4>
+        <svg width="120" height="120">${lines}${dots}</svg>
+      </div>`;
+    }
+    return `<div class="view-section"><h4>Senha do aparelho</h4><div class="info-item full"><div class="v">Não informada</div></div></div>`;
+  }
+
+  function openViewModal(r){
+    $('viewTitle').textContent = `OS Nº ${String(r.osNum).padStart(4,'0')} — ${escapeHtml(r.cliente) || 'Sem nome'}`;
+    $('viewSub').innerHTML = r.tipo === 'cel' ? `${icon('phone',13)} Celular / Tablet` : `${icon('monitor',13)} Informática / Impressora`;
+
+    const fotosHtml = (r.fotos && r.fotos.length)
+      ? `<div class="view-section"><h4>Fotos do aparelho</h4><div class="view-photos">${r.fotos.map(f=>`<img src="${f}" alt="Foto do aparelho">`).join('')}</div></div>`
+      : '';
+
+    $('viewBody').innerHTML = `
+      <div class="view-section">
+        <h4>Dados gerais</h4>
+        <div class="info-grid">
+          <div class="info-item"><div class="k">Cliente</div><div class="v">${escapeHtml(toTitleCase(r.cliente))||'—'}</div></div>
+          <div class="info-item"><div class="k">Contato</div><div class="v">${escapeHtml(r.contato)||'—'}</div></div>
+          <div class="info-item"><div class="k">Atendente</div><div class="v">${escapeHtml(r.atendente)||'—'}</div></div>
+          <div class="info-item"><div class="k">Tipo de aparelho</div><div class="v">${escapeHtml(r.tipoAparelho)||'—'}</div></div>
+          <div class="info-item"><div class="k">Modelo</div><div class="v">${escapeHtml(r.modelo)||'—'}</div></div>
+          <div class="info-item"><div class="k">Serviço</div><div class="v">${escapeHtml(r.servico)||'—'}</div></div>
+          <div class="info-item"><div class="k">Status</div><div class="v"><span class="status-badge status-${r.status}"><span class="dot"></span>${STATUS_LABELS[r.status]}</span></div></div>
+          <div class="info-item"><div class="k">Técnico</div><div class="v">${escapeHtml(r.tecnico)||'—'}</div></div>
+        </div>
+      </div>
+      <div class="view-section">
+        <h4>Pagamento &amp; datas</h4>
+        <div class="info-grid">
+          <div class="info-item"><div class="k">Valor</div><div class="v valor-tag">${escapeHtml(r.valor)||'—'}</div></div>
+          <div class="info-item"><div class="k">Pagamento</div><div class="v">${escapeHtml(r.pagamento)||'—'}${r.parcelas?` em ${r.parcelas}x`:''}</div></div>
+          <div class="info-item"><div class="k">Entrada</div><div class="v">${formatDatePT(r.dataEntrada)} ${r.horarioR?'· '+r.horarioR:''}</div></div>
+          <div class="info-item"><div class="k">Entrega</div><div class="v">${r.dataEntrega?formatDatePT(r.dataEntrega):'—'} ${r.horarioE?'· '+r.horarioE:''}</div></div>
+        </div>
+      </div>
+      ${r.obs ? `<div class="view-section"><h4>Observações</h4><div class="info-item full"><div class="v">${escapeHtml(r.obs)}</div></div></div>` : ''}
+      ${(r.diagnostico || r.solucao || r.motivoCancelamento || r.obsRetirada) ? `
+      <div class="view-section">
+        <h4>Diagnóstico técnico</h4>
+        ${r.motivoCancelamento ? `<div class="motivo-badge">${MOTIVO_LABELS[r.motivoCancelamento] || r.motivoCancelamento}</div>` : ''}
+        <div class="info-grid">
+          ${r.diagnostico ? `<div class="info-item full"><div class="k">Diagnóstico</div><div class="v">${escapeHtml(r.diagnostico)}</div></div>` : ''}
+          ${r.solucao ? `<div class="info-item full"><div class="k">Solução</div><div class="v">${escapeHtml(r.solucao)}</div></div>` : ''}
+          ${r.obsRetirada ? `<div class="info-item full"><div class="k">Aviso p/ retirada</div><div class="v">${escapeHtml(r.obsRetirada)}</div></div>` : ''}
+        </div>
+      </div>` : ''}
+      ${renderSenhaView(r)}
+      ${fotosHtml}
+    `;
+
+    viewOverlay._currentRecord = r;
+    viewOverlay.classList.add('show');
+  }
+
+  $('viewBody').addEventListener('click', (e)=>{
+    const revealBtn = e.target.closest('#btnRevealSenha');
+    if(revealBtn){
+      const span = $('senhaMasked');
+      const showing = revealBtn.textContent === 'Ocultar';
+      span.textContent = showing ? '•'.repeat(span.dataset.real.length) : span.dataset.real;
+      revealBtn.textContent = showing ? 'Mostrar' : 'Ocultar';
+      return;
+    }
+    const img = e.target.closest('.view-photos img');
+    if(img){
+      $('lightboxImg').src = img.src;
+      $('photoLightbox').classList.add('show');
+    }
+  });
+
+  $('closeLightbox').addEventListener('click', ()=> $('photoLightbox').classList.remove('show'));
+  $('photoLightbox').addEventListener('click', (e)=>{
+    if(e.target.id === 'photoLightbox') $('photoLightbox').classList.remove('show');
+  });
+
+  // ---------- MODAL: DIAGNÓSTICO ----------
+  const diagOverlay = $('diagOverlay');
+  let diagRecord = null;
+
+  function closeDiagFn(){
+    diagOverlay.classList.remove('show');
+    diagRecord = null;
+  }
+
+  function setDiagMotivo(motivo){
+    $('dMotivoDesistiu').checked = motivo === 'desistiu';
+    $('dMotivoNaoAprovado').checked = motivo === 'nao_aprovado';
+    $('dMotivoCancelada').checked = motivo === 'cancelada';
+  }
+  function getDiagMotivo(){
+    if($('dMotivoDesistiu').checked) return 'desistiu';
+    if($('dMotivoNaoAprovado').checked) return 'nao_aprovado';
+    if($('dMotivoCancelada').checked) return 'cancelada';
+    return '';
+  }
+  document.querySelectorAll('#diagOverlay input[data-motivo]').forEach(cb=>{
+    cb.addEventListener('change', ()=>{
+      if(cb.checked){
+        document.querySelectorAll('#diagOverlay input[data-motivo]').forEach(other=>{
+          if(other !== cb) other.checked = false;
+        });
+      }
+    });
+  });
+
+  function openDiagModal(record){
+    diagRecord = record;
+    $('diagTitle').textContent = `Diagnóstico — OS Nº ${String(record.osNum).padStart(4,'0')}`;
+    $('diagSub').textContent = escapeHtml(toTitleCase(record.cliente)) || 'Sem nome';
+    $('diagHeaderBox').innerHTML = `
+      <div><b>${escapeHtml(toTitleCase(record.cliente))||'Sem nome'}</b> · ${escapeHtml(record.contato)||'sem contato'}</div>
+      <div>${escapeHtml(record.tipoAparelho)||(record.tipo==='cel'?'Celular/Tablet':'Informática')} — ${escapeHtml(record.modelo)||'—'}</div>
+      <div>Serviço solicitado: ${escapeHtml(record.servico)||'—'}</div>
+    `;
+    $('dValor').value = record.valor || '';
+    $('dDiagnostico').value = record.diagnostico || '';
+    $('dSolucao').value = record.solucao || '';
+    $('dObsRetirada').value = record.obsRetirada || '';
+    setDiagMotivo(record.motivoCancelamento || '');
+    diagOverlay.classList.add('show');
+    setTimeout(()=> $('dDiagnostico').focus(), 50);
+  }
+
+  async function startDiagnostico(record){
+    const { error } = await supabase.from('ordens_servico').update({ status:'analisando' }).eq('id', record.id);
+    if(error){
+      console.error(error);
+      showToast('⚠️ Erro ao iniciar diagnóstico: ' + (error.message || 'ver console'));
+      return;
+    }
+    record.status = 'analisando';
+    showToast('🔍 Diagnóstico iniciado — status alterado para Em Análise.');
+    await loadData();
+    const updated = records.find(r=>r.id === record.id) || record;
+    openDiagModal(updated);
+  }
+
+  async function saveDiagnostico(finalize){
+    if(!diagRecord) return;
+    const btn = finalize ? $('btnFinalizarOS') : $('btnSaveDiagDraft');
+    btn.disabled = true;
+    const payload = {
+      valor: $('dValor').value.trim(),
+      diagnostico: $('dDiagnostico').value.trim(),
+      solucao: $('dSolucao').value.trim(),
+      motivo_cancelamento: getDiagMotivo() || null,
+      obs_retirada: $('dObsRetirada').value.trim(),
+    };
+    if(finalize) payload.status = 'pronto';
+
+    const { error } = await supabase.from('ordens_servico').update(payload).eq('id', diagRecord.id);
+    btn.disabled = false;
+    if(error){
+      console.error(error);
+      showToast('⚠️ Erro ao salvar: ' + (error.message || 'ver console (F12)'));
+      return;
+    }
+    showToast(finalize ? '✓ OS finalizada — Pronto para retirada.' : '✓ Diagnóstico salvo.');
+    closeDiagFn();
+    await loadData();
+  }
+
+  function nowTimeHHMM(){
+    const d = new Date();
+    return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+  }
+
+  async function marcarEntregue(record){
+    const { error } = await supabase.from('ordens_servico').update({
+      status: 'entregue',
+      data_entrega: todayISO(),
+      horario_e: nowTimeHHMM(),
+    }).eq('id', record.id);
+    if(error){
+      console.error(error);
+      showToast('⚠️ Erro ao marcar como entregue: ' + (error.message || 'ver console'));
+      return;
+    }
+    showToast('📦 OS marcada como Entregue.');
+    await loadData();
+  }
+
+  $('closeDiag').addEventListener('click', closeDiagFn);
+  $('btnCancelDiag').addEventListener('click', closeDiagFn);
+  diagOverlay.addEventListener('click', (e)=>{ if(e.target === diagOverlay) closeDiagFn(); });
+  $('btnSaveDiagDraft').addEventListener('click', ()=> saveDiagnostico(false));
+
+  // ---------- CONFIRMAÇÃO DE FINALIZAÇÃO DA OS ----------
+  const confirmFinalizeOverlay = $('confirmFinalizeOverlay');
+  function closeConfirmFinalizeFn(){
+    confirmFinalizeOverlay.classList.remove('show');
+  }
+  $('btnFinalizarOS').addEventListener('click', ()=>{
+    if(!diagRecord) return;
+    const nome = toTitleCase(diagRecord.cliente) || 'Sem nome';
+    $('confirmFinalizeText').textContent = `A OS Nº ${String(diagRecord.osNum).padStart(4,'0')} de ${nome} será marcada como Pronta para Retirada e sairá da fila de trabalho.`;
+    confirmFinalizeOverlay.classList.add('show');
+  });
+  $('btnCancelFinalize').addEventListener('click', closeConfirmFinalizeFn);
+  confirmFinalizeOverlay.addEventListener('click', (e)=>{
+    if(e.target === confirmFinalizeOverlay) closeConfirmFinalizeFn();
+  });
+  $('btnConfirmFinalize').addEventListener('click', async ()=>{
+    closeConfirmFinalizeFn();
+    await saveDiagnostico(true);
+  });
+
+  // keyboard: ESC closes modals
+  document.addEventListener('keydown', (e)=>{
+    if(e.key === 'Escape'){
+      closeModalFn();
+      $('confirmOverlay').classList.remove('show');
+      closeSettingsFn();
+      closeViewFn();
+      closeDiagFn();
+      $('confirmFinalizeOverlay').classList.remove('show');
+      $('photoLightbox').classList.remove('show');
+      closeClientesFn();
+      closeClienteHistFn();
+      closeClienteEditFn();
+      $('confirmClienteOverlay').classList.remove('show');
+    }
+  });
+
+  // ---------- AUTENTICAÇÃO ----------
+  function showApp(){
+    $('authOverlay').classList.add('hide');
+    $('appRoot').style.display = '';
+    setToday();
+    loadConfig();
+    loadLoja();
+    loadData();
+  }
+  function showLogin(){
+    $('appRoot').style.display = 'none';
+    $('authOverlay').classList.remove('hide');
+  }
+  function showAuthError(msg){
+    const el = $('authError');
+    el.textContent = msg;
+    el.classList.add('show');
+  }
+  async function doLogin(){
+    const email = $('authEmail').value.trim();
+    const password = $('authPassword').value;
+    if(!email || !password){
+      showAuthError('Preencha e-mail e senha.');
+      return;
+    }
+    $('authError').classList.remove('show');
+    $('btnLogin').disabled = true;
+    $('btnLogin').textContent = 'Entrando...';
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    $('btnLogin').disabled = false;
+    $('btnLogin').textContent = 'Entrar';
+    if(error){
+      showAuthError(error.message === 'Invalid login credentials' ? 'E-mail ou senha incorretos.' : error.message);
+    }
+  }
+  $('btnLogin').addEventListener('click', doLogin);
+  $('authPassword').addEventListener('keydown', (e)=>{ if(e.key === 'Enter') doLogin(); });
+  $('authEmail').addEventListener('keydown', (e)=>{ if(e.key === 'Enter') doLogin(); });
+  $('btnLogout').addEventListener('click', async ()=>{
+    await supabase.auth.signOut();
+  });
+
+  supabase.auth.onAuthStateChange((event, session)=>{
+    if(session){ showApp(); } else { showLogin(); }
+  });
+
+  // ---------- INIT ----------
+  function setToday(){
+    const d = new Date();
+    const dias = ['domingo','segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado'];
+    const meses = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+    $('todayText').textContent = `${dias[d.getDay()]}, ${d.getDate()} ${meses[d.getMonth()]} ${d.getFullYear()}`;
+  }
+
+  (async ()=>{
+    const { data: { session } } = await supabase.auth.getSession();
+    if(session){ showApp(); } else { showLogin(); }
+  })();
+})();
+</script>
+</body>
+</html>
