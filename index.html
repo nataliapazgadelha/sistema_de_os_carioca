@@ -649,6 +649,9 @@
     padding:9px 11px;border-radius:9px;margin:0 0 10px;
   }
   .obs-retirada-box strong{display:block;font-size:11.5px;text-transform:uppercase;letter-spacing:.02em;margin-bottom:2px;}
+  .obs-retirada-box.danger{
+    background:#FDEAE6;color:#B5432A;border:1px solid #E8836B;font-weight:600;
+  }
   .diag-motivo-row{display:flex;flex-direction:column;gap:8px;margin-top:6px;}
   .diag-motivo-opt{
     display:flex;align-items:flex-start;gap:9px;
@@ -1955,7 +1958,9 @@
     $('cntCel').textContent = cel;
     $('cntInfo').textContent = info;
 
-    $('statTotal').textContent = records.length;
+    // Assim que o técnico finaliza a OS (status vira "pronto"), ela sai da contagem de
+    // "Total de OS" — o total reflete só o que ainda está em andamento na bancada.
+    $('statTotal').textContent = records.filter(r=> r.status !== 'pronto' && r.status !== 'entregue').length;
     $('statPend').textContent = records.filter(r=> r.status==='analisando').length;
     $('statPronto').textContent = records.filter(r=>r.status==='pronto').length;
     const today = todayISO();
@@ -2029,7 +2034,7 @@
       : `<div class="ticket-thumb">${icon('camera',20)}</div>`;
 
     const motivoBadge = r.motivoCancelamento ? `<div class="motivo-badge">${MOTIVO_LABELS[r.motivoCancelamento] || r.motivoCancelamento}</div>` : '';
-    const obsRetiradaBox = r.obsRetirada ? `<div class="obs-retirada-box"><strong>Aviso p/ retirada:</strong> ${escapeHtml(r.obsRetirada)}</div>` : '';
+    const obsRetiradaBox = r.obsRetirada ? `<div class="obs-retirada-box${r.motivoCancelamento ? ' danger' : ''}"><strong>Aviso p/ retirada:</strong> ${escapeHtml(r.obsRetirada)}</div>` : '';
     const diagBtn = diagButtonHtml(r);
     const entregueBtn = entregueButtonHtml(r);
 
@@ -2183,7 +2188,8 @@
     $('fTecnico').value = record?.tecnico || '';
     $('fStatus').value = record?.status || 'recebido';
     $('fDataEntrada').value = record?.dataEntrada || todayISO();
-    $('fHorarioR').value = record?.horarioR || '';
+    // Nova OS: pré-preenche o horário de entrada com a hora atual (dá pra ajustar se precisar).
+    $('fHorarioR').value = record ? (record.horarioR || '') : nowTimeHHMM();
     $('fDataEntrega').value = record?.dataEntrega || '';
     $('fHorarioE').value = record?.horarioE || '';
     $('fObs').value = record?.obs || '';
@@ -2920,7 +2926,7 @@
         <div class="info-grid">
           ${r.diagnostico ? `<div class="info-item full"><div class="k">Diagnóstico</div><div class="v">${escapeHtml(r.diagnostico)}</div></div>` : ''}
           ${r.solucao ? `<div class="info-item full"><div class="k">Solução</div><div class="v">${escapeHtml(r.solucao)}</div></div>` : ''}
-          ${r.obsRetirada ? `<div class="info-item full"><div class="k">Aviso p/ retirada</div><div class="v">${escapeHtml(r.obsRetirada)}</div></div>` : ''}
+          ${r.obsRetirada ? `<div class="info-item full"><div class="k">Aviso p/ retirada</div><div class="v"><div class="obs-retirada-box${r.motivoCancelamento ? ' danger' : ''}" style="margin:0;">${escapeHtml(r.obsRetirada)}</div></div></div>` : ''}
         </div>
       </div>` : ''}
       ${renderSenhaView(r)}
