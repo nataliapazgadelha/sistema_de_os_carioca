@@ -906,15 +906,9 @@
           <option value="recebido">Recebido</option>
           <option value="analisando">Em Análise</option>
           <option value="pronto">Pronto para Retirada</option>
-          <option value="entregue">Entregue</option>
         </select>
         <select class="filter-select" id="tecFilter">
           <option value="">Todos os técnicos</option>
-        </select>
-        <select class="filter-select" id="entregueFilter">
-          <option value="">Entregues e pendentes</option>
-          <option value="nao">Somente pendentes</option>
-          <option value="sim">Somente entregues</option>
         </select>
         <button class="clear-btn" id="clearFilters">Limpar filtros</button>
       </div>
@@ -933,6 +927,23 @@
         </div>
         <div class="pronto-widget-list" id="pwList">
           <div class="pronto-widget-empty">Nenhuma OS pronta no momento.</div>
+        </div>
+      </div>
+
+      <div class="pronto-widget" id="entreguesWidget" style="margin-top:14px;">
+        <div class="pronto-widget-head" style="background:var(--bg-soft);color:var(--ink-soft);border-bottom-color:var(--line);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M16.5 9.4 7.55 4.24"/><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16Z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg> Entregues
+          <span class="count-pill" id="ewCount" style="background:var(--ink-faint);">0</span>
+        </div>
+        <div style="padding:10px 12px;display:flex;flex-direction:column;gap:8px;border-bottom:1px solid var(--line-soft);">
+          <input type="text" id="ewSearch" placeholder="Buscar cliente..." style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);font-size:12.5px;">
+          <div style="display:flex;gap:6px;align-items:center;">
+            <input type="date" id="ewDate" title="Filtrar por data de entrega" style="flex:1;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);font-size:12.5px;">
+            <button type="button" class="clear-btn" id="ewClear" style="padding:6px 4px;white-space:nowrap;">Limpar</button>
+          </div>
+        </div>
+        <div class="pronto-widget-list" id="ewList">
+          <div class="pronto-widget-empty">Nenhuma OS entregue encontrada.</div>
         </div>
       </div>
     </aside>
@@ -1888,28 +1899,26 @@
   }
 
   // ---------- RENDER ----------
-  let activeStatFilter = null; // null | 'pend' | 'entregue-hoje'
+  let activeStatFilter = null; // null | 'pend'
   function applyFilters(list){
     const q = $('searchInput').value.trim().toLowerCase();
     const dateVal = $('dateFilter').value;
     const status = $('statusFilter').value;
     const tec = $('tecFilter').value;
-    const entregue = $('entregueFilter').value;
-    const today = todayISO();
 
     return list.filter(r=>{
       if(currentTipoTab !== 'todos' && r.tipo !== currentTipoTab) return false;
 
+      // OS entregues não aparecem mais nas abas de trabalho — ficam apenas
+      // na janelinha "Entregues", com busca por cliente e filtro por data.
+      if(r.status === 'entregue') return false;
+
       if(activeStatFilter === 'pend'){
         if(r.status !== 'analisando') return false;
-      } else if(activeStatFilter === 'entregue-hoje'){
-        if(r.status !== 'entregue' || r.dataEntrega !== today) return false;
       } else {
         if(dateVal && r.dataEntrada !== dateVal) return false;
         if(status && r.status !== status) return false;
         if(tec && r.tecnico !== tec) return false;
-        if(entregue === 'sim' && r.status !== 'entregue') return false;
-        if(entregue === 'nao' && r.status === 'entregue') return false;
       }
 
       // OS prontas para retirada saem da fila de trabalho por padrão — elas ficam
@@ -1955,9 +1964,9 @@
   }
 
   function updateCounts(){
-    // OS "prontas para retirada" já saíram da fila de trabalho (ficam só na janelinha
-    // lateral), então não entram na contagem das abas.
-    const emFila = records.filter(r=> r.status !== 'pronto');
+    // OS "prontas para retirada" e "entregues" já saíram da fila de trabalho (ficam só
+    // nas janelinhas laterais), então não entram na contagem das abas.
+    const emFila = records.filter(r=> r.status !== 'pronto' && r.status !== 'entregue');
     const cel = emFila.filter(r=>r.tipo==='cel').length;
     const info = emFila.filter(r=>r.tipo==='info').length;
     $('cntTodos').textContent = emFila.length;
@@ -2103,6 +2112,7 @@
     updateCounts();
     updateFilterOptions();
     renderProntosWidget();
+    renderEntreguesWidget();
 
     const filtered = applyFilters(records).sort((a,b)=> b.osNum - a.osNum);
     const area = $('listArea');
@@ -2150,6 +2160,51 @@
       if(record) window.open(buildWhatsAppLink(record), '_blank', 'noopener');
       return;
     }
+    const item = e.target.closest('.pronto-widget-item');
+    if(item){
+      const record = records.find(r=>r.id === item.dataset.id);
+      if(record) openViewModal(record);
+    }
+  });
+
+  // ---------- WIDGET: ENTREGUES ----------
+  function renderEntreguesWidget(){
+    const q = $('ewSearch').value.trim().toLowerCase();
+    const dateVal = $('ewDate').value;
+
+    let entregues = records.filter(r=>r.status==='entregue');
+    if(dateVal) entregues = entregues.filter(r=>r.dataEntrega === dateVal);
+    if(q) entregues = entregues.filter(r=> `${r.cliente} ${r.contato}`.toLowerCase().includes(q));
+    entregues.sort((a,b)=> b.osNum - a.osNum);
+
+    $('ewCount').textContent = entregues.length;
+    const list = $('ewList');
+    if(entregues.length === 0){
+      list.innerHTML = `<div class="pronto-widget-empty">${records.some(r=>r.status==='entregue') ? 'Nenhuma OS entregue encontrada com esse filtro.' : 'Nenhuma OS entregue ainda.'}</div>`;
+      return;
+    }
+    list.innerHTML = entregues.map(r=>{
+      const aparelho = [r.tipoAparelho, r.modelo].filter(Boolean).join(' — ') || r.modelo || '—';
+      return `
+        <div class="pronto-widget-item" data-id="${r.id}">
+          <div class="pw-name">${escapeHtml(toTitleCase(r.cliente)) || 'Sem nome'}</div>
+          <div class="pw-device">${escapeHtml(aparelho)}</div>
+          <div class="pw-actions">
+            <span class="pw-osnum">OS ${String(r.osNum).padStart(4,'0')}</span>
+            <span class="pw-osnum">Entregue em ${formatDatePT(r.dataEntrega)}</span>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  $('ewSearch').addEventListener('input', renderEntreguesWidget);
+  $('ewDate').addEventListener('change', renderEntreguesWidget);
+  $('ewClear').addEventListener('click', ()=>{
+    $('ewSearch').value = '';
+    $('ewDate').value = '';
+    renderEntreguesWidget();
+  });
+  $('ewList').addEventListener('click', (e)=>{
     const item = e.target.closest('.pronto-widget-item');
     if(item){
       const record = records.find(r=>r.id === item.dataset.id);
@@ -2392,13 +2447,11 @@
   $('dateFilter').addEventListener('change', ()=>{ activeStatFilter = null; render(); });
   $('statusFilter').addEventListener('change', ()=>{ activeStatFilter = null; render(); });
   $('tecFilter').addEventListener('change', ()=>{ activeStatFilter = null; render(); });
-  $('entregueFilter').addEventListener('change', ()=>{ activeStatFilter = null; render(); });
   $('clearFilters').addEventListener('click', ()=>{
     $('searchInput').value = '';
     $('dateFilter').value = '';
     $('statusFilter').value = '';
     $('tecFilter').value = '';
-    $('entregueFilter').value = '';
     activeStatFilter = null;
     render();
   });
@@ -2409,19 +2462,27 @@
     if(!card) return;
     const kind = card.dataset.stat;
 
+    // "Entregues hoje" não filtra a lista de trabalho — as OS entregues vivem só
+    // na janelinha "Entregues", então aqui a gente só aponta o filtro de data dela
+    // para hoje e rola até o card.
+    if(kind === 'entregue-hoje'){
+      $('ewDate').value = todayISO();
+      $('ewSearch').value = '';
+      renderEntreguesWidget();
+      $('entreguesWidget').scrollIntoView({ behavior:'smooth', block:'start' });
+      return;
+    }
+
     $('searchInput').value = '';
     $('dateFilter').value = '';
     $('statusFilter').value = '';
     $('tecFilter').value = '';
-    $('entregueFilter').value = '';
 
     currentTipoTab = 'todos';
     document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.tipo === 'todos'));
 
     if(kind === 'pend'){
       activeStatFilter = 'pend';
-    } else if(kind === 'entregue-hoje'){
-      activeStatFilter = 'entregue-hoje';
     } else if(kind === 'pronto'){
       activeStatFilter = null;
       $('statusFilter').value = 'pronto';
