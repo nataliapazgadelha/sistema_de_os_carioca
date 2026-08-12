@@ -889,9 +889,9 @@
           <div class="num" id="statPronto">0</div>
           <div class="lbl">Prontas p/ retirada</div>
         </div>
-        <div class="stat-card accent-entregue" data-stat="entregue-hoje">
-          <div class="num" id="statEntregueHoje">0</div>
-          <div class="lbl">Entregues hoje</div>
+        <div class="stat-card accent-entregue" data-stat="entregues">
+          <div class="num" id="statEntregues">0</div>
+          <div class="lbl">Entregues</div>
         </div>
       </div>
 
@@ -927,23 +927,6 @@
         </div>
         <div class="pronto-widget-list" id="pwList">
           <div class="pronto-widget-empty">Nenhuma OS pronta no momento.</div>
-        </div>
-      </div>
-
-      <div class="pronto-widget" id="entreguesWidget" style="margin-top:14px;">
-        <div class="pronto-widget-head" style="background:var(--bg-soft);color:var(--ink-soft);border-bottom-color:var(--line);">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M16.5 9.4 7.55 4.24"/><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16Z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg> Entregues
-          <span class="count-pill" id="ewCount" style="background:var(--ink-faint);">0</span>
-        </div>
-        <div style="padding:10px 12px;display:flex;flex-direction:column;gap:8px;border-bottom:1px solid var(--line-soft);">
-          <input type="text" id="ewSearch" placeholder="Buscar cliente..." style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);font-size:12.5px;">
-          <div style="display:flex;gap:6px;align-items:center;">
-            <input type="date" id="ewDate" title="Filtrar por data de entrega" style="flex:1;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);font-size:12.5px;">
-            <button type="button" class="clear-btn" id="ewClear" style="padding:6px 4px;white-space:nowrap;">Limpar</button>
-          </div>
-        </div>
-        <div class="pronto-widget-list" id="ewList">
-          <div class="pronto-widget-empty">Nenhuma OS entregue encontrada.</div>
         </div>
       </div>
     </aside>
@@ -1254,6 +1237,32 @@
     </div>
     <div class="modal-foot">
       <button class="btn btn-ghost" id="btnCloseClientesFoot">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: ENTREGUES -->
+<div class="overlay" id="entreguesOverlay">
+  <div class="modal" style="max-width:560px;">
+    <div class="modal-head">
+      <div>
+        <h2>Entregues</h2>
+        <div class="sub" id="entreguesSub">Todas as OS já entregues ao cliente</div>
+      </div>
+      <button class="close-x" id="closeEntregues">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+        <input type="text" id="entreguesSearch" placeholder="Buscar cliente..." style="flex:1 1 180px;padding:10px 12px;border-radius:9px;border:1px solid var(--line);background:var(--bg);font-size:14px;">
+        <input type="date" id="entreguesDate" title="Filtrar por data de entrega" style="padding:10px 12px;border-radius:9px;border:1px solid var(--line);background:var(--bg);font-size:13.5px;">
+        <button class="clear-btn" id="entreguesClear">Limpar filtros</button>
+      </div>
+      <div class="hist-os-list" id="entreguesList"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" id="btnCloseEntreguesFoot">Fechar</button>
     </div>
   </div>
 </div>
@@ -1965,7 +1974,7 @@
 
   function updateCounts(){
     // OS "prontas para retirada" e "entregues" já saíram da fila de trabalho (ficam só
-    // nas janelinhas laterais), então não entram na contagem das abas.
+    // no card lateral e no modal de Entregues), então não entram na contagem das abas.
     const emFila = records.filter(r=> r.status !== 'pronto' && r.status !== 'entregue');
     const cel = emFila.filter(r=>r.tipo==='cel').length;
     const info = emFila.filter(r=>r.tipo==='info').length;
@@ -1978,8 +1987,7 @@
     $('statTotal').textContent = records.filter(r=> r.status !== 'pronto' && r.status !== 'entregue').length;
     $('statPend').textContent = records.filter(r=> r.status==='analisando').length;
     $('statPronto').textContent = records.filter(r=>r.status==='pronto').length;
-    const today = todayISO();
-    $('statEntregueHoje').textContent = records.filter(r=>r.status==='entregue' && r.dataEntrega===today).length;
+    $('statEntregues').textContent = records.filter(r=>r.status==='entregue').length;
   }
 
   function escapeHtml(str){
@@ -2112,7 +2120,6 @@
     updateCounts();
     updateFilterOptions();
     renderProntosWidget();
-    renderEntreguesWidget();
 
     const filtered = applyFilters(records).sort((a,b)=> b.osNum - a.osNum);
     const area = $('listArea');
@@ -2167,48 +2174,60 @@
     }
   });
 
-  // ---------- WIDGET: ENTREGUES ----------
-  function renderEntreguesWidget(){
-    const q = $('ewSearch').value.trim().toLowerCase();
-    const dateVal = $('ewDate').value;
+  // ---------- MODAL: ENTREGUES ----------
+  const entreguesOverlay = $('entreguesOverlay');
+  function closeEntreguesFn(){ entreguesOverlay.classList.remove('show'); }
+  function openEntreguesModal(){
+    entreguesOverlay.classList.add('show');
+    renderEntreguesList();
+  }
+  $('closeEntregues').addEventListener('click', closeEntreguesFn);
+  $('btnCloseEntreguesFoot').addEventListener('click', closeEntreguesFn);
+  entreguesOverlay.addEventListener('click', (e)=>{ if(e.target === entreguesOverlay) closeEntreguesFn(); });
+
+  function renderEntreguesList(){
+    const q = $('entreguesSearch').value.trim().toLowerCase();
+    const dateVal = $('entreguesDate').value;
 
     let entregues = records.filter(r=>r.status==='entregue');
     if(dateVal) entregues = entregues.filter(r=>r.dataEntrega === dateVal);
     if(q) entregues = entregues.filter(r=> `${r.cliente} ${r.contato}`.toLowerCase().includes(q));
     entregues.sort((a,b)=> b.osNum - a.osNum);
 
-    $('ewCount').textContent = entregues.length;
-    const list = $('ewList');
+    $('entreguesSub').textContent = `${entregues.length} OS entregue${entregues.length===1?'':'s'}`;
+    const list = $('entreguesList');
     if(entregues.length === 0){
-      list.innerHTML = `<div class="pronto-widget-empty">${records.some(r=>r.status==='entregue') ? 'Nenhuma OS entregue encontrada com esse filtro.' : 'Nenhuma OS entregue ainda.'}</div>`;
+      list.innerHTML = `<div class="hist-empty">${records.some(r=>r.status==='entregue') ? 'Nenhuma OS entregue encontrada com esse filtro.' : 'Nenhuma OS entregue ainda.'}</div>`;
       return;
     }
     list.innerHTML = entregues.map(r=>{
-      const aparelho = [r.tipoAparelho, r.modelo].filter(Boolean).join(' — ') || r.modelo || '—';
+      const aparelho = [r.tipoAparelho, r.modelo].filter(Boolean).join(' — ') || r.modelo || 'sem modelo';
       return `
-        <div class="pronto-widget-item" data-id="${r.id}">
-          <div class="pw-name">${escapeHtml(toTitleCase(r.cliente)) || 'Sem nome'}</div>
-          <div class="pw-device">${escapeHtml(aparelho)}</div>
-          <div class="pw-actions">
-            <span class="pw-osnum">OS ${String(r.osNum).padStart(4,'0')}</span>
-            <span class="pw-osnum">Entregue em ${formatDatePT(r.dataEntrega)}</span>
+        <div class="hist-os-item" data-id="${r.id}">
+          <div class="left">
+            <div class="num">OS Nº ${String(r.osNum).padStart(4,'0')} — ${escapeHtml(toTitleCase(r.cliente))||'Sem nome'}</div>
+            <div class="desc">${escapeHtml(aparelho)} · Entregue em ${formatDatePT(r.dataEntrega)}${r.horarioE?' · '+r.horarioE:''}</div>
           </div>
+          <span class="status-badge status-entregue"><span class="dot"></span>Entregue</span>
         </div>`;
     }).join('');
   }
 
-  $('ewSearch').addEventListener('input', renderEntreguesWidget);
-  $('ewDate').addEventListener('change', renderEntreguesWidget);
-  $('ewClear').addEventListener('click', ()=>{
-    $('ewSearch').value = '';
-    $('ewDate').value = '';
-    renderEntreguesWidget();
+  $('entreguesSearch').addEventListener('input', renderEntreguesList);
+  $('entreguesDate').addEventListener('change', renderEntreguesList);
+  $('entreguesClear').addEventListener('click', ()=>{
+    $('entreguesSearch').value = '';
+    $('entreguesDate').value = '';
+    renderEntreguesList();
   });
-  $('ewList').addEventListener('click', (e)=>{
-    const item = e.target.closest('.pronto-widget-item');
+  $('entreguesList').addEventListener('click', (e)=>{
+    const item = e.target.closest('.hist-os-item');
     if(item){
       const record = records.find(r=>r.id === item.dataset.id);
-      if(record) openViewModal(record);
+      if(record){
+        closeEntreguesFn();
+        openViewModal(record);
+      }
     }
   });
 
@@ -2462,14 +2481,12 @@
     if(!card) return;
     const kind = card.dataset.stat;
 
-    // "Entregues hoje" não filtra a lista de trabalho — as OS entregues vivem só
-    // na janelinha "Entregues", então aqui a gente só aponta o filtro de data dela
-    // para hoje e rola até o card.
-    if(kind === 'entregue-hoje'){
-      $('ewDate').value = todayISO();
-      $('ewSearch').value = '';
-      renderEntreguesWidget();
-      $('entreguesWidget').scrollIntoView({ behavior:'smooth', block:'start' });
+    // "Entregues" não filtra a lista de trabalho — as OS entregues ficam só no
+    // modal dedicado, com busca por cliente e filtro por data.
+    if(kind === 'entregues'){
+      $('entreguesSearch').value = '';
+      $('entreguesDate').value = '';
+      openEntreguesModal();
       return;
     }
 
@@ -3168,6 +3185,7 @@
       $('confirmFinalizeOverlay').classList.remove('show');
       $('photoLightbox').classList.remove('show');
       closeClientesFn();
+      closeEntreguesFn();
       closeClienteHistFn();
       closeClienteEditFn();
       $('confirmClienteOverlay').classList.remove('show');
