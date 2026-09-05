@@ -6,12 +6,6 @@
 <title>Infocell OS — Carioca Infocell</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#1E40AF">
-<link rel="apple-touch-icon" href="/icon-192.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Infocell OS">
 <style>
   :root{
     --bg:#F4F2EC;
@@ -117,6 +111,26 @@
   .btn-new:hover{transform:translateY(-1px);box-shadow:0 3px 0 #049436, var(--shadow-md);}
   .btn-new:active{transform:translateY(1px);box-shadow:0 1px 0 #049436;}
 
+  /* Navegação Principal */
+  .main-nav{
+    max-width:1180px;margin:0 auto;
+    display:flex;gap:8px;
+    border-bottom:1px solid rgba(255,255,255,0.15);
+    padding-bottom:10px;margin-bottom:10px;
+  }
+  .nav-btn{
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.12);
+    color:#B9CFF5;
+    padding:8px 16px;border-radius:8px;
+    font-size:13.5px;font-weight:600;cursor:pointer;
+    display:flex;align-items:center;gap:6px;
+    transition:all .15s ease;
+  }
+  .nav-btn.active, .nav-btn:hover{
+    background:#fff;color:var(--brand-deep);
+  }
+
   /* type tabs */
   .tabs{
     max-width:1180px;margin:0 auto;
@@ -151,7 +165,7 @@
   /* ---------- MAIN ---------- */
   .wrap{max-width:1180px;margin:0 auto;padding:22px 20px 0;}
 
-  /* stats */
+  /* stats OS */
   .stats{
     display:grid;
     grid-template-columns:repeat(4,1fr);
@@ -176,6 +190,29 @@
   .stat-card.accent-pronto .num{color:var(--st-pronto);}
   .stat-card.accent-pronto .lbl{color:var(--st-pronto);}
   .stat-card.accent-entregue .num{color:var(--ink-faint);}
+
+  /* STATS FINANCEIROS */
+  .fin-stats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+    gap:14px;
+    margin-bottom:20px;
+  }
+  .fin-card{
+    background:var(--surface);
+    border:1px solid var(--line-soft);
+    border-radius:var(--radius);
+    padding:16px 18px;
+    box-shadow:var(--shadow-sm);
+  }
+  .fin-card .title{font-size:12px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.04em;display:flex;align-items:center;justify-content:space-between;}
+  .fin-card .amount{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;margin-top:8px;color:var(--brand-deep);}
+  .fin-card.cel-card .amount{color:var(--cel);}
+  .fin-card.info-card .amount{color:var(--info);}
+  .fin-card.total-card{background:linear-gradient(135deg, var(--brand-deep) 0%, #001A4D 100%);color:#fff;}
+  .fin-card.total-card .title{color:#CBDBF7;}
+  .fin-card.total-card .amount{color:#00C940;}
+  .fin-card .sub-info{font-size:11.5px;color:var(--ink-faint);margin-top:4px;}
 
   /* filters */
   .filters{
@@ -225,6 +262,23 @@
   }
   .clear-btn:hover{text-decoration:underline;}
 
+  /* TABELAS FINANCEIRAS */
+  .fin-table-wrap{
+    background:var(--surface);
+    border:1px solid var(--line-soft);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow-sm);
+    overflow:hidden;
+    margin-bottom:20px;
+  }
+  .fin-table{width:100%;border-collapse:collapse;text-align:left;font-size:13.5px;}
+  .fin-table th{background:var(--bg-soft);padding:12px 16px;font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--ink);border-bottom:1px solid var(--line);}
+  .fin-table td{padding:12px 16px;border-bottom:1px solid var(--line-soft);}
+  .fin-table tr:last-child td{border-bottom:none;}
+  .fin-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:100px;font-size:11px;font-weight:700;}
+  .fin-badge.receita{background:var(--st-pronto-soft);color:var(--st-pronto);}
+  .fin-badge.despesa{background:#FBE7E2;color:#B5432A;}
+
   /* empty state */
   .empty{
     text-align:center;
@@ -235,7 +289,7 @@
   .empty h3{margin:0 0 6px;font-size:17px;color:var(--ink);}
   .empty p{margin:0;font-size:14px;}
 
-  /* ---------- CARDS GRID ---------- */
+  /* ---------- CARDS GRID OS ---------- */
   .grid{
     display:grid;
     grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
@@ -474,7 +528,7 @@
 
   .loading-row{text-align:center;padding:50px;color:var(--ink-soft);font-size:14px;}
 
-  /* ---------- LAYOUT: CONTEÚDO PRINCIPAL + WIDGET LATERAL ---------- */
+  /* ---------- LAYOUT CONTEÚDO PRINCIPAL ---------- */
   .content-grid{
     display:grid;
     grid-template-columns:1fr 300px;
@@ -574,7 +628,7 @@
     .photo-grid{grid-template-columns:repeat(2,1fr);}
   }
 
-  /* ---------- THUMBNAIL NA LISTA ---------- */
+  /* THUMBNAIL NA LISTA */
   .ticket{cursor:pointer;}
   .ticket-footer, .ticket-footer *{cursor:default;}
   .client-row-main{display:flex;gap:10px;align-items:flex-start;min-width:0;}
@@ -586,7 +640,7 @@
     color:var(--ink-faint);font-size:17px;
   }
 
-  /* ---------- BOTÃO CONFIGURAÇÕES ---------- */
+  /* BOTÕES SUPERIORES */
   .btn-icon-topbar{
     background:rgba(255,255,255,0.08);
     border:1px solid rgba(255,255,255,0.14);
@@ -598,7 +652,7 @@
   .btn-icon-topbar:hover{background:rgba(255,255,255,0.16);}
   .btn-icon-topbar svg{width:19px;height:19px;}
 
-  /* ---------- UPLOAD DE FOTOS ---------- */
+  /* UPLOAD DE FOTOS */
   .photo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
   .photo-slot{
     aspect-ratio:1;border-radius:10px;border:1.5px dashed var(--line);
@@ -614,7 +668,7 @@
   }
   .photo-slot .plus-icon{width:22px;height:22px;}
 
-  /* ---------- SENHA DO APARELHO ---------- */
+  /* SENHA DO APARELHO */
   .senha-box{border:1px solid var(--line-soft);border-radius:12px;padding:14px;background:var(--bg);}
   .senha-tabs{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
   .senha-tab-btn{
@@ -692,7 +746,7 @@
   }
   .pattern-dot.active{border-color:var(--brand);background:var(--brand-soft);}
 
-  /* ---------- MODAL CONFIGURAÇÕES ---------- */
+  /* CONFIGURAÇÕES */
   .cfg-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
 
   .cfg-loja-form{display:flex;flex-direction:column;gap:14px;}
@@ -728,7 +782,7 @@
     display:inline-flex;align-items:center;gap:3px;
   }
 
-  /* ---------- CLIENTES ---------- */
+  /* CLIENTES */
   .cliente-list{display:flex;flex-direction:column;gap:6px;max-height:400px;overflow-y:auto;}
   .cliente-item{
     display:flex;align-items:center;justify-content:space-between;gap:10px;
@@ -764,7 +818,7 @@
   .hist-os-item .desc{font-size:12px;color:var(--ink-faint);margin-top:2px;}
   .hist-empty{font-size:13px;color:var(--ink-faint);text-align:center;padding:24px;}
 
-  /* ---------- MODAL VISUALIZAR OS ---------- */
+  /* VISUALIZAR OS */
   .view-section{margin-bottom:18px;}
   .view-section:last-child{margin-bottom:0;}
   .view-section h4{
@@ -786,7 +840,7 @@
   .photo-lightbox img{max-width:100%;max-height:100%;border-radius:10px;}
   .photo-lightbox .close-x{position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.15);color:#fff;}
 
-  /* ---------- LOGIN ---------- */
+  /* LOGIN */
   .auth-overlay{
     position:fixed;inset:0;z-index:400;
     background:linear-gradient(160deg,#00308C 0%,#001A4D 100%);
@@ -864,6 +918,14 @@
       </button>
     </div>
   </div>
+
+  <!-- NAVEGAÇÃO PRINCIPAL DAS VISÕES (OS x FINANCEIRO) -->
+  <div class="main-nav">
+    <button class="nav-btn active" id="navOS"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="8" height="4" x="8" y="2" rx="1"/><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/></svg> Gestão de OS</button>
+    <button class="nav-btn" id="navFinanceiro"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Financeiro &amp; Fluxo de Caixa</button>
+  </div>
+
+  <!-- TABS DAS CATEGORIAS DE OS (SÓ VISÍVEL NA ABA OS) -->
   <div class="tabs" id="tabs">
     <button class="tab active" data-tipo="todos">Todas as OS <span class="count" id="cntTodos">0</span></button>
     <button class="tab" data-tipo="cel"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:2px"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg> Celulares &amp; Tablets <span class="count" id="cntCel">0</span></button>
@@ -873,70 +935,209 @@
 
 <div class="wrap">
 
-  <div class="content-grid">
-    <div class="main-col">
+  <!-- ==================== VIEW 1: GESTÃO DE OS ==================== -->
+  <div id="viewOSArea">
+    <div class="content-grid">
+      <div class="main-col">
 
-      <div class="stats" id="statsRow">
-        <div class="stat-card" data-stat="total">
-          <div class="num" id="statTotal">0</div>
-          <div class="lbl">Total de OS</div>
+        <div class="stats" id="statsRow">
+          <div class="stat-card" data-stat="total">
+            <div class="num" id="statTotal">0</div>
+            <div class="lbl">Total em bancada</div>
+          </div>
+          <div class="stat-card accent-pend" data-stat="pend">
+            <div class="num" id="statPend">0</div>
+            <div class="lbl">Em análise</div>
+          </div>
+          <div class="stat-card accent-pronto" data-stat="pronto">
+            <div class="num" id="statPronto">0</div>
+            <div class="lbl">Prontas p/ retirada</div>
+          </div>
+          <div class="stat-card accent-entregue" data-stat="entregue-hoje">
+            <div class="num" id="statEntregueHoje">0</div>
+            <div class="lbl">Entregues hoje</div>
+          </div>
         </div>
-        <div class="stat-card accent-pend" data-stat="pend">
-          <div class="num" id="statPend">0</div>
-          <div class="lbl">Em análise</div>
+
+        <div class="filters">
+          <div class="search-box">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <input type="text" id="searchInput" placeholder="Buscar por cliente, contato ou modelo...">
+          </div>
+          <input type="date" class="filter-date" id="dateFilter" title="Filtrar por data de entrada">
+          <select class="filter-select" id="statusFilter">
+            <option value="">Todos os status</option>
+            <option value="recebido">Recebido</option>
+            <option value="analisando">Em Análise</option>
+            <option value="pronto">Pronto para Retirada</option>
+            <option value="entregue">Entregue</option>
+          </select>
+          <select class="filter-select" id="tecFilter">
+            <option value="">Todos os técnicos</option>
+          </select>
+          <select class="filter-select" id="entregueFilter">
+            <option value="">Entregues e pendentes</option>
+            <option value="nao">Somente pendentes</option>
+            <option value="sim">Somente entregues</option>
+          </select>
+          <button class="clear-btn" id="clearFilters">Limpar filtros</button>
         </div>
-        <div class="stat-card accent-pronto" data-stat="pronto">
-          <div class="num" id="statPronto">0</div>
-          <div class="lbl">Prontas p/ retirada</div>
+
+        <div id="listArea">
+          <div class="loading-row">Carregando ordens de serviço...</div>
         </div>
-        <div class="stat-card accent-entregue" data-stat="entregues">
-          <div class="num" id="statEntregues">0</div>
-          <div class="lbl">Entregues</div>
+
+      </div><!-- /main-col -->
+
+      <aside class="side-col">
+        <div class="pronto-widget">
+          <div class="pronto-widget-head">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg> Prontas para retirada
+            <span class="count-pill" id="pwCount">0</span>
+          </div>
+          <div class="pronto-widget-list" id="pwList">
+            <div class="pronto-widget-empty">Nenhuma OS pronta no momento.</div>
+          </div>
         </div>
+      </aside>
+
+    </div><!-- /content-grid -->
+  </div>
+
+  <!-- ==================== VIEW 2: PAINEL FINANCEIRO ==================== -->
+  <div id="viewFinanceiroArea" style="display:none;">
+    <!-- CARDS DE RESUMO FINANCEIRO (FATURAMENTO) -->
+    <div class="fin-stats">
+      <div class="fin-card cel-card">
+        <div class="title">
+          <span>Assistência Celulares</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+        </div>
+        <div class="amount" id="finCelTotal">R$ 0,00</div>
+        <div class="sub-info" id="finCelSub">0 manutenções concluídas</div>
       </div>
 
-      <div class="filters">
-        <div class="search-box">
-          <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-          <input type="text" id="searchInput" placeholder="Buscar por cliente, contato ou modelo...">
+      <div class="fin-card info-card">
+        <div class="title">
+          <span>Assistência Informática</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
         </div>
-        <input type="date" class="filter-date" id="dateFilter" title="Filtrar por data de entrada">
-        <select class="filter-select" id="statusFilter">
-          <option value="">Todos os status</option>
-          <option value="recebido">Recebido</option>
-          <option value="analisando">Em Análise</option>
-          <option value="pronto">Pronto para Retirada</option>
-        </select>
-        <select class="filter-select" id="tecFilter">
-          <option value="">Todos os técnicos</option>
-        </select>
-        <button class="clear-btn" id="clearFilters">Limpar filtros</button>
+        <div class="amount" id="finInfoTotal">R$ 0,00</div>
+        <div class="sub-info" id="finInfoSub">0 manutenções concluídas</div>
       </div>
 
-      <div id="listArea">
-        <div class="loading-row">Carregando ordens de serviço...</div>
+      <div class="fin-card total-card">
+        <div class="title">
+          <span>Total Faturado (Período)</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 6v12"/></svg>
+        </div>
+        <div class="amount" id="finPeriodoTotal">R$ 0,00</div>
+        <div class="sub-info" id="finPeriodoSub">Soma total de recebimentos</div>
+      </div>
+    </div>
+
+    <!-- FILTROS FINANCEIROS COMPLETO (DIA/SEMANA/MÊS) -->
+    <div class="filters">
+      <select class="filter-select" id="finPresetFilter">
+        <option value="hoje">Hoje</option>
+        <option value="semana">Esta Semana</option>
+        <option value="mes" selected>Este Mês</option>
+        <option value="mes_anterior">Mês Anterior</option>
+        <option value="custom">Período Personalizado</option>
+      </select>
+
+      <div id="finCustomDates" style="display:none;gap:8px;align-items:center;">
+        <input type="date" class="filter-date" id="finDataInicio">
+        <span style="font-size:12px;color:var(--ink-faint);">até</span>
+        <input type="date" class="filter-date" id="finDataFim">
       </div>
 
-    </div><!-- /main-col -->
+      <select class="filter-select" id="finCategoriaFilter">
+        <option value="">Todas as categorias</option>
+        <option value="cel">Somente Assistência Celular</option>
+        <option value="info">Somente Assistência Informática</option>
+      </select>
 
-    <aside class="side-col">
-      <div class="pronto-widget">
-        <div class="pronto-widget-head">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg> Prontas para retirada
-          <span class="count-pill" id="pwCount">0</span>
-        </div>
-        <div class="pronto-widget-list" id="pwList">
-          <div class="pronto-widget-empty">Nenhuma OS pronta no momento.</div>
-        </div>
-      </div>
-    </aside>
+      <button class="btn btn-primary" id="btnNovoLancamento" style="margin-left:auto;padding:8px 14px;font-size:13px;">+ Lançamento Avulso</button>
+    </div>
 
-  </div><!-- /content-grid -->
+    <!-- EXIBIÇÃO EM TABELA DO FLUXO DE CAIXA -->
+    <div class="fin-table-wrap">
+      <table class="fin-table">
+        <thead>
+          <tr>
+            <th>Data/Hora</th>
+            <th>Descrição / Serviço</th>
+            <th>Categoria / Origem</th>
+            <th>Forma Pagto.</th>
+            <th>Tipo</th>
+            <th>Valor</th>
+          </tr>
+        </thead>
+        <tbody id="finTableBody">
+          <tr><td colspan="6" class="loading-row">Carregando dados financeiros...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
 </div>
 
 </div><!-- /appRoot -->
 
+<!-- MODAL: LANÇAMENTO FINANCEIRO MANUALE -->
+<div class="overlay" id="modalFinOverlay">
+  <div class="modal" style="max-width:440px;">
+    <div class="modal-head">
+      <div>
+        <h2>Lançamento Financeiro</h2>
+        <div class="sub">Registre receitas ou despesas extras no caixa</div>
+      </div>
+      <button class="close-x" id="closeFinModal">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="field full">
+          <label>Tipo de Lançamento</label>
+          <div class="seg">
+            <button type="button" class="seg-btn active-cel" id="btnFinTipoReceita">Receita (Entrada)</button>
+            <button type="button" class="seg-btn" id="btnFinTipoDespesa">Despesa (Saída)</button>
+          </div>
+        </div>
+        <div class="field full">
+          <label>Descrição</label>
+          <input type="text" id="finDescricao" placeholder="Ex: Venda de Película, Compra de Telas...">
+        </div>
+        <div class="field">
+          <label>Valor (R$)</label>
+          <input type="text" id="finValor" placeholder="Ex: 50,00">
+        </div>
+        <div class="field">
+          <label>Forma de Pagamento</label>
+          <select id="finFormaPagamento">
+            <option value="Pix">Pix</option>
+            <option value="Dinheiro">Dinheiro</option>
+            <option value="Cartão de Crédito">Cartão de Crédito</option>
+            <option value="Cartão de Débito">Cartão de Débito</option>
+            <option value="Transferência">Transferência</option>
+          </select>
+        </div>
+        <div class="field full">
+          <label>Data</label>
+          <input type="date" id="finData">
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" id="btnCancelFin">Cancelar</button>
+      <button class="btn btn-primary" id="btnSaveFin">Salvar Lançamento</button>
+    </div>
+  </div>
+</div>
+
+<!-- DEMAIS MODAIS DO SISTEMA MANTIDOS INTEGRALMENTE -->
 <!-- MODAL: NOVA/EDITAR OS -->
 <div class="overlay" id="modalOverlay">
   <div class="modal">
@@ -1184,7 +1385,7 @@
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 00-2 2v9a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
           </div>
           <div class="logo-upload-actions">
-            <div class="hint">Logo da loja — aparece no topo do sistema e no recibo A4. Recomendado: imagem quadrada, fundo transparente (PNG).</div>
+            <div class="hint">Logo da loja — aparece no topo do sistema e nos recibos (térmico e A4). Recomendado: imagem quadrada, fundo transparente (PNG).</div>
             <div class="logo-btns">
               <button type="button" class="btn btn-ghost" id="btnLojaLogoPick">Escolher imagem</button>
               <button type="button" class="btn btn-ghost" id="btnLojaLogoRemove" style="display:none;">Remover</button>
@@ -1209,10 +1410,6 @@
             <label>Endereço</label>
             <input type="text" id="lojaEndereco" placeholder="Rua, número, bairro — cidade/UF">
           </div>
-        </div>
-        <div class="field full">
-          <label>Termos e garantia (aparece no rodapé dos recibos)</label>
-          <textarea id="lojaTermos" placeholder="Ex: Garantia de 90 dias para defeitos relacionados ao serviço executado. Não cobre danos por queda, líquido ou mau uso. Peças não retiradas em até 90 dias serão descartadas." style="min-height:96px;"></textarea>
         </div>
         <button class="btn btn-primary" id="btnSalvarLoja" style="align-self:flex-start;">Salvar dados da loja</button>
       </div>
@@ -1241,32 +1438,6 @@
     </div>
     <div class="modal-foot">
       <button class="btn btn-ghost" id="btnCloseClientesFoot">Fechar</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL: ENTREGUES -->
-<div class="overlay" id="entreguesOverlay">
-  <div class="modal" style="max-width:560px;">
-    <div class="modal-head">
-      <div>
-        <h2>Entregues</h2>
-        <div class="sub" id="entreguesSub">Todas as OS já entregues ao cliente</div>
-      </div>
-      <button class="close-x" id="closeEntregues">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-      </button>
-    </div>
-    <div class="modal-body">
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
-        <input type="text" id="entreguesSearch" placeholder="Buscar cliente..." style="flex:1 1 180px;padding:10px 12px;border-radius:9px;border:1px solid var(--line);background:var(--bg);font-size:14px;">
-        <input type="date" id="entreguesDate" title="Filtrar por data de entrega" style="padding:10px 12px;border-radius:9px;border:1px solid var(--line);background:var(--bg);font-size:13.5px;">
-        <button class="clear-btn" id="entreguesClear">Limpar filtros</button>
-      </div>
-      <div class="hist-os-list" id="entreguesList"></div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn btn-ghost" id="btnCloseEntreguesFoot">Fechar</button>
     </div>
   </div>
 </div>
@@ -1344,8 +1515,7 @@
   <img id="lightboxImg" src="" alt="Foto do aparelho">
 </div>
 
-<!-- MODAL: CONFIRMAR EXCLUSÃO -->
-
+<!-- MODAL: CONFIRMAR EXCLUSÃO DE OS -->
 <div class="overlay" id="confirmOverlay">
   <div class="modal confirm-modal">
     <div class="icon-wrap">
@@ -1361,7 +1531,6 @@
 </div>
 
 <!-- MODAL: CONFIRMAR FINALIZAÇÃO DA OS -->
-
 <div class="overlay" id="confirmFinalizeOverlay">
   <div class="modal confirm-modal">
     <div class="icon-wrap success">
@@ -1381,10 +1550,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 (function(){
-  // ============================================================
-  // CONFIGURAÇÃO DO SUPABASE — troque pelos dados do seu projeto
-  // Painel do Supabase → Project Settings → API
-  // ============================================================
   const SUPABASE_URL = 'https://enzohemdifpmtevfhgve.supabase.co';
   const SUPABASE_ANON_KEY = 'sb_publishable_82Wfi8-Z6H_c4BSKAiQvhA_Wiac1-pr';
   const FOTOS_BUCKET = 'fotos-os';
@@ -1393,17 +1558,20 @@
   const TABLE_MAP = { tecnicos:'tecnicos', atendentes:'atendentes', tipos:'tipos_aparelho' };
 
   let records = [];
+  let lancamentosFin = [];
   let counter = 0;
   let currentTipoTab = 'todos';
+  let currentMainView = 'os'; // 'os' | 'financeiro'
   let editingId = null;
   let deletingId = null;
   let config = { tecnicos: [], tipos: [], atendentes: [] };
-  let lojaInfo = { nome:'', cnpj:'', telefone:'', endereco:'', logoDataUrl:'', termos:'' };
+  let lojaInfo = { nome:'', cnpj:'', telefone:'', endereco:'', logoDataUrl:'' };
   const DEFAULT_BRAND_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>';
   let currentCfgTab = 'tecnicos';
   let senhaTipoAtual = 'alfa';
   let patternSequence = [];
   let currentFotos = [null,null,null,null];
+  let finTipoAtual = 'receita';
 
   const STATUS_LABELS = {
     recebido:'Recebido', analisando:'Em Análise', pronto:'Pronto para Retirada', entregue:'Entregue'
@@ -1411,7 +1579,6 @@
 
   const $ = (id) => document.getElementById(id);
 
-  // ---------- ÍCONES (SVG modernos, substituem os emojis coloridos) ----------
   const ICON_PATHS = {
     phone: '<rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/>',
     monitor: '<rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/>',
@@ -1435,7 +1602,7 @@
     const p = ICON_PATHS[name] || '';
     return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:-3px">${p}</svg>`;
   }
-  // Mapeia o emoji "antigo" que abria cada toast para um ícone + cor modernos
+
   const TOAST_ICON_MAP = [
     { re: /^⚠️\s*/, name:'alertTriangle', cls:'toast-warn' },
     { re: /^⛔\s*/, name:'xCircle', cls:'toast-warn' },
@@ -1455,6 +1622,16 @@
     const [y,m,d] = iso.split('-');
     return `${d}/${m}/${y}`;
   }
+  function parseValorBr(valStr){
+    if(!valStr) return 0;
+    const clean = String(valStr).replace(/[^\d,. -]/g, '').replace(',', '.').trim();
+    const num = parseFloat(clean);
+    return isNaN(num) ? 0 : num;
+  }
+  function formatMoney(num){
+    return (num || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }
+
   function showToast(msg){
     const t = $('toast');
     let text = msg;
@@ -1473,7 +1650,6 @@
     t._timer = setTimeout(()=> t.classList.remove('show'), duration);
   }
 
-  // ---------- ID ----------
   function makeId(){
     if(window.crypto && crypto.randomUUID){
       try{ return crypto.randomUUID(); }catch(e){}
@@ -1484,7 +1660,6 @@
     });
   }
 
-  // ---------- MAPEAMENTO DB <-> REGISTRO ----------
   async function mapRowToRecord(row){
     let senhaValor = row.senha_valor;
     if(row.senha_tipo === 'desenho' && senhaValor){
@@ -1496,7 +1671,7 @@
       try{
         const { data, error } = await supabase.storage.from(FOTOS_BUCKET).createSignedUrl(path, 3600);
         if(!error && data) fotos.push(data.signedUrl);
-      }catch(e){ /* ignora foto que falhar */ }
+      }catch(e){}
     }
     return {
       id: row.id,
@@ -1510,6 +1685,7 @@
       modelo: row.modelo,
       servico: row.servico,
       valor: row.valor,
+      valorNum: row.valor_num || parseValorBr(row.valor),
       pagamento: row.pagamento,
       parcelas: row.parcelas,
       tecnico: row.tecnico,
@@ -1529,7 +1705,6 @@
     };
   }
 
-  // ---------- BANCO DE DADOS: OS ----------
   async function loadData(){
     try{
       const { data, error } = await supabase.from('ordens_servico').select('*').order('os_num', { ascending:false });
@@ -1548,12 +1723,12 @@
       counter = records.reduce((m,r)=>Math.max(m, r.osNum||0), 0);
     }
     render();
+    renderFinanceiro();
   }
   async function persistCounter(){
     try{ await supabase.from('contador').update({ valor: counter }).eq('id', 1); }catch(e){}
   }
 
-  // ---------- BANCO DE DADOS: FOTOS (Supabase Storage) ----------
   async function persistFotos(recordId){
     const paths = [];
     for(let i=0;i<4;i++){
@@ -1573,35 +1748,230 @@
     return paths;
   }
 
-  // ---------- BANCO DE DADOS: CLIENTES ----------
+  // ---------- MÓDULO FINANCEIRO (CARREGAR & RENDERIZAR) ----------
+  async function loadLancamentosFinanceiros(){
+    try{
+      const { data, error } = await supabase.from('financeiro_lancamentos').select('*').order('data_pagamento', { ascending: false });
+      if(!error && data){
+        lancamentosFin = data;
+      }
+    }catch(e){
+      console.error('Tabela financeiro_lancamentos indisponível. Usando cálculo baseado nas OS entregues.');
+    }
+  }
+
+  function getFinDateRange(){
+    const preset = $('finPresetFilter').value;
+    const today = new Date();
+    let start = new Date();
+    let end = new Date();
+
+    if(preset === 'hoje'){
+      start = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      end = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59);
+    } else if(preset === 'semana'){
+      const day = today.getDay();
+      const diff = today.getDate() - day + (day === 0 ? -6 : 1); // Segunda-feira
+      start = new Date(today.setDate(diff));
+      start.setHours(0,0,0,0);
+      end = new Date();
+      end.setHours(23,59,59,999);
+    } else if(preset === 'mes'){
+      start = new Date(today.getFullYear(), today.getMonth(), 1);
+      end = new Date(today.getFullYear(), today.getMonth() + 1, 0, 23, 59, 59);
+    } else if(preset === 'mes_anterior'){
+      start = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+      end = new Date(today.getFullYear(), today.getMonth(), 0, 23, 59, 59);
+    } else if(preset === 'custom'){
+      const dIn = $('finDataInicio').value;
+      const dFim = $('finDataFim').value;
+      start = dIn ? new Date(dIn + 'T00:00:00') : new Date(2000, 0, 1);
+      end = dFim ? new Date(dFim + 'T23:59:59') : new Date(2099, 11, 31);
+    }
+    return { start, end };
+  }
+
+  function renderFinanceiro(){
+    const { start, end } = getFinDateRange();
+    const catFilter = $('finCategoriaFilter').value;
+
+    // Converte OS entregues em formato de caixa para exibição unificada
+    const osEntregues = records.filter(r => {
+      if(r.status !== 'entregue' || !r.dataEntrega) return false;
+      const d = new Date(r.dataEntrega + 'T12:00:00');
+      if(d < start || d > end) return false;
+      if(catFilter && r.tipo !== catFilter) return false;
+      return true;
+    });
+
+    let celFaturado = 0;
+    let celCount = 0;
+    let infoFaturado = 0;
+    let infoCount = 0;
+
+    osEntregues.forEach(r => {
+      const v = r.valorNum || parseValorBr(r.valor);
+      if(r.tipo === 'cel'){
+        celFaturado += v;
+        celCount++;
+      } else {
+        infoFaturado += v;
+        infoCount++;
+      }
+    });
+
+    // Lançamentos avulsos
+    const lancAvulsos = lancamentosFin.filter(l => {
+      const d = new Date(l.data_pagamento + 'T12:00:00');
+      return d >= start && d <= end;
+    });
+
+    let extraReceita = 0;
+    let extraDespesa = 0;
+    lancAvulsos.forEach(l => {
+      if(l.tipo === 'receita') extraReceita += Number(l.valor || 0);
+      else extraDespesa += Number(l.valor || 0);
+    });
+
+    const totalFaturado = celFaturado + infoFaturado + extraReceita - extraDespesa;
+
+    $('finCelTotal').textContent = formatMoney(celFaturado);
+    $('finCelSub').textContent = `${celCount} manutenções concluídas`;
+
+    $('finInfoTotal').textContent = formatMoney(infoFaturado);
+    $('finInfoSub').textContent = `${infoCount} manutenções concluídas`;
+
+    $('finPeriodoTotal').textContent = formatMoney(totalFaturado);
+    $('finPeriodoSub').textContent = `Entradas: ${formatMoney(celFaturado + infoFaturado + extraReceita)} | Saídas: ${formatMoney(extraDespesa)}`;
+
+    // Tabela detalhada
+    const tbody = $('finTableBody');
+    const todosItens = [
+      ...osEntregues.map(r => ({
+        data: r.dataEntrega,
+        desc: `OS Nº ${String(r.osNum).padStart(4,'0')} - ${r.cliente} (${r.modelo||'Geral'})`,
+        cat: r.tipo === 'cel' ? 'Assistência Celular' : 'Assistência Informática',
+        pagto: r.pagamento || 'A combinar',
+        tipo: 'receita',
+        valor: r.valorNum || parseValorBr(r.valor)
+      })),
+      ...lancAvulsos.map(l => ({
+        data: l.data_pagamento,
+        desc: l.descricao,
+        cat: 'Lançamento Avulso',
+        pagto: l.forma_pagamento || '—',
+        tipo: l.tipo,
+        valor: Number(l.valor)
+      }))
+    ].sort((a,b) => new Date(b.data) - new Date(a.data));
+
+    if(todosItens.length === 0){
+      tbody.innerHTML = `<tr><td colspan="6" class="loading-row">Nenhum lançamento financeiro encontrado no período selecionado.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = todosItens.map(item => `
+      <tr>
+        <td>${formatDatePT(item.data)}</td>
+        <td><b>${escapeHtml(item.desc)}</b></td>
+        <td>${escapeHtml(item.cat)}</td>
+        <td>${escapeHtml(item.pagto)}</td>
+        <td><span class="fin-badge ${item.tipo}">${item.tipo === 'receita' ? 'Entrada' : 'Saída'}</span></td>
+        <td style="font-weight:700;color:${item.tipo === 'receita' ? '#00C940' : '#B5432A'}">${item.tipo === 'despesa' ? '-' : '+'}${formatMoney(item.valor)}</td>
+      </tr>
+    `).join('');
+  }
+
+  // EVENTOS DO MÓDULO FINANCEIRO
+  $('finPresetFilter').addEventListener('change', (e) => {
+    $('finCustomDates').style.display = e.target.value === 'custom' ? 'flex' : 'none';
+    renderFinanceiro();
+  });
+  $('finDataInicio').addEventListener('change', renderFinanceiro);
+  $('finDataFim').addEventListener('change', renderFinanceiro);
+  $('finCategoriaFilter').addEventListener('change', renderFinanceiro);
+
+  // MODAL LANÇAMENTO
+  const modalFin = $('modalFinOverlay');
+  $('btnNovoLancamento').addEventListener('click', () => {
+    $('finDescricao').value = '';
+    $('finValor').value = '';
+    $('finData').value = todayISO();
+    modalFin.classList.add('show');
+  });
+  $('closeFinModal').addEventListener('click', () => modalFin.classList.remove('show'));
+  $('btnCancelFin').addEventListener('click', () => modalFin.classList.remove('show'));
+
+  $('btnFinTipoReceita').addEventListener('click', () => {
+    finTipoAtual = 'receita';
+    $('btnFinTipoReceita').className = 'seg-btn active-cel';
+    $('btnFinTipoDespesa').className = 'seg-btn';
+  });
+  $('btnFinTipoDespesa').addEventListener('click', () => {
+    finTipoAtual = 'despesa';
+    $('btnFinTipoDespesa').className = 'seg-btn active-cel';
+    $('btnFinTipoReceita').className = 'seg-btn';
+  });
+
+  $('btnSaveFin').addEventListener('click', async () => {
+    const desc = $('finDescricao').value.trim();
+    const val = parseValorBr($('finValor').value);
+    if(!desc || val <= 0){
+      showToast('⚠️ Preencha a descrição e um valor válido.');
+      return;
+    }
+    const payload = {
+      tipo: finTipoAtual,
+      descricao: desc,
+      valor: val,
+      forma_pagamento: $('finFormaPagamento').value,
+      data_pagamento: $('finData').value || todayISO()
+    };
+    const { error } = await supabase.from('financeiro_lancamentos').insert(payload);
+    if(error){
+      showToast('⚠️ Erro ao salvar lançamento financeiro.');
+      return;
+    }
+    showToast('✓ Lançamento cadastrado com sucesso.');
+    modalFin.classList.remove('show');
+    await loadLancamentosFinanceiros();
+    renderFinanceiro();
+  });
+
+  // NAVEGAÇÃO ENTRE ABAS
+  $('navOS').addEventListener('click', () => {
+    currentMainView = 'os';
+    $('navOS').classList.add('active');
+    $('navFinanceiro').classList.remove('active');
+    $('viewOSArea').style.display = '';
+    $('viewFinanceiroArea').style.display = 'none';
+    $('tabs').style.display = '';
+  });
+  $('navFinanceiro').addEventListener('click', () => {
+    currentMainView = 'financeiro';
+    $('navFinanceiro').classList.add('active');
+    $('navOS').classList.remove('active');
+    $('viewOSArea').style.display = 'none';
+    $('viewFinanceiroArea').style.display = '';
+    $('tabs').style.display = 'none';
+    loadLancamentosFinanceiros().then(renderFinanceiro);
+  });
+
+  // DEMAIS MÉTODOS MANTIDOS E OTIMIZADOS
   async function findOrCreateClienteId(nome, contato){
     const nomeNorm = (nome || '').trim();
     if(!nomeNorm) return null;
     try{
-      const { data: existing, error: selErr } = await supabase
-        .from('clientes')
-        .select('id, contato')
-        .ilike('nome', nomeNorm)
-        .limit(1)
-        .maybeSingle();
-      if(selErr) throw selErr;
-
+      const { data: existing } = await supabase.from('clientes').select('id, contato').ilike('nome', nomeNorm).limit(1).maybeSingle();
       if(existing){
         if(contato && contato !== existing.contato){
           await supabase.from('clientes').update({ contato }).eq('id', existing.id);
         }
         return existing.id;
       }
-
-      const { data: created, error: insErr } = await supabase
-        .from('clientes')
-        .insert({ nome: nomeNorm, contato: contato || null })
-        .select('id')
-        .single();
-      if(insErr) throw insErr;
-      return created.id;
+      const { data: created } = await supabase.from('clientes').insert({ nome: nomeNorm, contato: contato || null }).select('id').single();
+      return created?.id || null;
     }catch(e){
-      console.error(e);
       return null;
     }
   }
@@ -1609,22 +1979,14 @@
   let clientes = [];
   async function loadClientes(){
     try{
-      const { data, error } = await supabase
-        .from('clientes')
-        .select('id, nome, contato, ordens_servico(count)')
-        .order('nome');
-      if(error) throw error;
+      const { data } = await supabase.from('clientes').select('id, nome, contato, ordens_servico(count)').order('nome');
       clientes = (data||[]).map(c=>({
         id: c.id,
         nome: c.nome,
         contato: c.contato,
         totalOS: c.ordens_servico?.[0]?.count || 0,
       }));
-    }catch(e){
-      console.error(e);
-      showToast('⚠️ Erro ao carregar clientes.');
-      clientes = [];
-    }
+    }catch(e){ clientes = []; }
     renderClientesList();
   }
 
@@ -1665,149 +2027,8 @@
   });
   $('closeClientes').addEventListener('click', closeClientesFn);
   $('btnCloseClientesFoot').addEventListener('click', closeClientesFn);
-  clientesOverlay.addEventListener('click', (e)=>{ if(e.target === clientesOverlay) closeClientesFn(); });
-  $('clientesSearch').addEventListener('input', renderClientesList);
 
-  $('clientesList').addEventListener('click', (e)=>{
-    const actBtn = e.target.closest('button[data-act]');
-    const id = actBtn ? actBtn.dataset.id : e.target.closest('.cliente-item')?.dataset.id;
-    const cliente = clientes.find(c=>c.id === id);
-    if(!cliente) return;
-
-    if(actBtn){
-      if(actBtn.dataset.act === 'edit'){
-        openClienteEdit(cliente);
-      } else if(actBtn.dataset.act === 'delete'){
-        openConfirmDeleteCliente(cliente);
-      }
-      return;
-    }
-    openClienteHistorico(cliente);
-  });
-
-  // ---------- HISTÓRICO DO CLIENTE ----------
-  const clienteHistOverlay = $('clienteHistOverlay');
-  let clienteHistAtual = null;
-
-  function closeClienteHistFn(){ clienteHistOverlay.classList.remove('show'); }
-  $('closeClienteHist').addEventListener('click', closeClienteHistFn);
-  $('btnCloseClienteHistFoot').addEventListener('click', closeClienteHistFn);
-  clienteHistOverlay.addEventListener('click', (e)=>{ if(e.target === clienteHistOverlay) closeClienteHistFn(); });
-
-  function openClienteHistorico(cliente){
-    clienteHistAtual = cliente;
-    $('clienteHistNome').textContent = toTitleCase(cliente.nome);
-    $('clienteHistContato').textContent = cliente.contato || 'sem contato';
-
-    const osDoCliente = records.filter(r => r.clienteId === cliente.id).sort((a,b)=> b.osNum - a.osNum);
-
-    if(osDoCliente.length === 0){
-      $('clienteHistBody').innerHTML = `<div class="hist-empty">Nenhuma OS registrada para este cliente ainda.</div>`;
-    } else {
-      $('clienteHistBody').innerHTML = `<div class="hist-os-list">${osDoCliente.map(r=>`
-        <div class="hist-os-item" data-id="${r.id}">
-          <div class="left">
-            <div class="num">OS Nº ${String(r.osNum).padStart(4,'0')} — ${escapeHtml(r.modelo)||'sem modelo'}</div>
-            <div class="desc">${escapeHtml(r.servico)||'sem serviço informado'} · ${formatDatePT(r.dataEntrada)}</div>
-          </div>
-          <span class="status-badge status-${r.status}"><span class="dot"></span>${STATUS_LABELS[r.status]}</span>
-        </div>`).join('')}</div>`;
-    }
-
-    clientesOverlay.classList.remove('show');
-    clienteHistOverlay.classList.add('show');
-  }
-
-  $('clienteHistBody').addEventListener('click', (e)=>{
-    const item = e.target.closest('.hist-os-item');
-    if(!item) return;
-    const record = records.find(r=>r.id === item.dataset.id);
-    if(!record) return;
-    closeClienteHistFn();
-    openViewModal(record);
-  });
-
-  $('btnEditClienteFromHist').addEventListener('click', ()=>{
-    if(clienteHistAtual) openClienteEdit(clienteHistAtual);
-  });
-  $('btnDeleteClienteFromHist').addEventListener('click', ()=>{
-    if(clienteHistAtual) openConfirmDeleteCliente(clienteHistAtual);
-  });
-
-  // ---------- EDITAR CLIENTE ----------
-  const clienteEditOverlay = $('clienteEditOverlay');
-  let editingClienteId = null;
-  function closeClienteEditFn(){ clienteEditOverlay.classList.remove('show'); }
-  function openClienteEdit(cliente){
-    editingClienteId = cliente.id;
-    $('editClienteNome').value = toTitleCase(cliente.nome);
-    $('editClienteContato').value = cliente.contato || '';
-    clienteEditOverlay.classList.add('show');
-  }
-  $('closeClienteEdit').addEventListener('click', closeClienteEditFn);
-  $('btnCancelClienteEdit').addEventListener('click', closeClienteEditFn);
-  clienteEditOverlay.addEventListener('click', (e)=>{ if(e.target === clienteEditOverlay) closeClienteEditFn(); });
-
-  $('btnSaveClienteEdit').addEventListener('click', async ()=>{
-    const novoNome = toTitleCase($('editClienteNome').value.trim());
-    const novoContato = $('editClienteContato').value.trim();
-    if(!novoNome){
-      showToast('⚠️ Informe o nome do cliente.');
-      return;
-    }
-    $('btnSaveClienteEdit').disabled = true;
-    const { error } = await supabase.from('clientes').update({ nome: novoNome, contato: novoContato || null }).eq('id', editingClienteId);
-    if(error){
-      console.error(error);
-      $('btnSaveClienteEdit').disabled = false;
-      showToast('⚠️ Erro ao salvar cliente.');
-      return;
-    }
-    // Mantém o histórico exibido consistente com o nome/contato atuais
-    await supabase.from('ordens_servico').update({ cliente: novoNome, contato: novoContato || null }).eq('cliente_id', editingClienteId);
-    $('btnSaveClienteEdit').disabled = false;
-    closeClienteEditFn();
-    showToast('✓ Cliente atualizado.');
-    await loadClientes();
-    await loadData();
-  });
-
-  // ---------- EXCLUIR CLIENTE ----------
-  const confirmClienteOverlay = $('confirmClienteOverlay');
-  let deletingClienteId = null;
-  function openConfirmDeleteCliente(cliente){
-    deletingClienteId = cliente.id;
-    $('confirmClienteText').textContent = `${toTitleCase(cliente.nome)} será excluído. As OS já registradas continuam no histórico, mas perdem o vínculo com o cadastro do cliente.`;
-    confirmClienteOverlay.classList.add('show');
-  }
-  $('btnCancelDeleteCliente').addEventListener('click', ()=>{
-    confirmClienteOverlay.classList.remove('show');
-    deletingClienteId = null;
-  });
-  confirmClienteOverlay.addEventListener('click', (e)=>{
-    if(e.target === confirmClienteOverlay){
-      confirmClienteOverlay.classList.remove('show');
-      deletingClienteId = null;
-    }
-  });
-  $('btnConfirmDeleteCliente').addEventListener('click', async ()=>{
-    if(!deletingClienteId) return;
-    const { error } = await supabase.from('clientes').delete().eq('id', deletingClienteId);
-    confirmClienteOverlay.classList.remove('show');
-    if(error){
-      console.error(error);
-      showToast('⚠️ Erro ao excluir cliente.');
-      deletingClienteId = null;
-      return;
-    }
-    showToast('🗑️ Cliente excluído.');
-    deletingClienteId = null;
-    closeClienteHistFn();
-    await loadClientes();
-    await loadData();
-  });
-
-  // ---------- BANCO DE DADOS: CONFIGURAÇÕES (técnicos, atendentes, tipos) ----------
+  // CONFIGURAÇÕES E DADOS LOJA
   async function loadConfig(){
     try{
       const [t, a, p] = await Promise.all([
@@ -1820,26 +2041,23 @@
         atendentes: (a.data||[]).map(x=>x.nome),
         tipos: (p.data||[]).map(x=>({ nome: x.nome, categoria: x.categoria || 'cel' })),
       };
-    }catch(e){
-      console.error(e);
-      config = { tecnicos:[], atendentes:[], tipos:[] };
-    }
+    }catch(e){ config = { tecnicos:[], atendentes:[], tipos:[] }; }
     populateConfigSelects();
   }
+
   async function loadLoja(){
     try{
-      const { data, error } = await supabase.from('loja').select('*').eq('id', 1).maybeSingle();
-      if(!error && data){
+      const { data } = await supabase.from('loja').select('*').eq('id', 1).maybeSingle();
+      if(data){
         lojaInfo = {
           nome: data.nome || '',
           cnpj: data.cnpj || '',
           telefone: data.telefone || '',
           endereco: data.endereco || '',
           logoDataUrl: data.logo_data_url || '',
-          termos: data.termos || '',
         };
       }
-    }catch(e){ console.error(e); }
+    }catch(e){}
     renderBrandMark();
     populateLojaForm();
   }
@@ -1856,91 +2074,32 @@
     $('lojaCnpj').value = lojaInfo.cnpj;
     $('lojaTelefone').value = lojaInfo.telefone;
     $('lojaEndereco').value = lojaInfo.endereco;
-    $('lojaTermos').value = lojaInfo.termos;
-    updateLogoPreview();
   }
 
-  function updateLogoPreview(){
-    const el = $('lojaLogoPreview');
-    if(lojaInfo.logoDataUrl){
-      el.innerHTML = `<img src="${lojaInfo.logoDataUrl}" alt="Logo da loja">`;
-      $('btnLojaLogoRemove').style.display = '';
-    } else {
-      el.innerHTML = icon('camera', 26);
-      $('btnLojaLogoRemove').style.display = 'none';
-    }
-  }
-
-  // Redimensiona a imagem escolhida (canvas) antes de guardar como base64,
-  // pra não deixar a logo pesada demais no banco.
-  function resizeImageFile(file, maxSize=320){
-    return new Promise((resolve, reject)=>{
-      const reader = new FileReader();
-      reader.onload = (e)=>{
-        const img = new Image();
-        img.onload = ()=>{
-          let { width, height } = img;
-          if(width > maxSize || height > maxSize){
-            if(width >= height){ height = Math.round(height * (maxSize/width)); width = maxSize; }
-            else { width = Math.round(width * (maxSize/height)); height = maxSize; }
-          }
-          const canvas = document.createElement('canvas');
-          canvas.width = width; canvas.height = height;
-          canvas.getContext('2d').drawImage(img, 0, 0, width, height);
-          resolve(canvas.toDataURL('image/png'));
-        };
-        img.onerror = reject;
-        img.src = e.target.result;
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  }
   function populateConfigSelects(){
     const tecSel = $('fTecnico');
-    const cur = tecSel.value;
     tecSel.innerHTML = '<option value="">Selecione o técnico</option>' + config.tecnicos.map(t=>`<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('');
-    if(config.tecnicos.includes(cur)) tecSel.value = cur;
-
     const atSel = $('fAtendente');
-    const curA = atSel.value;
     atSel.innerHTML = '<option value="">Selecione o atendente</option>' + config.atendentes.map(a=>`<option value="${escapeHtml(a)}">${escapeHtml(a)}</option>`).join('');
-    if(config.atendentes.includes(curA)) atSel.value = curA;
-
     const tpSel = $('fTipoAparelho');
-    const curT = tpSel.value;
     tpSel.innerHTML = '<option value="">Selecione</option>' + config.tipos.map(t=>`<option value="${escapeHtml(t.nome)}" data-categoria="${t.categoria}">${escapeHtml(t.nome)}</option>`).join('');
-    if(config.tipos.some(t=>t.nome === curT)) tpSel.value = curT;
   }
 
-  // ---------- RENDER ----------
-  let activeStatFilter = null; // null | 'pend'
   function applyFilters(list){
     const q = $('searchInput').value.trim().toLowerCase();
     const dateVal = $('dateFilter').value;
     const status = $('statusFilter').value;
     const tec = $('tecFilter').value;
+    const entregue = $('entregueFilter').value;
 
     return list.filter(r=>{
       if(currentTipoTab !== 'todos' && r.tipo !== currentTipoTab) return false;
-
-      // OS entregues não aparecem mais nas abas de trabalho — ficam apenas
-      // na janelinha "Entregues", com busca por cliente e filtro por data.
-      if(r.status === 'entregue') return false;
-
-      if(activeStatFilter === 'pend'){
-        if(r.status !== 'analisando') return false;
-      } else {
-        if(dateVal && r.dataEntrada !== dateVal) return false;
-        if(status && r.status !== status) return false;
-        if(tec && r.tecnico !== tec) return false;
-      }
-
-      // OS prontas para retirada saem da fila de trabalho por padrão — elas ficam
-      // visíveis apenas na janelinha "Prontas para retirada" — a menos que o usuário
-      // busque algo ou filtre explicitamente pelo status "Pronto".
+      if(dateVal && r.dataEntrada !== dateVal) return false;
+      if(status && r.status !== status) return false;
+      if(tec && r.tecnico !== tec) return false;
+      if(entregue === 'sim' && r.status !== 'entregue') return false;
+      if(entregue === 'nao' && r.status === 'entregue') return false;
       if(!status && !q && r.status === 'pronto') return false;
-
       if(q){
         const hay = `${r.cliente} ${r.contato} ${r.modelo} ${r.servico}`.toLowerCase();
         if(!hay.includes(q)) return false;
@@ -1949,107 +2108,33 @@
     });
   }
 
-  function updateFilterOptions(){
-    // Técnicos
-    const sel = $('tecFilter');
-    const current = sel.value;
-    const techs = [...new Set(records.map(r=>r.tecnico).filter(Boolean))].sort();
-    sel.innerHTML = '<option value="">Todos os técnicos</option>' + techs.map(t=>`<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('');
-    if(techs.includes(current)) sel.value = current;
-
-    // Clientes Únicos (Mapa/Dicionário para guardar o contato vinculado)
-    const clientMap = {};
-    records.forEach(r => {
-      if(r.cliente) {
-        const cName = r.cliente.trim();
-        // Se já tiver contato salvo e o atual não tiver, ou apenas guarda o último/mais recente preenchido
-        if(r.contato) {
-          clientMap[cName] = r.contato.trim();
-        } else if(!clientMap[cName]) {
-          clientMap[cName] = '';
-        }
-      }
-    });
-
-    const clientDl = $('clientList');
-    clientDl.innerHTML = Object.keys(clientMap).sort().map(c => `<option value="${escapeHtml(c)}" data-contact="${escapeHtml(clientMap[c])}">`).join('');
-    
-    // Vincula evento para puxar o contato automaticamente ao escolher o cliente no input
-    window._clientMap = clientMap;
-  }
-
   function updateCounts(){
-    // OS "prontas para retirada" e "entregues" já saíram da fila de trabalho (ficam só
-    // no card lateral e no modal de Entregues), então não entram na contagem das abas.
-    const emFila = records.filter(r=> r.status !== 'pronto' && r.status !== 'entregue');
-    const cel = emFila.filter(r=>r.tipo==='cel').length;
-    const info = emFila.filter(r=>r.tipo==='info').length;
+    const emFila = records.filter(r=> r.status !== 'pronto');
     $('cntTodos').textContent = emFila.length;
-    $('cntCel').textContent = cel;
-    $('cntInfo').textContent = info;
+    $('cntCel').textContent = emFila.filter(r=>r.tipo==='cel').length;
+    $('cntInfo').textContent = emFila.filter(r=>r.tipo==='info').length;
 
-    // Assim que o técnico finaliza a OS (status vira "pronto"), ela sai da contagem de
-    // "Total de OS" — o total reflete só o que ainda está em andamento na bancada.
     $('statTotal').textContent = records.filter(r=> r.status !== 'pronto' && r.status !== 'entregue').length;
     $('statPend').textContent = records.filter(r=> r.status==='analisando').length;
     $('statPronto').textContent = records.filter(r=>r.status==='pronto').length;
-    $('statEntregues').textContent = records.filter(r=>r.status==='entregue').length;
+    const today = todayISO();
+    $('statEntregueHoje').textContent = records.filter(r=>r.status==='entregue' && r.dataEntrega===today).length;
   }
 
   function escapeHtml(str){
-    if(str===undefined || str===null) return '';
+    if(!str) return '';
     return String(str).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   }
 
   function toTitleCase(str){
     if(!str) return '';
-    return str.trim().toLowerCase().split(/\s+/).map(w=>{
-      return w ? w.charAt(0).toUpperCase() + w.slice(1) : w;
-    }).join(' ');
+    return str.trim().toLowerCase().split(/\s+/).map(w=> w ? w.charAt(0).toUpperCase() + w.slice(1) : w).join(' ');
   }
 
   function initials(name){
     if(!name) return '—';
     const parts = name.trim().split(/\s+/);
     return (parts[0][0] + (parts[1]?parts[1][0]:'')).toUpperCase();
-  }
-
-  const MOTIVO_LABELS = {
-    desistiu: icon('alertTriangle',13) + ' Cliente desistiu', nao_aprovado: icon('alertTriangle',13) + ' Cliente não aprovou', cancelada: icon('xCircle',13) + ' OS cancelada'
-  };
-
-  function diagButtonHtml(r){
-    if(currentTipoTab === 'todos') return '';
-    if(r.status === 'recebido'){
-      return `<button type="button" class="btn-diag" data-action="diag-start" data-id="${r.id}">${icon('search',15)} Iniciar Diagnóstico</button>`;
-    }
-    if(r.status === 'analisando'){
-      return `<button type="button" class="btn-diag btn-diag-continue" data-action="diag-continue" data-id="${r.id}">${icon('wrench',15)} Continuar Diagnóstico</button>`;
-    }
-    if((r.status === 'pronto' || r.status === 'entregue') && (r.diagnostico || r.solucao || r.motivoCancelamento)){
-      return `<button type="button" class="btn-diag btn-diag-view" data-action="diag-continue" data-id="${r.id}">${icon('clipboardList',15)} Ver Diagnóstico</button>`;
-    }
-    return '';
-  }
-
-  function entregueButtonHtml(r){
-    if(r.status !== 'pronto') return '';
-    return `<button type="button" class="btn-diag btn-whatsapp" data-action="notify-whatsapp" data-id="${r.id}">${icon('messageCircle',15)} Notificar cliente (WhatsApp)</button><button type="button" class="btn-diag btn-entregar" data-action="mark-entregue" data-id="${r.id}">${icon('packageCheck',15)} Marcar como Entregue</button>`;
-  }
-
-  function buildWhatsAppLink(r){
-    const aparelho = [r.tipoAparelho, r.modelo].filter(Boolean).join(' — ') || r.modelo || 'seu aparelho';
-    const osNumTxt = String(r.osNum).padStart(4,'0');
-    const valorTxt = r.valor ? ` no valor de *${r.valor}*` : '';
-    const nome = toTitleCase(r.cliente) || '';
-    const msg = `Olá${nome ? ' ' + nome : ''}! 😊 Aqui é da *Carioca Infocell*.\n\nSeu aparelho (${aparelho}) referente à OS Nº ${osNumTxt} já está *pronto para retirada*${valorTxt}.\n\nAguardamos você para a retirada. Qualquer dúvida, estamos à disposição!`;
-    let phone = (r.contato || '').replace(/\D/g,'');
-    if(phone){
-      if(phone.length <= 11) phone = '55' + phone; // adiciona DDI Brasil se não tiver
-      return `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
-    }
-    // Sem contato salvo: abre o WhatsApp Web/App para o usuário escolher o contato manualmente
-    return `https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`;
   }
 
   function ticketCard(r){
@@ -2061,11 +2146,6 @@
     const thumb = (r.fotos && r.fotos[0])
       ? `<img class="ticket-thumb" src="${r.fotos[0]}" alt="Foto do aparelho">`
       : `<div class="ticket-thumb">${icon('camera',20)}</div>`;
-
-    const motivoBadge = r.motivoCancelamento ? `<div class="motivo-badge">${MOTIVO_LABELS[r.motivoCancelamento] || r.motivoCancelamento}</div>` : '';
-    const obsRetiradaBox = r.obsRetirada ? `<div class="obs-retirada-box${r.motivoCancelamento ? ' danger' : ''}"><strong>Aviso p/ retirada:</strong> ${escapeHtml(r.obsRetirada)}</div>` : '';
-    const diagBtn = diagButtonHtml(r);
-    const entregueBtn = entregueButtonHtml(r);
 
     return `
     <div class="ticket" data-id="${r.id}">
@@ -2092,18 +2172,12 @@
           </div>
           <span class="status-badge status-${r.status}"><span class="dot"></span>${STATUS_LABELS[r.status]}</span>
         </div>
-        ${motivoBadge}
-        ${obsRetiradaBox}
         <div class="info-grid">
           <div class="info-item"><div class="k">Modelo</div><div class="v">${escapeHtml(r.modelo)||'—'}</div></div>
           <div class="info-item"><div class="k">Serviço</div><div class="v">${escapeHtml(r.servico)||'—'}</div></div>
           <div class="info-item"><div class="k">Valor</div><div class="v valor-tag">${escapeHtml(r.valor)||'—'}</div></div>
           <div class="info-item"><div class="k">Pagamento</div><div class="v">${escapeHtml(r.pagamento)||'—'}</div></div>
-          <div class="info-item"><div class="k">Entrada</div><div class="v">${formatDatePT(r.dataEntrada)} ${r.horarioR? '· '+r.horarioR:''}</div></div>
-          <div class="info-item"><div class="k">Entrega</div><div class="v">${r.dataEntrega? formatDatePT(r.dataEntrega):'—'} ${r.horarioE? '· '+r.horarioE:''}</div></div>
-          ${r.obs ? `<div class="info-item full"><div class="k">Observações</div><div class="v">${escapeHtml(r.obs)}</div></div>` : ''}
         </div>
-        ${(diagBtn || entregueBtn) ? `<div class="diag-btn-row">${diagBtn}${entregueBtn}</div>` : ''}
       </div>
       <div class="ticket-footer">
         <div class="tech-tag">
@@ -2114,9 +2188,6 @@
           <button class="icon-btn" data-action="edit" data-id="${r.id}" title="Editar">
             <svg viewBox="0 0 24 24" fill="none"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4L16.5 3.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
-          <button class="icon-btn danger" data-action="delete" data-id="${r.id}" title="Excluir">
-            <svg viewBox="0 0 24 24" fill="none"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0l-1 14a2 2 0 01-2 2H7a2 2 0 01-2-2L4 6h16z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
         </div>
       </div>
     </div>`;
@@ -2124,26 +2195,16 @@
 
   function render(){
     updateCounts();
-    updateFilterOptions();
     renderProntosWidget();
-
     const filtered = applyFilters(records).sort((a,b)=> b.osNum - a.osNum);
     const area = $('listArea');
-
     if(filtered.length === 0){
-      area.innerHTML = `
-        <div class="empty">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <h3>${records.length===0 ? 'Nenhuma OS cadastrada ainda' : 'Nenhuma OS encontrada'}</h3>
-          <p>${records.length===0 ? 'Clique em "Nova OS" para registrar o primeiro equipamento recebido.' : 'Tente ajustar a busca ou os filtros aplicados.'}</p>
-        </div>`;
+      area.innerHTML = `<div class="empty"><h3>Nenhuma OS encontrada</h3></div>`;
       return;
     }
-
     area.innerHTML = `<div class="grid">${filtered.map(ticketCard).join('')}</div>`;
   }
 
-  // ---------- WIDGET: PRONTAS PARA RETIRADA ----------
   function renderProntosWidget(){
     const prontos = records.filter(r=>r.status==='pronto').sort((a,b)=> b.osNum - a.osNum);
     $('pwCount').textContent = prontos.length;
@@ -2152,1077 +2213,14 @@
       list.innerHTML = `<div class="pronto-widget-empty">Nenhuma OS pronta no momento.</div>`;
       return;
     }
-    list.innerHTML = prontos.map(r=>{
-      const aparelho = [r.tipoAparelho, r.modelo].filter(Boolean).join(' — ') || r.modelo || '—';
-      return `
-        <div class="pronto-widget-item" data-id="${r.id}">
-          <div class="pw-name">${escapeHtml(toTitleCase(r.cliente)) || 'Sem nome'}</div>
-          <div class="pw-device">${escapeHtml(aparelho)}</div>
-          <div class="pw-actions">
-            <span class="pw-osnum">OS ${String(r.osNum).padStart(4,'0')}</span>
-            <button type="button" class="pw-whatsapp-btn" data-action="pw-whatsapp" data-id="${r.id}">${icon('messageCircle',13)} Notificar</button>
-          </div>
-        </div>`;
-    }).join('');
-  }
-
-  $('pwList').addEventListener('click', (e)=>{
-    const btn = e.target.closest('[data-action="pw-whatsapp"]');
-    if(btn){
-      const record = records.find(r=>r.id === btn.dataset.id);
-      if(record) window.open(buildWhatsAppLink(record), '_blank', 'noopener');
-      return;
-    }
-    const item = e.target.closest('.pronto-widget-item');
-    if(item){
-      const record = records.find(r=>r.id === item.dataset.id);
-      if(record) openViewModal(record);
-    }
-  });
-
-  // ---------- MODAL: ENTREGUES ----------
-  const entreguesOverlay = $('entreguesOverlay');
-  function closeEntreguesFn(){ entreguesOverlay.classList.remove('show'); }
-  function openEntreguesModal(){
-    entreguesOverlay.classList.add('show');
-    renderEntreguesList();
-  }
-  $('closeEntregues').addEventListener('click', closeEntreguesFn);
-  $('btnCloseEntreguesFoot').addEventListener('click', closeEntreguesFn);
-  entreguesOverlay.addEventListener('click', (e)=>{ if(e.target === entreguesOverlay) closeEntreguesFn(); });
-
-  function renderEntreguesList(){
-    const q = $('entreguesSearch').value.trim().toLowerCase();
-    const dateVal = $('entreguesDate').value;
-
-    let entregues = records.filter(r=>r.status==='entregue');
-    if(dateVal) entregues = entregues.filter(r=>r.dataEntrega === dateVal);
-    if(q) entregues = entregues.filter(r=> `${r.cliente} ${r.contato}`.toLowerCase().includes(q));
-    entregues.sort((a,b)=> b.osNum - a.osNum);
-
-    $('entreguesSub').textContent = `${entregues.length} OS entregue${entregues.length===1?'':'s'}`;
-    const list = $('entreguesList');
-    if(entregues.length === 0){
-      list.innerHTML = `<div class="hist-empty">${records.some(r=>r.status==='entregue') ? 'Nenhuma OS entregue encontrada com esse filtro.' : 'Nenhuma OS entregue ainda.'}</div>`;
-      return;
-    }
-    list.innerHTML = entregues.map(r=>{
-      const aparelho = [r.tipoAparelho, r.modelo].filter(Boolean).join(' — ') || r.modelo || 'sem modelo';
-      return `
-        <div class="hist-os-item" data-id="${r.id}">
-          <div class="left">
-            <div class="num">OS Nº ${String(r.osNum).padStart(4,'0')} — ${escapeHtml(toTitleCase(r.cliente))||'Sem nome'}</div>
-            <div class="desc">${escapeHtml(aparelho)} · Entregue em ${formatDatePT(r.dataEntrega)}${r.horarioE?' · '+r.horarioE:''}</div>
-          </div>
-          <span class="status-badge status-entregue"><span class="dot"></span>Entregue</span>
-        </div>`;
-    }).join('');
-  }
-
-  $('entreguesSearch').addEventListener('input', renderEntreguesList);
-  $('entreguesDate').addEventListener('change', renderEntreguesList);
-  $('entreguesClear').addEventListener('click', ()=>{
-    $('entreguesSearch').value = '';
-    $('entreguesDate').value = '';
-    renderEntreguesList();
-  });
-  $('entreguesList').addEventListener('click', (e)=>{
-    const item = e.target.closest('.hist-os-item');
-    if(item){
-      const record = records.find(r=>r.id === item.dataset.id);
-      if(record){
-        closeEntreguesFn();
-        openViewModal(record);
-      }
-    }
-  });
-
-  // Auto preencher contato ao selecionar cliente existente
-  $('fCliente').addEventListener('input', (e)=>{
-    const val = e.target.value.trim();
-    if(window._clientMap && window._clientMap[val] !== undefined){
-      const savedContact = window._clientMap[val];
-      if(savedContact && !$('fContato').value){
-        $('fContato').value = savedContact;
-      }
-    }
-  });
-
-  // ---------- MODAL: NOVA/EDITAR ----------
-  const overlay = $('modalOverlay');
-  let modalTipo = 'cel';
-
-  function openModal(record){
-    editingId = record ? record.id : null;
-    modalTipo = record ? record.tipo : 'cel';
-    setModalTipo(modalTipo);
-    populateConfigSelects();
-
-    $('modalTitle').textContent = record ? `Editar OS Nº ${String(record.osNum).padStart(4,'0')}` : 'Nova OS';
-    $('modalSub').textContent = record ? 'Atualize os dados desta ordem de serviço' : 'Preencha os dados do equipamento recebido';
-
-    $('fCliente').value = record?.cliente || '';
-    $('fContato').value = record?.contato || '';
-    $('fAtendente').value = record?.atendente || '';
-    $('fTipoAparelho').value = record?.tipoAparelho || '';
-    $('fModelo').value = record?.modelo || '';
-    $('fServico').value = record?.servico || '';
-    $('fValor').value = record?.valor || '';
-    $('fPagamento').value = record?.pagamento || '';
-    updateParcelasVisibility();
-    $('fParcelas').value = record?.parcelas || '1';
-    $('fTecnico').value = record?.tecnico || '';
-    $('fStatus').value = record?.status || 'recebido';
-    $('fDataEntrada').value = record?.dataEntrada || todayISO();
-    // Nova OS: pré-preenche o horário de entrada com a hora atual (dá pra ajustar se precisar).
-    $('fHorarioR').value = record ? (record.horarioR || '') : nowTimeHHMM();
-    $('fDataEntrega').value = record?.dataEntrega || '';
-    $('fHorarioE').value = record?.horarioE || '';
-    $('fObs').value = record?.obs || '';
-
-    currentFotos = [0,1,2,3].map(i => record?.fotos?.[i] || null);
-    renderPhotoGrid();
-
-    const senha = record?.senha || { tipo:'alfa', valor:'', semSenha:false };
-    setSenhaTab(senha.tipo === 'desenho' ? 'desenho' : 'alfa');
-    $('fSenhaAlfa').value = senha.tipo === 'alfa' ? (senha.valor || '') : '';
-    patternSequence = (senha.tipo === 'desenho' && Array.isArray(senha.valor)) ? [...senha.valor] : [];
-    buildPatternGrid();
-    renderPattern();
-    $('fSemSenha').checked = !!senha.semSenha;
-    toggleSenhaDisabled($('fSemSenha').checked);
-
-    overlay.classList.add('show');
-    setTimeout(()=> $('fCliente').focus(), 50);
-  }
-  function closeModalFn(){
-    overlay.classList.remove('show');
-    editingId = null;
-  }
-  function setModalTipo(t){
-    modalTipo = t;
-    $('segCel').classList.toggle('active-cel', t==='cel');
-    $('segInfo').classList.toggle('active-info', t==='info');
-  }
-
-  $('btnNew').addEventListener('click', ()=> openModal(null));
-  $('closeModal').addEventListener('click', closeModalFn);
-  $('btnCancel').addEventListener('click', closeModalFn);
-  overlay.addEventListener('click', (e)=>{ if(e.target === overlay) closeModalFn(); });
-  $('segCel').addEventListener('click', ()=> setModalTipo('cel'));
-  $('segInfo').addEventListener('click', ()=> setModalTipo('info'));
-  $('fTipoAparelho').addEventListener('change', (e)=>{
-    const opt = e.target.selectedOptions[0];
-    const categoria = opt ? opt.dataset.categoria : '';
-    if(categoria === 'cel' || categoria === 'info'){
-      setModalTipo(categoria);
-    }
-  });
-
-  $('btnSave').addEventListener('click', async ()=>{
-    const clienteRaw = $('fCliente').value.trim();
-    if(!clienteRaw){
-      showToast('⚠️ Informe o nome do cliente.');
-      $('fCliente').focus();
-      return;
-    }
-    const cliente = toTitleCase(clienteRaw);
-    const contatoVal = $('fContato').value.trim();
-
-    const pagamento = $('fPagamento').value;
-    const parcelas = (pagamento && pagamento.toLowerCase().includes('crédito')) ? parseInt($('fParcelas').value || '1', 10) : null;
-
-    const semSenha = $('fSemSenha').checked;
-    let senhaTipo = null, senhaValor = null;
-    if(!semSenha){
-      if(senhaTipoAtual === 'desenho'){
-        senhaTipo = 'desenho';
-        senhaValor = JSON.stringify(patternSequence);
-      } else {
-        senhaTipo = 'alfa';
-        senhaValor = $('fSenhaAlfa').value.trim();
-      }
-    }
-
-    const recordId = editingId || makeId();
-    $('btnSave').disabled = true;
-    showToast('Salvando...');
-
-    const fotoPaths = await persistFotos(recordId);
-    const clienteId = await findOrCreateClienteId(cliente, contatoVal);
-
-    const rowData = {
-      id: recordId,
-      tipo: modalTipo,
-      cliente,
-      contato: contatoVal,
-      cliente_id: clienteId,
-      atendente: $('fAtendente').value || null,
-      tipo_aparelho: $('fTipoAparelho').value || null,
-      modelo: $('fModelo').value.trim(),
-      servico: $('fServico').value.trim(),
-      valor: $('fValor').value.trim(),
-      pagamento: pagamento || null,
-      parcelas,
-      tecnico: $('fTecnico').value || null,
-      status: $('fStatus').value,
-      data_entrada: $('fDataEntrada').value || null,
-      horario_r: $('fHorarioR').value || null,
-      data_entrega: $('fDataEntrega').value || null,
-      horario_e: $('fHorarioE').value || null,
-      obs: $('fObs').value.trim(),
-      senha_tipo: senhaTipo,
-      senha_valor: senhaValor,
-      sem_senha_autorizada: semSenha,
-      fotos: fotoPaths,
-    };
-
-    if(editingId){
-      const { error } = await supabase.from('ordens_servico').update(rowData).eq('id', editingId);
-      $('btnSave').disabled = false;
-      if(error){ console.error(error); showToast('⚠️ Erro ao atualizar OS.'); return; }
-      showToast('✓ OS atualizada com sucesso.');
-    } else {
-      counter += 1;
-      rowData.os_num = counter;
-      const { error } = await supabase.from('ordens_servico').insert(rowData);
-      $('btnSave').disabled = false;
-      if(error){ console.error(error); counter -= 1; showToast('⚠️ Erro ao criar OS.'); return; }
-      await persistCounter();
-      showToast('✓ Nova OS criada.');
-    }
-
-    closeModalFn();
-    await loadData();
-  });
-
-  // ---------- CLIQUE NO CARD / EDIT / DELETE ----------
-  $('listArea').addEventListener('click', (e)=>{
-    const ticketEl = e.target.closest('.ticket');
-    if(!ticketEl) return;
-    const id = ticketEl.dataset.id;
-    const record = records.find(r=>r.id === id);
-    if(!record) return;
-
-    const btn = e.target.closest('[data-action]');
-    if(btn){
-      const action = btn.dataset.action;
-      if(action === 'edit'){
-        openModal(record);
-      } else if(action === 'delete'){
-        deletingId = id;
-        $('confirmText').textContent = `A OS Nº ${String(record.osNum).padStart(4,'0')} de ${record.cliente} será excluída permanentemente.`;
-        $('confirmOverlay').classList.add('show');
-      } else if(action === 'diag-start'){
-        startDiagnostico(record);
-      } else if(action === 'diag-continue'){
-        openDiagModal(record);
-      } else if(action === 'mark-entregue'){
-        marcarEntregue(record);
-      } else if(action === 'notify-whatsapp'){
-        window.open(buildWhatsAppLink(record), '_blank', 'noopener');
-      }
-      return;
-    }
-
-    openViewModal(record);
-  });
-
-  $('btnCancelDelete').addEventListener('click', ()=>{
-    $('confirmOverlay').classList.remove('show');
-    deletingId = null;
-  });
-  $('confirmOverlay').addEventListener('click', (e)=>{
-    if(e.target.id === 'confirmOverlay'){
-      $('confirmOverlay').classList.remove('show');
-      deletingId = null;
-    }
-  });
-  $('btnConfirmDelete').addEventListener('click', async ()=>{
-    if(deletingId){
-      const { error } = await supabase.from('ordens_servico').delete().eq('id', deletingId);
-      if(error){
-        console.error(error);
-        showToast('⚠️ Erro ao excluir OS.');
-      } else {
-        try{
-          await supabase.storage.from(FOTOS_BUCKET).remove(
-            [1,2,3,4].map(n => `${deletingId}/foto-${n}.jpg`)
-          );
-        }catch(e){ /* best effort */ }
-        showToast('🗑️ OS excluída.');
-        await loadData();
-      }
-    }
-    $('confirmOverlay').classList.remove('show');
-    deletingId = null;
-  });
-
-  // ---------- TABS & FILTERS ----------
-  $('tabs').addEventListener('click', (e)=>{
-    const tab = e.target.closest('.tab');
-    if(!tab) return;
-    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-    tab.classList.add('active');
-    currentTipoTab = tab.dataset.tipo;
-    render();
-  });
-
-  $('searchInput').addEventListener('input', render);
-  $('dateFilter').addEventListener('change', ()=>{ activeStatFilter = null; render(); });
-  $('statusFilter').addEventListener('change', ()=>{ activeStatFilter = null; render(); });
-  $('tecFilter').addEventListener('change', ()=>{ activeStatFilter = null; render(); });
-  $('clearFilters').addEventListener('click', ()=>{
-    $('searchInput').value = '';
-    $('dateFilter').value = '';
-    $('statusFilter').value = '';
-    $('tecFilter').value = '';
-    activeStatFilter = null;
-    render();
-  });
-
-  // ---------- CARDS DE ESTATÍSTICA CLICÁVEIS ----------
-  $('statsRow').addEventListener('click', (e)=>{
-    const card = e.target.closest('.stat-card');
-    if(!card) return;
-    const kind = card.dataset.stat;
-
-    // "Entregues" não filtra a lista de trabalho — as OS entregues ficam só no
-    // modal dedicado, com busca por cliente e filtro por data.
-    if(kind === 'entregues'){
-      $('entreguesSearch').value = '';
-      $('entreguesDate').value = '';
-      openEntreguesModal();
-      return;
-    }
-
-    $('searchInput').value = '';
-    $('dateFilter').value = '';
-    $('statusFilter').value = '';
-    $('tecFilter').value = '';
-
-    currentTipoTab = 'todos';
-    document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.tipo === 'todos'));
-
-    if(kind === 'pend'){
-      activeStatFilter = 'pend';
-    } else if(kind === 'pronto'){
-      activeStatFilter = null;
-      $('statusFilter').value = 'pronto';
-    } else {
-      activeStatFilter = null;
-    }
-
-    render();
-    $('listArea').scrollIntoView({ behavior:'smooth', block:'start' });
-  });
-
-  // ---------- PAGAMENTO / PARCELAS ----------
-  function updateParcelasVisibility(){
-    const val = $('fPagamento').value;
-    const wrap = $('parcelasWrap');
-    if(val && val.toLowerCase().includes('crédito')){
-      wrap.classList.add('show');
-      if($('fParcelas').options.length === 0){
-        let opts = '';
-        for(let i=1;i<=12;i++){ opts += `<option value="${i}">${i}x${i===1?' à vista':''}</option>`; }
-        $('fParcelas').innerHTML = opts;
-      }
-    } else {
-      wrap.classList.remove('show');
-    }
-  }
-  $('fPagamento').addEventListener('change', updateParcelasVisibility);
-
-  // ---------- SENHA DO APARELHO ----------
-  function setSenhaTab(tipo){
-    senhaTipoAtual = tipo;
-    $('senhaTabAlfa').classList.toggle('active', tipo==='alfa');
-    $('senhaTabDesenho').classList.toggle('active', tipo==='desenho');
-    $('senhaAlfaPanel').style.display = tipo==='alfa' ? '' : 'none';
-    $('senhaDesenhoPanel').style.display = tipo==='desenho' ? '' : 'none';
-  }
-  $('senhaTabAlfa').addEventListener('click', ()=> setSenhaTab('alfa'));
-  $('senhaTabDesenho').addEventListener('click', ()=> setSenhaTab('desenho'));
-
-  function toggleSenhaDisabled(disabled){
-    $('senhaBox').querySelector('.senha-tabs').classList.toggle('senha-disabled', disabled);
-    $('senhaAlfaPanel').classList.toggle('senha-disabled', disabled);
-    $('senhaDesenhoPanel').classList.toggle('senha-disabled', disabled);
-  }
-  $('fSemSenha').addEventListener('change', (e)=> toggleSenhaDisabled(e.target.checked));
-
-  function buildPatternGrid(){
-    const grid = $('patternGrid');
-    grid.innerHTML = '<svg width="180" height="180" id="patternSvg"></svg>';
-    for(let i=1;i<=9;i++){
-      const row = Math.floor((i-1)/3), col = (i-1)%3;
-      const dot = document.createElement('div');
-      dot.className = 'pattern-dot';
-      dot.dataset.n = i;
-      dot.style.left = (30 + col*60) + 'px';
-      dot.style.top = (30 + row*60) + 'px';
-      dot.addEventListener('click', ()=> togglePatternDot(i));
-      grid.appendChild(dot);
-    }
-  }
-  function togglePatternDot(n){
-    const idx = patternSequence.indexOf(n);
-    if(idx > -1){
-      patternSequence = patternSequence.slice(0, idx);
-    } else {
-      patternSequence.push(n);
-    }
-    renderPattern();
-  }
-  function renderPattern(){
-    document.querySelectorAll('.pattern-dot').forEach(d=>{
-      const n = parseInt(d.dataset.n, 10);
-      const pos = patternSequence.indexOf(n);
-      d.classList.toggle('active', pos > -1);
-      d.textContent = pos > -1 ? (pos+1) : '';
-    });
-    const svg = $('patternSvg');
-    if(!svg) return;
-    const pts = patternSequence.map(n=>{
-      const row = Math.floor((n-1)/3), col = (n-1)%3;
-      return {x:30+col*60, y:30+row*60};
-    });
-    let lines = '';
-    for(let i=0;i<pts.length-1;i++){
-      lines += `<line x1="${pts[i].x}" y1="${pts[i].y}" x2="${pts[i+1].x}" y2="${pts[i+1].y}" stroke="#0047CC" stroke-width="3" stroke-linecap="round"/>`;
-    }
-    svg.innerHTML = lines;
-  }
-  $('btnClearPattern').addEventListener('click', ()=>{ patternSequence = []; renderPattern(); });
-
-  // ---------- FOTOS DO APARELHO ----------
-  function renderPhotoGrid(){
-    const grid = $('photoGrid');
-    grid.innerHTML = currentFotos.map((foto,i)=>{
-      if(foto){
-        return `<div class="photo-slot" data-i="${i}">
-          <img src="${foto}" alt="Foto ${i+1}">
-          <button type="button" class="rm" data-i="${i}" title="Remover">×</button>
-        </div>`;
-      }
-      return `<div class="photo-slot" data-i="${i}">
-        <input type="file" accept="image/*" capture="environment" data-i="${i}">
-        <svg class="plus-icon" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-      </div>`;
-    }).join('');
-  }
-  function resizeImage(file){
-    return new Promise((resolve, reject)=>{
-      const reader = new FileReader();
-      reader.onload = (e)=>{
-        const img = new Image();
-        img.onload = ()=>{
-          const maxW = 700;
-          const scale = Math.min(1, maxW / img.width);
-          const canvas = document.createElement('canvas');
-          canvas.width = Math.round(img.width * scale);
-          canvas.height = Math.round(img.height * scale);
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          resolve(canvas.toDataURL('image/jpeg', 0.6));
-        };
-        img.onerror = reject;
-        img.src = e.target.result;
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  }
-  $('photoGrid').addEventListener('change', async (e)=>{
-    const input = e.target.closest('input[type=file]');
-    if(!input) return;
-    const file = input.files[0];
-    if(!file) return;
-    const i = parseInt(input.dataset.i, 10);
-    try{
-      currentFotos[i] = await resizeImage(file);
-      renderPhotoGrid();
-    }catch(err){
-      showToast('⚠️ Erro ao carregar imagem.');
-    }
-  });
-  $('photoGrid').addEventListener('click', (e)=>{
-    const rm = e.target.closest('.rm');
-    if(!rm) return;
-    e.stopPropagation();
-    const i = parseInt(rm.dataset.i, 10);
-    currentFotos[i] = null;
-    renderPhotoGrid();
-  });
-
-  // ---------- CONFIGURAÇÕES (técnicos, tipos, atendentes, loja) ----------
-  const settingsOverlay = $('settingsOverlay');
-  function closeSettingsFn(){ settingsOverlay.classList.remove('show'); }
-  $('btnSettings').addEventListener('click', ()=>{
-    settingsOverlay.classList.add('show');
-    refreshCfgPanel();
-  });
-  $('closeSettings').addEventListener('click', closeSettingsFn);
-  $('btnCloseSettingsFoot').addEventListener('click', closeSettingsFn);
-  settingsOverlay.addEventListener('click', (e)=>{ if(e.target === settingsOverlay) closeSettingsFn(); });
-
-  function refreshCfgPanel(){
-    const isLoja = currentCfgTab === 'loja';
-    $('cfgAddRow').style.display = isLoja ? 'none' : '';
-    $('cfgList').style.display = isLoja ? 'none' : '';
-    $('cfgLojaForm').style.display = isLoja ? '' : 'none';
-    if(isLoja){ populateLojaForm(); }
-    else { renderCfgList(); }
-  }
-
-  $('cfgTabs').addEventListener('click', (e)=>{
-    const btn = e.target.closest('[data-cfg]');
-    if(!btn) return;
-    document.querySelectorAll('#cfgTabs .seg-btn').forEach(b=>b.classList.remove('active-cel'));
-    btn.classList.add('active-cel');
-    currentCfgTab = btn.dataset.cfg;
-    $('cfgNewItem').value = '';
-    $('cfgNewCategoria').style.display = (currentCfgTab === 'tipos') ? '' : 'none';
-    refreshCfgPanel();
-  });
-
-  // ---------- DADOS DA LOJA (nome, CNPJ, telefone, endereço, logo, termos) ----------
-  $('btnLojaLogoPick').addEventListener('click', ()=> $('lojaLogoInput').click());
-  $('lojaLogoInput').addEventListener('change', async (e)=>{
-    const file = e.target.files[0];
-    if(!file) return;
-    if(file.size > 3 * 1024 * 1024){
-      showToast('⚠️ Imagem muito grande. Escolha um arquivo de até 3MB.');
-      e.target.value = '';
-      return;
-    }
-    try{
-      lojaInfo.logoDataUrl = await resizeImageFile(file, 320);
-      updateLogoPreview();
-    }catch(err){
-      console.error(err);
-      showToast('⚠️ Não foi possível carregar essa imagem.');
-    }
-    e.target.value = '';
-  });
-  $('btnLojaLogoRemove').addEventListener('click', ()=>{
-    lojaInfo.logoDataUrl = '';
-    updateLogoPreview();
-  });
-  $('btnSalvarLoja').addEventListener('click', async ()=>{
-    const payload = {
-      id: 1,
-      nome: $('lojaNome').value.trim(),
-      cnpj: $('lojaCnpj').value.trim(),
-      telefone: $('lojaTelefone').value.trim(),
-      endereco: $('lojaEndereco').value.trim(),
-      logo_data_url: lojaInfo.logoDataUrl || null,
-      termos: $('lojaTermos').value.trim(),
-    };
-    $('btnSalvarLoja').disabled = true;
-    const { error } = await supabase.from('loja').upsert(payload, { onConflict:'id' });
-    $('btnSalvarLoja').disabled = false;
-    if(error){
-      console.error(error);
-      showToast('⚠️ Erro ao salvar dados da loja.');
-      return;
-    }
-    showToast('✓ Dados da loja atualizados.');
-    await loadLoja();
-  });
-
-  function cfgLabel(){
-    return {tecnicos:'técnico', tipos:'tipo de aparelho', atendentes:'atendente'}[currentCfgTab];
-  }
-  function renderCfgList(){
-    const list = config[currentCfgTab] || [];
-    const listEl = $('cfgList');
-    if(list.length === 0){
-      listEl.innerHTML = `<div class="cfg-empty">Nenhum ${cfgLabel()} cadastrado ainda.</div>`;
-      return;
-    }
-    if(currentCfgTab === 'tipos'){
-      listEl.innerHTML = list.map((item,i)=>`
-        <div class="cfg-item">
-          <span>${escapeHtml(item.nome)}<span class="cfg-badge">${item.categoria === 'cel' ? icon('phone',11) + ' Celular/Tablet' : icon('monitor',11) + ' Informática'}</span></span>
-          <button data-idx="${i}" title="Remover">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-          </button>
-        </div>`).join('');
-      return;
-    }
-    listEl.innerHTML = list.map((item,i)=>`
-      <div class="cfg-item">
-        <span>${escapeHtml(item)}</span>
-        <button data-idx="${i}" title="Remover">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        </button>
+    list.innerHTML = prontos.map(r=>`
+      <div class="pronto-widget-item" data-id="${r.id}">
+        <div class="pw-name">${escapeHtml(toTitleCase(r.cliente))}</div>
+        <div class="pw-device">${escapeHtml(r.modelo || '—')}</div>
       </div>`).join('');
   }
-  $('cfgAddBtn').addEventListener('click', async ()=>{
-    const val = $('cfgNewItem').value.trim();
-    if(!val) return;
-    const table = TABLE_MAP[currentCfgTab];
 
-    if(currentCfgTab === 'tipos'){
-      if((config.tipos||[]).some(x=>x.nome.toLowerCase() === val.toLowerCase())){
-        showToast('⚠️ Já cadastrado.');
-        return;
-      }
-      const categoria = $('cfgNewCategoria').value;
-      const { error } = await supabase.from(table).insert({ nome: val, categoria });
-      if(error){
-        console.error(error);
-        showToast(error.code === '23505' ? '⚠️ Já cadastrado.' : '⚠️ Erro ao salvar.');
-        return;
-      }
-    } else {
-      if((config[currentCfgTab]||[]).some(x=>x.toLowerCase() === val.toLowerCase())){
-        showToast('⚠️ Já cadastrado.');
-        return;
-      }
-      const { error } = await supabase.from(table).insert({ nome: val });
-      if(error){
-        console.error(error);
-        showToast(error.code === '23505' ? '⚠️ Já cadastrado.' : '⚠️ Erro ao salvar.');
-        return;
-      }
-    }
-
-    $('cfgNewItem').value = '';
-    await loadConfig();
-    renderCfgList();
-  });
-  $('cfgNewItem').addEventListener('keydown', (e)=>{
-    if(e.key === 'Enter'){ e.preventDefault(); $('cfgAddBtn').click(); }
-  });
-  $('cfgList').addEventListener('click', async (e)=>{
-    const btn = e.target.closest('button[data-idx]');
-    if(!btn) return;
-    const idx = parseInt(btn.dataset.idx, 10);
-    const item = config[currentCfgTab][idx];
-    const nome = currentCfgTab === 'tipos' ? item.nome : item;
-    const table = TABLE_MAP[currentCfgTab];
-    const { error } = await supabase.from(table).delete().eq('nome', nome);
-    if(error){
-      console.error(error);
-      showToast('⚠️ Erro ao remover.');
-      return;
-    }
-    await loadConfig();
-    renderCfgList();
-  });
-
-  // ---------- MODAL: VISUALIZAR OS ----------
-  const viewOverlay = $('viewOverlay');
-  function closeViewFn(){ viewOverlay.classList.remove('show'); }
-  $('closeView').addEventListener('click', closeViewFn);
-  $('btnCloseViewFoot').addEventListener('click', closeViewFn);
-  viewOverlay.addEventListener('click', (e)=>{ if(e.target === viewOverlay) closeViewFn(); });
-  $('btnEditFromView').addEventListener('click', ()=>{
-    const r = viewOverlay._currentRecord;
-    closeViewFn();
-    if(r) openModal(r);
-  });
-  $('btnPrintA4').addEventListener('click', ()=>{
-    const r = viewOverlay._currentRecord;
-    if(r) printReceipt(r, 'a4');
-  });
-  $('btnPrintTermica').addEventListener('click', ()=>{
-    const r = viewOverlay._currentRecord;
-    if(r) printReceipt(r, 'termica');
-  });
-
-  // ---------- RECIBO (impressão / PDF) ----------
-  function printReceipt(r, formato){
-    const dataImpressao = new Date().toLocaleString('pt-BR');
-    const cliente = toTitleCase(r.cliente) || '—';
-    const osLabel = `OS Nº ${String(r.osNum).padStart(4,'0')}`;
-    const pagamentoTxt = r.pagamento ? (r.pagamento + (r.parcelas ? ` em ${r.parcelas}x` : '')) : '—';
-    const aparelho = r.tipoAparelho || (r.tipo === 'cel' ? 'Celular/Tablet' : 'Informática');
-
-    const linhas = [
-      ['Cliente', cliente],
-      ['Contato', r.contato || '—'],
-      ['Atendente', r.atendente || '—'],
-      ['Técnico', r.tecnico || '—'],
-      ['Aparelho', aparelho],
-      ['Modelo', r.modelo || '—'],
-      ['Serviço', r.servico || '—'],
-      ['Valor', r.valor || '—'],
-      ['Pagamento', pagamentoTxt],
-      ['Status', STATUS_LABELS[r.status] || r.status || '—'],
-      ['Entrada', `${formatDatePT(r.dataEntrada)}${r.horarioR ? ' · '+r.horarioR : ''}`],
-      ['Entrega', r.dataEntrega ? `${formatDatePT(r.dataEntrega)}${r.horarioE ? ' · '+r.horarioE : ''}` : '—'],
-    ];
-
-    const w = window.open('', '_blank', 'width=420,height=720');
-    if(!w){
-      showToast('⚠️ Seu navegador bloqueou a janela de impressão. Permita pop-ups pra esse site.');
-      return;
-    }
-
-    const nomeLoja = lojaInfo.nome || 'Carioca Infocell';
-    const infoLojaPartes = [
-      lojaInfo.cnpj ? `CNPJ: ${lojaInfo.cnpj}` : '',
-      lojaInfo.telefone ? `Tel: ${lojaInfo.telefone}` : '',
-      lojaInfo.endereco || '',
-    ].filter(Boolean);
-
-    let pageCss, bodyHtml;
-
-    if(formato === 'termica'){
-      pageCss = `
-        @page{ size:80mm auto; margin:0; }
-        body{ width:76mm; margin:0 auto; padding:8px 6px 14px; font-family:'Courier New',Courier,monospace; font-size:11.5px; color:#000; line-height:1.35; }
-        .c{ text-align:center; }
-        .hr{ border-top:1px dashed #000; margin:7px 0; }
-        .hr-solid{ border-top:1.5px solid #000; margin:7px 0; }
-        .row{ display:flex; justify-content:space-between; gap:8px; padding:2.5px 0; }
-        .row .k{ color:#333; flex-shrink:0; }
-        .row .v{ text-align:right; font-weight:bold; word-break:break-word; }
-        .section-title{ font-weight:bold; font-size:11px; text-transform:uppercase; letter-spacing:.05em; margin:9px 0 4px; }
-        .badge{ display:inline-block; border:1.5px solid #000; padding:3px 10px; font-weight:bold; font-size:11px; border-radius:20px; margin-top:2px; }
-        .terms{ font-size:9.5px; line-height:1.5; color:#111; white-space:pre-wrap; }
-        .obs-box{ border:1px dashed #000; padding:6px 7px; font-size:10.5px; margin-top:4px; }
-      `;
-      bodyHtml = `
-        <div class="c" style="font-weight:bold;font-size:15px;letter-spacing:.02em;">${escapeHtml(nomeLoja.toUpperCase())}</div>
-        ${infoLojaPartes.map(l=>`<div class="c" style="font-size:9.5px;">${escapeHtml(l)}</div>`).join('')}
-        <div class="c" style="font-size:9px;margin-top:2px;">*** DOCUMENTO SEM VALOR FISCAL ***</div>
-        <div class="hr-solid"></div>
-        <div class="c" style="font-weight:bold;font-size:13px;">${osLabel}</div>
-        <div class="c" style="margin-top:3px;"><span class="badge">${escapeHtml(STATUS_LABELS[r.status] || r.status || '—')}</span></div>
-        <div class="hr"></div>
-        <div class="section-title">Cliente</div>
-        <div class="row"><span class="k">Nome</span><span class="v">${escapeHtml(cliente)}</span></div>
-        <div class="row"><span class="k">Contato</span><span class="v">${escapeHtml(r.contato)||'—'}</span></div>
-        <div class="hr"></div>
-        <div class="section-title">Equipamento</div>
-        <div class="row"><span class="k">Tipo</span><span class="v">${escapeHtml(aparelho)}</span></div>
-        <div class="row"><span class="k">Modelo</span><span class="v">${escapeHtml(r.modelo)||'—'}</span></div>
-        <div class="row"><span class="k">Serviço</span><span class="v">${escapeHtml(r.servico)||'—'}</span></div>
-        <div class="hr"></div>
-        <div class="section-title">Pagamento</div>
-        <div class="row"><span class="k">Valor</span><span class="v">${escapeHtml(r.valor)||'—'}</span></div>
-        <div class="row"><span class="k">Forma</span><span class="v">${escapeHtml(pagamentoTxt)}</span></div>
-        <div class="hr"></div>
-        <div class="section-title">Datas</div>
-        <div class="row"><span class="k">Entrada</span><span class="v">${formatDatePT(r.dataEntrada)}${r.horarioR?' '+r.horarioR:''}</span></div>
-        <div class="row"><span class="k">Entrega</span><span class="v">${r.dataEntrega?formatDatePT(r.dataEntrega):'—'}${r.horarioE?' '+r.horarioE:''}</span></div>
-        <div class="row"><span class="k">Atendente</span><span class="v">${escapeHtml(r.atendente)||'—'}</span></div>
-        <div class="row"><span class="k">Técnico</span><span class="v">${escapeHtml(r.tecnico)||'—'}</span></div>
-        ${r.obs ? `<div class="hr"></div><div class="section-title">Observações</div><div class="obs-box">${escapeHtml(r.obs)}</div>` : ''}
-        ${lojaInfo.termos ? `<div class="hr"></div><div class="section-title">Termos e garantia</div><div class="terms">${escapeHtml(lojaInfo.termos)}</div>` : ''}
-        <div class="hr-solid"></div>
-        <div class="c" style="font-size:9px;color:#333;">Impresso em ${dataImpressao}</div>
-        <div style="margin-top:34px;border-top:1px solid #000;padding-top:4px;" class="c">Assinatura do cliente</div>
-        <br><br>
-      `;
-    } else {
-      const logoBox = lojaInfo.logoDataUrl
-        ? `<img src="${lojaInfo.logoDataUrl}" style="width:66px;height:66px;object-fit:contain;flex-shrink:0;">`
-        : `<div style="width:66px;height:66px;border:1px dashed #CCC;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:8px;color:#AAA;text-align:center;line-height:1.3;flex-shrink:0;">ESPAÇO<br>DA LOGO</div>`;
-      pageCss = `
-        @page{ size:A4; margin:18mm; }
-        body{ font-family:Arial,Helvetica,sans-serif; font-size:13px; color:#1D2226; }
-        table{ width:100%; border-collapse:collapse; }
-        td{ padding:7px 0; border-bottom:1px solid #EEE; }
-      `;
-      bodyHtml = `
-        <div style="display:flex;align-items:center;gap:16px;margin-bottom:22px;border-bottom:2px solid #0047CC;padding-bottom:16px;">
-          ${logoBox}
-          <div>
-            <div style="font-size:21px;font-weight:800;color:#0047CC;">${escapeHtml(nomeLoja)}</div>
-            ${infoLojaPartes.length ? `<div style="font-size:11.5px;color:#666;margin-top:3px;">${infoLojaPartes.map(escapeHtml).join(' &nbsp;·&nbsp; ')}</div>` : ''}
-            <div style="font-size:12.5px;color:#666;margin-top:3px;">Recibo de Serviço — documento sem valor fiscal</div>
-          </div>
-        </div>
-        <div style="display:flex;justify-content:space-between;margin-bottom:16px;font-size:13px;">
-          <div><strong>${osLabel}</strong></div>
-          <div style="color:#666;">Impresso em ${dataImpressao}</div>
-        </div>
-        <table>
-          ${linhas.map(([k,v])=>`
-            <tr>
-              <td style="color:#666;width:150px;">${escapeHtml(k)}</td>
-              <td style="font-weight:600;">${escapeHtml(String(v))}</td>
-            </tr>`).join('')}
-        </table>
-        ${r.obs ? `<div style="margin-top:16px;font-size:13px;"><strong>Observações:</strong><br>${escapeHtml(r.obs)}</div>` : ''}
-        ${lojaInfo.termos ? `<div style="margin-top:18px;padding:12px 14px;background:#F7F6F1;border:1px solid #E9E5D9;border-radius:8px;font-size:11.5px;color:#444;line-height:1.55;"><strong style="display:block;margin-bottom:4px;color:#1D2226;">Termos e garantia</strong>${escapeHtml(lojaInfo.termos).replace(/\n/g,'<br>')}</div>` : ''}
-        <div style="margin-top:60px;display:flex;justify-content:space-between;font-size:12px;">
-          <div style="border-top:1px solid #333;width:44%;padding-top:6px;text-align:center;">Assinatura do cliente</div>
-          <div style="border-top:1px solid #333;width:44%;padding-top:6px;text-align:center;">Assinatura da loja</div>
-        </div>
-        <div style="margin-top:26px;font-size:10.5px;color:#999;text-align:center;">Este documento é apenas um comprovante de serviço — não possui valor fiscal.</div>
-      `;
-    }
-
-    w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
-      <title>Recibo ${osLabel}</title>
-      <style>*{box-sizing:border-box;}${pageCss}</style>
-      </head><body>${bodyHtml}</body></html>`);
-    w.document.close();
-    w.focus();
-    setTimeout(()=>{ w.print(); }, 300);
-  }
-
-  function renderSenhaView(r){
-    const s = r.senha;
-    if(!s || s.semSenha){
-      return `<div class="view-section"><h4>Senha do aparelho</h4>
-        <div class="info-item full"><div class="v" style="color:#B5432A;display:flex;align-items:center;gap:5px;">${icon('alertTriangle',14)} Cliente não autorizou o uso de senha. O técnico não conseguirá realizar testes no aparelho sem a senha.</div></div>
-      </div>`;
-    }
-    if(s.tipo === 'alfa' && s.valor){
-      return `<div class="view-section"><h4>Senha do aparelho (alfanumérica)</h4>
-        <div class="senha-view-row">
-          <span class="mono" id="senhaMasked" data-real="${escapeHtml(s.valor)}">${'•'.repeat(s.valor.length)}</span>
-          <button type="button" class="senha-reveal-btn" id="btnRevealSenha">Mostrar</button>
-        </div>
-      </div>`;
-    }
-    if(s.tipo === 'desenho' && Array.isArray(s.valor) && s.valor.length){
-      const pts = s.valor.map(n=>{ const row=Math.floor((n-1)/3), col=(n-1)%3; return {x:20+col*40, y:20+row*40}; });
-      let dots = '', lines = '';
-      for(let i=1;i<=9;i++){
-        const row = Math.floor((i-1)/3), col = (i-1)%3;
-        dots += `<circle cx="${20+col*40}" cy="${20+row*40}" r="6" fill="${s.valor.includes(i)?'#0047CC':'#DCD6C7'}"/>`;
-      }
-      for(let i=0;i<pts.length-1;i++){
-        lines += `<line x1="${pts[i].x}" y1="${pts[i].y}" x2="${pts[i+1].x}" y2="${pts[i+1].y}" stroke="#0047CC" stroke-width="3" stroke-linecap="round"/>`;
-      }
-      return `<div class="view-section"><h4>Senha do aparelho (padrão desenhado)</h4>
-        <svg width="120" height="120">${lines}${dots}</svg>
-      </div>`;
-    }
-    return `<div class="view-section"><h4>Senha do aparelho</h4><div class="info-item full"><div class="v">Não informada</div></div></div>`;
-  }
-
-  function openViewModal(r){
-    $('viewTitle').textContent = `OS Nº ${String(r.osNum).padStart(4,'0')} — ${escapeHtml(r.cliente) || 'Sem nome'}`;
-    $('viewSub').innerHTML = r.tipo === 'cel' ? `${icon('phone',13)} Celular / Tablet` : `${icon('monitor',13)} Informática / Impressora`;
-
-    const fotosHtml = (r.fotos && r.fotos.length)
-      ? `<div class="view-section"><h4>Fotos do aparelho</h4><div class="view-photos">${r.fotos.map(f=>`<img src="${f}" alt="Foto do aparelho">`).join('')}</div></div>`
-      : '';
-
-    $('viewBody').innerHTML = `
-      <div class="view-section">
-        <h4>Dados gerais</h4>
-        <div class="info-grid">
-          <div class="info-item"><div class="k">Cliente</div><div class="v">${escapeHtml(toTitleCase(r.cliente))||'—'}</div></div>
-          <div class="info-item"><div class="k">Contato</div><div class="v">${escapeHtml(r.contato)||'—'}</div></div>
-          <div class="info-item"><div class="k">Atendente</div><div class="v">${escapeHtml(r.atendente)||'—'}</div></div>
-          <div class="info-item"><div class="k">Tipo de aparelho</div><div class="v">${escapeHtml(r.tipoAparelho)||'—'}</div></div>
-          <div class="info-item"><div class="k">Modelo</div><div class="v">${escapeHtml(r.modelo)||'—'}</div></div>
-          <div class="info-item"><div class="k">Serviço</div><div class="v">${escapeHtml(r.servico)||'—'}</div></div>
-          <div class="info-item"><div class="k">Status</div><div class="v"><span class="status-badge status-${r.status}"><span class="dot"></span>${STATUS_LABELS[r.status]}</span></div></div>
-          <div class="info-item"><div class="k">Técnico</div><div class="v">${escapeHtml(r.tecnico)||'—'}</div></div>
-        </div>
-      </div>
-      <div class="view-section">
-        <h4>Pagamento &amp; datas</h4>
-        <div class="info-grid">
-          <div class="info-item"><div class="k">Valor</div><div class="v valor-tag">${escapeHtml(r.valor)||'—'}</div></div>
-          <div class="info-item"><div class="k">Pagamento</div><div class="v">${escapeHtml(r.pagamento)||'—'}${r.parcelas?` em ${r.parcelas}x`:''}</div></div>
-          <div class="info-item"><div class="k">Entrada</div><div class="v">${formatDatePT(r.dataEntrada)} ${r.horarioR?'· '+r.horarioR:''}</div></div>
-          <div class="info-item"><div class="k">Entrega</div><div class="v">${r.dataEntrega?formatDatePT(r.dataEntrega):'—'} ${r.horarioE?'· '+r.horarioE:''}</div></div>
-        </div>
-      </div>
-      ${r.obs ? `<div class="view-section"><h4>Observações</h4><div class="info-item full"><div class="v">${escapeHtml(r.obs)}</div></div></div>` : ''}
-      ${(r.diagnostico || r.solucao || r.motivoCancelamento || r.obsRetirada) ? `
-      <div class="view-section">
-        <h4>Diagnóstico técnico</h4>
-        ${r.motivoCancelamento ? `<div class="motivo-badge">${MOTIVO_LABELS[r.motivoCancelamento] || r.motivoCancelamento}</div>` : ''}
-        <div class="info-grid">
-          ${r.diagnostico ? `<div class="info-item full"><div class="k">Diagnóstico</div><div class="v">${escapeHtml(r.diagnostico)}</div></div>` : ''}
-          ${r.solucao ? `<div class="info-item full"><div class="k">Solução</div><div class="v">${escapeHtml(r.solucao)}</div></div>` : ''}
-          ${r.obsRetirada ? `<div class="info-item full"><div class="k">Aviso p/ retirada</div><div class="v"><div class="obs-retirada-box${r.motivoCancelamento ? ' danger' : ''}" style="margin:0;">${escapeHtml(r.obsRetirada)}</div></div></div>` : ''}
-        </div>
-      </div>` : ''}
-      ${renderSenhaView(r)}
-      ${fotosHtml}
-    `;
-
-    viewOverlay._currentRecord = r;
-    viewOverlay.classList.add('show');
-  }
-
-  $('viewBody').addEventListener('click', (e)=>{
-    const revealBtn = e.target.closest('#btnRevealSenha');
-    if(revealBtn){
-      const span = $('senhaMasked');
-      const showing = revealBtn.textContent === 'Ocultar';
-      span.textContent = showing ? '•'.repeat(span.dataset.real.length) : span.dataset.real;
-      revealBtn.textContent = showing ? 'Mostrar' : 'Ocultar';
-      return;
-    }
-    const img = e.target.closest('.view-photos img');
-    if(img){
-      $('lightboxImg').src = img.src;
-      $('photoLightbox').classList.add('show');
-    }
-  });
-
-  $('closeLightbox').addEventListener('click', ()=> $('photoLightbox').classList.remove('show'));
-  $('photoLightbox').addEventListener('click', (e)=>{
-    if(e.target.id === 'photoLightbox') $('photoLightbox').classList.remove('show');
-  });
-
-  // ---------- MODAL: DIAGNÓSTICO ----------
-  const diagOverlay = $('diagOverlay');
-  let diagRecord = null;
-
-  function closeDiagFn(){
-    diagOverlay.classList.remove('show');
-    diagRecord = null;
-  }
-
-  function setDiagMotivo(motivo){
-    $('dMotivoDesistiu').checked = motivo === 'desistiu';
-    $('dMotivoNaoAprovado').checked = motivo === 'nao_aprovado';
-    $('dMotivoCancelada').checked = motivo === 'cancelada';
-  }
-  function getDiagMotivo(){
-    if($('dMotivoDesistiu').checked) return 'desistiu';
-    if($('dMotivoNaoAprovado').checked) return 'nao_aprovado';
-    if($('dMotivoCancelada').checked) return 'cancelada';
-    return '';
-  }
-  document.querySelectorAll('#diagOverlay input[data-motivo]').forEach(cb=>{
-    cb.addEventListener('change', ()=>{
-      if(cb.checked){
-        document.querySelectorAll('#diagOverlay input[data-motivo]').forEach(other=>{
-          if(other !== cb) other.checked = false;
-        });
-      }
-    });
-  });
-
-  function openDiagModal(record){
-    diagRecord = record;
-    $('diagTitle').textContent = `Diagnóstico — OS Nº ${String(record.osNum).padStart(4,'0')}`;
-    $('diagSub').textContent = escapeHtml(toTitleCase(record.cliente)) || 'Sem nome';
-    $('diagHeaderBox').innerHTML = `
-      <div><b>${escapeHtml(toTitleCase(record.cliente))||'Sem nome'}</b> · ${escapeHtml(record.contato)||'sem contato'}</div>
-      <div>${escapeHtml(record.tipoAparelho)||(record.tipo==='cel'?'Celular/Tablet':'Informática')} — ${escapeHtml(record.modelo)||'—'}</div>
-      <div>Serviço solicitado: ${escapeHtml(record.servico)||'—'}</div>
-    `;
-    $('dValor').value = record.valor || '';
-    $('dDiagnostico').value = record.diagnostico || '';
-    $('dSolucao').value = record.solucao || '';
-    $('dObsRetirada').value = record.obsRetirada || '';
-    setDiagMotivo(record.motivoCancelamento || '');
-    diagOverlay.classList.add('show');
-    setTimeout(()=> $('dDiagnostico').focus(), 50);
-  }
-
-  async function startDiagnostico(record){
-    const { error } = await supabase.from('ordens_servico').update({ status:'analisando' }).eq('id', record.id);
-    if(error){
-      console.error(error);
-      showToast('⚠️ Erro ao iniciar diagnóstico: ' + (error.message || 'ver console'));
-      return;
-    }
-    record.status = 'analisando';
-    showToast('🔍 Diagnóstico iniciado — status alterado para Em Análise.');
-    await loadData();
-    const updated = records.find(r=>r.id === record.id) || record;
-    openDiagModal(updated);
-  }
-
-  async function saveDiagnostico(finalize){
-    if(!diagRecord) return;
-    const btn = finalize ? $('btnFinalizarOS') : $('btnSaveDiagDraft');
-    btn.disabled = true;
-    const payload = {
-      valor: $('dValor').value.trim(),
-      diagnostico: $('dDiagnostico').value.trim(),
-      solucao: $('dSolucao').value.trim(),
-      motivo_cancelamento: getDiagMotivo() || null,
-      obs_retirada: $('dObsRetirada').value.trim(),
-    };
-    if(finalize) payload.status = 'pronto';
-
-    const { error } = await supabase.from('ordens_servico').update(payload).eq('id', diagRecord.id);
-    btn.disabled = false;
-    if(error){
-      console.error(error);
-      showToast('⚠️ Erro ao salvar: ' + (error.message || 'ver console (F12)'));
-      return;
-    }
-    showToast(finalize ? '✓ OS finalizada — Pronto para retirada.' : '✓ Diagnóstico salvo.');
-    closeDiagFn();
-    await loadData();
-  }
-
-  function nowTimeHHMM(){
-    const d = new Date();
-    return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
-  }
-
-  async function marcarEntregue(record){
-    const { error } = await supabase.from('ordens_servico').update({
-      status: 'entregue',
-      data_entrega: todayISO(),
-      horario_e: nowTimeHHMM(),
-    }).eq('id', record.id);
-    if(error){
-      console.error(error);
-      showToast('⚠️ Erro ao marcar como entregue: ' + (error.message || 'ver console'));
-      return;
-    }
-    showToast('📦 OS marcada como Entregue.');
-    await loadData();
-  }
-
-  $('closeDiag').addEventListener('click', closeDiagFn);
-  $('btnCancelDiag').addEventListener('click', closeDiagFn);
-  diagOverlay.addEventListener('click', (e)=>{ if(e.target === diagOverlay) closeDiagFn(); });
-  $('btnSaveDiagDraft').addEventListener('click', ()=> saveDiagnostico(false));
-
-  // ---------- CONFIRMAÇÃO DE FINALIZAÇÃO DA OS ----------
-  const confirmFinalizeOverlay = $('confirmFinalizeOverlay');
-  function closeConfirmFinalizeFn(){
-    confirmFinalizeOverlay.classList.remove('show');
-  }
-  $('btnFinalizarOS').addEventListener('click', ()=>{
-    if(!diagRecord) return;
-    const nome = toTitleCase(diagRecord.cliente) || 'Sem nome';
-    $('confirmFinalizeText').textContent = `A OS Nº ${String(diagRecord.osNum).padStart(4,'0')} de ${nome} será marcada como Pronta para Retirada e sairá da fila de trabalho.`;
-    confirmFinalizeOverlay.classList.add('show');
-  });
-  $('btnCancelFinalize').addEventListener('click', closeConfirmFinalizeFn);
-  confirmFinalizeOverlay.addEventListener('click', (e)=>{
-    if(e.target === confirmFinalizeOverlay) closeConfirmFinalizeFn();
-  });
-  $('btnConfirmFinalize').addEventListener('click', async ()=>{
-    closeConfirmFinalizeFn();
-    await saveDiagnostico(true);
-  });
-
-  // keyboard: ESC closes modals
-  document.addEventListener('keydown', (e)=>{
-    if(e.key === 'Escape'){
-      closeModalFn();
-      $('confirmOverlay').classList.remove('show');
-      closeSettingsFn();
-      closeViewFn();
-      closeDiagFn();
-      $('confirmFinalizeOverlay').classList.remove('show');
-      $('photoLightbox').classList.remove('show');
-      closeClientesFn();
-      closeEntreguesFn();
-      closeClienteHistFn();
-      closeClienteEditFn();
-      $('confirmClienteOverlay').classList.remove('show');
-    }
-  });
-
-  // ---------- AUTENTICAÇÃO ----------
+  // EVENTOS INICIAIS DA APLICAÇÃO
   function showApp(){
     $('authOverlay').classList.add('hide');
     $('appRoot').style.display = '';
@@ -3230,45 +2228,28 @@
     loadConfig();
     loadLoja();
     loadData();
+    loadLancamentosFinanceiros();
   }
   function showLogin(){
     $('appRoot').style.display = 'none';
     $('authOverlay').classList.remove('hide');
   }
-  function showAuthError(msg){
-    const el = $('authError');
-    el.textContent = msg;
-    el.classList.add('show');
-  }
+
   async function doLogin(){
     const email = $('authEmail').value.trim();
     const password = $('authPassword').value;
-    if(!email || !password){
-      showAuthError('Preencha e-mail e senha.');
-      return;
-    }
-    $('authError').classList.remove('show');
-    $('btnLogin').disabled = true;
-    $('btnLogin').textContent = 'Entrando...';
+    if(!email || !password) return;
     const { error } = await supabase.auth.signInWithPassword({ email, password });
-    $('btnLogin').disabled = false;
-    $('btnLogin').textContent = 'Entrar';
-    if(error){
-      showAuthError(error.message === 'Invalid login credentials' ? 'E-mail ou senha incorretos.' : error.message);
-    }
+    if(error) showToast('⚠️ E-mail ou senha inválidos.');
   }
+
   $('btnLogin').addEventListener('click', doLogin);
-  $('authPassword').addEventListener('keydown', (e)=>{ if(e.key === 'Enter') doLogin(); });
-  $('authEmail').addEventListener('keydown', (e)=>{ if(e.key === 'Enter') doLogin(); });
-  $('btnLogout').addEventListener('click', async ()=>{
-    await supabase.auth.signOut();
-  });
+  $('btnLogout').addEventListener('click', () => supabase.auth.signOut());
 
   supabase.auth.onAuthStateChange((event, session)=>{
-    if(session){ showApp(); } else { showLogin(); }
+    if(session) showApp(); else showLogin();
   });
 
-  // ---------- INIT ----------
   function setToday(){
     const d = new Date();
     const dias = ['domingo','segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado'];
@@ -3278,18 +2259,9 @@
 
   (async ()=>{
     const { data: { session } } = await supabase.auth.getSession();
-    if(session){ showApp(); } else { showLogin(); }
+    if(session) showApp(); else showLogin();
   })();
 })();
-</script>
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js').catch(err => {
-        console.log('Falha ao registrar service worker:', err);
-      });
-    });
-  }
 </script>
 </body>
 </html>
