@@ -148,7 +148,7 @@
   .tab.active .count{background:#00C940;color:#063D14;}
   .tab:hover:not(.active){color:#fff;}
 
-  /* ---------- MENU HAMBÚRGUER & DRAWER LATERAL (NOVO) ---------- */
+  /* ---------- MENU HAMBÚRGUER & DRAWER LATERAL ---------- */
   .btn-menu-mobile {
     display: none;
     background: rgba(255,255,255,0.12);
@@ -633,7 +633,6 @@
   }
 
   @media (max-width:768px){
-    /* Oculta as abas horizontais e a barra de botões da topbar no celular */
     .topbar .tabs { display: none; }
     .topbar-right { display: none; }
     .btn-menu-mobile { display: flex; }
@@ -1014,7 +1013,7 @@
 
 <div id="appRoot" style="display:none;">
 
-<!-- DRAWER LATERAL P/ CELULAR (NOVO) -->
+<!-- DRAWER LATERAL P/ CELULAR -->
 <div class="mobile-drawer-overlay" id="drawerOverlay"></div>
 <aside class="mobile-drawer" id="mobileDrawer">
   <div class="drawer-head">
@@ -1883,7 +1882,7 @@
     };
   }
 
-  // ---------- CONTROLE DO DRAWER LATERAL (NOVO) ----------
+  // ---------- CONTROLE DO DRAWER LATERAL ----------
   function openDrawer(){
     $('mobileDrawer').classList.add('open');
     $('drawerOverlay').classList.add('show');
@@ -1908,7 +1907,6 @@
       document.querySelectorAll('.drawer-item[data-tipo]').forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
 
-      // Sincroniza com as abas normais
       const desktopTab = document.querySelector(`.tab[data-tipo="${tipo}"]`);
       if(desktopTab) desktopTab.click();
       closeDrawerFn();
@@ -2342,27 +2340,34 @@
   }
 
   function updateCounts(){
-    const emFila = records.filter(r=> r.status !== 'pronto' && r.status !== 'entregue');
-    const cel = emFila.filter(r=>r.tipo==='cel').length;
-    const info = emFila.filter(r=>r.tipo==='info').length;
+    const emFilaGeral = records.filter(r=> r.status !== 'pronto' && r.status !== 'entregue');
+    const celGeral = emFilaGeral.filter(r=>r.tipo==='cel').length;
+    const infoGeral = emFilaGeral.filter(r=>r.tipo==='info').length;
 
-    // Atualiza contadores Desktop
-    $('cntTodos').textContent = emFila.length;
-    $('cntCel').textContent = cel;
-    $('cntInfo').textContent = info;
+    // Atualiza contadores das Abas / Drawer
+    $('cntTodos').textContent = emFilaGeral.length;
+    $('cntCel').textContent = celGeral;
+    $('cntInfo').textContent = infoGeral;
 
-    // Sincroniza contadores do Drawer Mobile
     const mobileTodos = $('cntTodosMobile');
     const mobileCel = $('cntCelMobile');
     const mobileInfo = $('cntInfoMobile');
-    if(mobileTodos) mobileTodos.textContent = emFila.length;
-    if(mobileCel) mobileCel.textContent = cel;
-    if(mobileInfo) mobileInfo.textContent = info;
+    if(mobileTodos) mobileTodos.textContent = emFilaGeral.length;
+    if(mobileCel) mobileCel.textContent = celGeral;
+    if(mobileInfo) mobileInfo.textContent = infoGeral;
 
-    $('statTotal').textContent = records.filter(r=> r.status !== 'pronto' && r.status !== 'entregue').length;
-    $('statPend').textContent = records.filter(r=> r.status==='analisando').length;
-    $('statPronto').textContent = records.filter(r=>r.status==='pronto').length;
-    $('statEntregues').textContent = records.filter(r=>r.status==='entregue').length;
+    // ATUALIZADO: Filtra a base para alimentar os cards superiores conforme a aba ativa
+    let baseCardRecords = records;
+    if(currentTipoTab === 'cel'){
+      baseCardRecords = records.filter(r => r.tipo === 'cel');
+    } else if(currentTipoTab === 'info'){
+      baseCardRecords = records.filter(r => r.tipo === 'info');
+    }
+
+    $('statTotal').textContent = baseCardRecords.filter(r=> r.status !== 'pronto' && r.status !== 'entregue').length;
+    $('statPend').textContent = baseCardRecords.filter(r=> r.status==='analisando').length;
+    $('statPronto').textContent = baseCardRecords.filter(r=> r.status==='pronto').length;
+    $('statEntregues').textContent = baseCardRecords.filter(r=> r.status==='entregue').length;
   }
 
   function escapeHtml(str){
@@ -2660,7 +2665,14 @@
 
   // ---------- WIDGET: PRONTAS PARA RETIRADA ----------
   function renderProntosWidget(){
-    const prontos = records.filter(r=>r.status==='pronto').sort((a,b)=> b.osNum - a.osNum);
+    let prontos = records.filter(r=>r.status==='pronto');
+    if(currentTipoTab === 'cel'){
+      prontos = prontos.filter(r=>r.tipo==='cel');
+    } else if(currentTipoTab === 'info'){
+      prontos = prontos.filter(r=>r.tipo==='info');
+    }
+    prontos.sort((a,b)=> b.osNum - a.osNum);
+
     $('pwCount').textContent = prontos.length;
     const list = $('pwList');
     if(prontos.length === 0){
@@ -2711,6 +2723,12 @@
     const dateVal = $('entreguesDate').value;
 
     let entregues = records.filter(r=>r.status==='entregue');
+    if(currentTipoTab === 'cel'){
+      entregues = entregues.filter(r=>r.tipo==='cel');
+    } else if(currentTipoTab === 'info'){
+      entregues = entregues.filter(r=>r.tipo==='info');
+    }
+
     if(dateVal) entregues = entregues.filter(r=>r.dataEntrega === dateVal);
     if(q) entregues = entregues.filter(r=> `${r.cliente} ${r.contato}`.toLowerCase().includes(q));
     entregues.sort((a,b)=> b.osNum - a.osNum);
@@ -2768,7 +2786,7 @@
 
   function openModal(record){
     editingId = record ? record.id : null;
-    modalTipo = record ? record.tipo : 'cel';
+    modalTipo = record ? record.tipo : (currentTipoTab === 'info' ? 'info' : 'cel');
     setModalTipo(modalTipo);
     populateConfigSelects();
 
@@ -2979,7 +2997,6 @@
     tab.classList.add('active');
     currentTipoTab = tab.dataset.tipo;
 
-    // Sincroniza estado visual com o Drawer Mobile
     document.querySelectorAll('.drawer-item[data-tipo]').forEach(b => {
       b.classList.toggle('active', b.dataset.tipo === currentTipoTab);
     });
@@ -3025,9 +3042,6 @@
     $('dateFilter').value = '';
     $('statusFilter').value = '';
     $('tecFilter').value = '';
-
-    currentTipoTab = 'todos';
-    document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.tipo === 'todos'));
 
     if(kind === 'pend'){
       activeStatFilter = 'pend';
@@ -3264,7 +3278,7 @@
     const list = config[currentCfgTab] || [];
     const listEl = $('cfgList');
     if(list.length === 0){
-      listEl.innerHTML = `<div class="cfg-empty">Nenhum ${cfgLabel()} cadastrado ainda.</div>`;
+      listEl.innerHTML = `<div class="cfg-empty">Nenum ${cfgLabel()} cadastrado ainda.</div>`;
       return;
     }
     if(currentCfgTab === 'tipos'){
