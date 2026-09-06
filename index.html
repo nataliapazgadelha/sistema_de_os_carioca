@@ -624,6 +624,107 @@
   }
   .pw-whatsapp-btn:hover{background:#1EBE5B;}
 
+  /* ---------- MÓDULO FINANCEIRO ---------- */
+  .fin-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .fin-card {
+    background: var(--surface);
+    border: 1px solid var(--line-soft);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    box-shadow: var(--shadow-sm);
+  }
+  .fin-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .fin-card-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+  }
+  .fin-card-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 100px;
+    background: var(--brand-soft);
+    color: var(--brand-deep);
+  }
+  .fin-val-main {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--info);
+    margin-bottom: 12px;
+  }
+  .fin-breakdown {
+    border-top: 1px dashed var(--line);
+    padding-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .fin-sub-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12.5px;
+  }
+  .fin-sub-lbl { color: var(--ink-soft); display: flex; align-items: center; gap: 6px; }
+  .fin-sub-val { font-family: 'JetBrains Mono', monospace; font-weight: 600; color: var(--ink); }
+
+  .fin-filters {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    background: var(--surface);
+    border: 1px solid var(--line-soft);
+    padding: 14px 16px;
+    border-radius: var(--radius);
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .fin-table-container {
+    background: var(--surface);
+    border: 1px solid var(--line-soft);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+  }
+  .fin-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 13.5px;
+  }
+  .fin-table th {
+    background: var(--bg-soft);
+    padding: 12px 16px;
+    font-weight: 700;
+    font-size: 12px;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    border-bottom: 1px solid var(--line);
+  }
+  .fin-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--line-soft);
+    color: var(--ink);
+  }
+  .fin-table tr:last-child td { border-bottom: none; }
+  .fin-table tr:hover td { background: var(--bg); }
+
   /* ---------- RESPONSIVIDADE P/ CELULAR ---------- */
   @media (max-width:900px){
     .content-grid{grid-template-columns:1fr;}
@@ -638,6 +739,13 @@
     .btn-menu-mobile { display: flex; }
     .today-pill { display: none; }
     .topbar-inner { padding-bottom: 12px; }
+    
+    /* Correções de Responsividade para o Financeiro no Mobile */
+    .fin-summary-grid { grid-template-columns: 1fr !important; gap: 12px; }
+    .fin-filters { flex-direction: column; align-items: stretch; gap: 10px; }
+    .fin-filters .field { width: 100%; min-width: 100% !important; }
+    .fin-filters select.filter-select { width: 100%; }
+    .fin-table-header-box { flex-direction: column; align-items: flex-start !important; gap: 6px; }
   }
 
   @media (max-width:640px){
@@ -884,107 +992,6 @@
     color:#B5432A;font-size:12.5px;font-weight:600;margin:-4px 0 14px;min-height:0;display:none;
   }
   .auth-error.show{display:block;}
-
-  /* ---------- MÓDULO FINANCEIRO ---------- */
-  .fin-summary-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    margin-bottom: 24px;
-  }
-  .fin-card {
-    background: var(--surface);
-    border: 1px solid var(--line-soft);
-    border-radius: var(--radius);
-    padding: 16px 18px;
-    box-shadow: var(--shadow-sm);
-  }
-  .fin-card-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  .fin-card-title {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--ink-soft);
-    text-transform: uppercase;
-    letter-spacing: .04em;
-  }
-  .fin-card-badge {
-    font-size: 11px;
-    font-weight: 700;
-    padding: 3px 8px;
-    border-radius: 100px;
-    background: var(--brand-soft);
-    color: var(--brand-deep);
-  }
-  .fin-val-main {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 26px;
-    font-weight: 700;
-    color: var(--info);
-    margin-bottom: 12px;
-  }
-  .fin-breakdown {
-    border-top: 1px dashed var(--line);
-    padding-top: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .fin-sub-item {
-    display: flex;
-    justify-content: space-between;
-    font-size: 12.5px;
-  }
-  .fin-sub-lbl { color: var(--ink-soft); display: flex; align-items: center; gap: 6px; }
-  .fin-sub-val { font-family: 'JetBrains Mono', monospace; font-weight: 600; color: var(--ink); }
-
-  .fin-filters {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    flex-wrap: wrap;
-    background: var(--surface);
-    border: 1px solid var(--line-soft);
-    padding: 14px 16px;
-    border-radius: var(--radius);
-    margin-bottom: 20px;
-    box-shadow: var(--shadow-sm);
-  }
-
-  .fin-table-container {
-    background: var(--surface);
-    border: 1px solid var(--line-soft);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow-sm);
-    overflow: hidden;
-  }
-  .fin-table {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: left;
-    font-size: 13.5px;
-  }
-  .fin-table th {
-    background: var(--bg-soft);
-    padding: 12px 16px;
-    font-weight: 700;
-    font-size: 12px;
-    color: var(--ink-soft);
-    text-transform: uppercase;
-    letter-spacing: .04em;
-    border-bottom: 1px solid var(--line);
-  }
-  .fin-table td {
-    padding: 14px 16px;
-    border-bottom: 1px solid var(--line-soft);
-    color: var(--ink);
-  }
-  .fin-table tr:last-child td { border-bottom: none; }
-  .fin-table tr:hover td { background: var(--bg); }
 </style>
 </head>
 <body>
@@ -1266,7 +1273,7 @@
 
     <!-- TABELA DETALHADA DE LANÇAMENTOS -->
     <div class="fin-table-container">
-      <div style="padding:16px; border-bottom:1px solid var(--line-soft); display:flex; justify-content:space-between; align-items:center;">
+      <div class="fin-table-header-box" style="padding:16px; border-bottom:1px solid var(--line-soft); display:flex; justify-content:space-between; align-items:center;">
         <h3 style="margin:0; font-size:16px;">Lançamentos Faturados / Concluídos</h3>
         <span style="font-size:12.5px; color:var(--ink-soft);" id="finTotalFiltrado">Total do Período: R$ 0,00</span>
       </div>
@@ -2344,7 +2351,6 @@
     const celGeral = emFilaGeral.filter(r=>r.tipo==='cel').length;
     const infoGeral = emFilaGeral.filter(r=>r.tipo==='info').length;
 
-    // Atualiza contadores das Abas / Drawer
     $('cntTodos').textContent = emFilaGeral.length;
     $('cntCel').textContent = celGeral;
     $('cntInfo').textContent = infoGeral;
@@ -2356,7 +2362,6 @@
     if(mobileCel) mobileCel.textContent = celGeral;
     if(mobileInfo) mobileInfo.textContent = infoGeral;
 
-    // ATUALIZADO: Filtra a base para alimentar os cards superiores conforme a aba ativa
     let baseCardRecords = records;
     if(currentTipoTab === 'cel'){
       baseCardRecords = records.filter(r => r.tipo === 'cel');
@@ -2637,7 +2642,7 @@
         const dtExibicao = formatDatePT(r.dataEntrega || r.dataEntrada);
         const isCel = r.tipo === 'cel';
         const badgeClass = isCel ? 'cel' : 'info';
-        const categoryLabel = isCel ? '📱 Celulares / Tablets' : '💻 Informática / Impressoras';
+        const categoryLabel = isCel ? '📱 Celular' : '💻 Informática';
 
         return `
           <tr>
